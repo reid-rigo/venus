@@ -87,6 +87,8 @@ function Codegen:emit_expr(node)
       table.insert(parts, "[\"" .. field.key .. "\"] = " .. self:emit_expr(field.value))
     end
     return "{ " .. table.concat(parts, ", ") .. " }"
+  elseif node.type == "placeholder" then
+    error("placeholder outside pipeline context")
   elseif node.type == "program" then
     for _, stmt in ipairs(node.body) do
       local line = self:emit_expr(stmt)

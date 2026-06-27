@@ -48,5 +48,30 @@ return {
       input = "-5 |> math.abs |> print",
       expected = "print(math.abs((-5)))",
     },
+    {
+      name = "placeholder as first arg",
+      input = "2 |> math.pow(_, 3)",
+      expected = "math.pow(2, 3)",
+    },
+    {
+      name = "placeholder as last arg",
+      input = "2 |> math.pow(3, _)",
+      expected = "math.pow(3, 2)",
+    },
+    {
+      name = "placeholder middle arg",
+      input = "2 |> math.pow(1, _, 3)",
+      expected = "math.pow(1, 2, 3)",
+    },
+    {
+      name = "placeholder single arg",
+      input = "2 |> foo(_)",
+      expected = "foo(2)",
+    },
+    {
+      name = "pipeline chained with placeholder",
+      input = "2 |> math.pow(3, _) |> print(_)",
+      expected = "print(math.pow(3, 2))",
+    },
   },
 }

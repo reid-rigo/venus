@@ -18,11 +18,18 @@ luajit src/main.lua  # dev equivalent (no build needed)
 ### Pipeline operator (`|>`)
 
 ```venus
-2 |> math.pow(3) |> print         -- print(math.pow(2, 3))
-"hello" |> string.upper |> print   -- print(string.upper("hello"))
+2 |> math.pow(3) |> print           -- print(math.pow(2, 3))
+"hello" |> string.upper |> print     -- print(string.upper("hello"))
 ```
 
 The left-hand value is inserted as the first argument of the right-hand call.
+
+Use `_` to explicitly place the value in a specific position:
+
+```venus
+2 |> math.pow(3, _)                 -- math.pow(3, 2)
+2 |> math.pow(_, 3)                 -- math.pow(2, 3) -- same as default
+```
 
 ### `let` declarations
 

@@ -22,6 +22,7 @@ local Token = {
   RBRACE = "RBRACE",
   LBRACKET = "LBRACKET",
   RBRACKET = "RBRACKET",
+  UNDERSCORE = "UNDERSCORE",
   EOF    = "EOF",
 }
 Lexer.Token = Token
@@ -174,6 +175,9 @@ function Lexer:tokenize()
     elseif is_digit(c) then
       local num = self:read_number()
       table.insert(self.tokens, { type = Token.NUMBER, value = num })
+    elseif c == "_" then
+      self:advance()
+      table.insert(self.tokens, { type = Token.UNDERSCORE, value = "_" })
     elseif is_alpha(c) then
       local ident = self:read_ident()
       local kw_type = keywords[ident]

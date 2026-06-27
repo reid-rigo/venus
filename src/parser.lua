@@ -124,11 +124,26 @@ function Parser:parse_pipeline()
   local left = self:parse_logical()
 
   while self:peek().type == "PIPE" do
-    self:advance() -- consume |>
+    self:advance()
     local right = self:parse_call()
 
     if right.type == "call" then
-      table.insert(right.args, 1, left)
+      local has_placeholder = false
+      for _, arg in ipairs(right.args) do
+        if arg.type == "placeholder" then
+          has_placeholder = true
+          break
+        end
+      end
+      if has_placeholder then
+        for i, arg in ipairs(right.args) do
+          if arg.type == "placeholder" then
+            right.args[i] = left
+          end
+        end
+      else
+        table.insert(right.args, 1, left)
+      end
       left = right
     elseif right.type == "ident" then
       left = { type = "call", callee = right.name, args = { left } }
@@ -296,6 +311,9 @@ function Parser:parse_primary()
     return self:parse_list_constructor()
   elseif tok.type == "LBRACE" then
     return self:parse_map_constructor()
+  elseif tok.type == "UNDERSCORE" then
+    self:advance()
+    return { type = "placeholder" }
   else
     error("Unexpected token: " .. tok.type .. " (" .. tostring(tok.value) .. ")")
   end
