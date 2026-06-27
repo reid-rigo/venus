@@ -48,20 +48,27 @@ print(add(2, 3))                    -- 5
 
 The last expression in a function body is returned implicitly.
 
-### Table literals
+### Lists (`[]`)
 
 ```venus
-let t = {}                      -- empty table
-let t = {1, 2, 3}              -- list
-let t = {x = 1, y = 2}         -- record
-let t = {1, key = "val"}       -- mixed
+let t = []                    -- empty list
+let t = [1 2 3]              -- space-separated values
+let t = [1 [2 3]]            -- nested
 ```
 
-Tables can appear in pipelines, calls, and function bodies.
+### Maps (`{}`)
+
+```venus
+let m = {}                    -- empty map
+let m = { "x" 1 "y" 2 }      -- string keys with values
+let m = { x 10 }             -- identifier key (same as "x")
+```
+
+Map keys are always literal strings — identifier keys are not variable lookups.
 
 ### Literals & Operators
 
-Numbers, strings (`"` or `'`), `+`, `-`, `*`, `/`, `( )`, member access (`.`), function calls, table literals (`{ }`), comments (`--`).
+Numbers, strings (`"` or `'`), `+`, `-`, `*`, `/`, `( )`, member access (`.`), function calls, list literals (`[ ]`), map literals (`{ }`), comments (`--`).
 
 ## Project Structure
 

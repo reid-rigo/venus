@@ -20,6 +20,8 @@ local Token = {
   FUN    = "FUN",
   LBRACE = "LBRACE",
   RBRACE = "RBRACE",
+  LBRACKET = "LBRACKET",
+  RBRACKET = "RBRACKET",
   EOF    = "EOF",
 }
 Lexer.Token = Token
@@ -152,6 +154,12 @@ function Lexer:tokenize()
     elseif c == "}" then
       self:advance()
       table.insert(self.tokens, { type = Token.RBRACE, value = "}" })
+    elseif c == "[" then
+      self:advance()
+      table.insert(self.tokens, { type = Token.LBRACKET, value = "[" })
+    elseif c == "]" then
+      self:advance()
+      table.insert(self.tokens, { type = Token.RBRACKET, value = "]" })
     elseif c == "." then
       if c2 and is_digit(c2) then
         local num = self:read_number()

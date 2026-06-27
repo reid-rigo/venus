@@ -1,47 +1,42 @@
 local compile = require("test.util").compile
 
 return {
-  name = "table",
+  name = "map",
   tests = {
     {
-      name = "empty table",
-      input = "let t = {}",
-      expected = "local t = {  }",
+      name = "empty map",
+      input = "let m = {}",
+      expected = "local m = {  }",
     },
     {
-      name = "list table",
-      input = "let t = {1, 2, 3}",
-      expected = "local t = { 1, 2, 3 }",
+      name = "map with string keys",
+      input = 'let m = { "x" 1 "y" 2 }',
+      expected = 'local m = { ["x"] = 1, ["y"] = 2 }',
     },
     {
-      name = "record table",
-      input = "let t = {x = 1, y = 2}",
-      expected = "local t = { x = 1, y = 2 }",
-    },
-    {
-      name = "mixed table",
-      input = "let t = {1, key = 2}",
-      expected = "local t = { 1, key = 2 }",
-    },
-    {
-      name = "table as expression",
+      name = "map as expression",
       input = "{} |> print",
       expected = "print({  })",
     },
     {
-      name = "table in pipeline",
-      input = "{1, 2} |> table.concat(3)",
-      expected = "table.concat({ 1, 2 }, 3)",
+      name = "map with expressions",
+      input = 'let m = { "a" 1 + 2 }',
+      expected = 'local m = { ["a"] = (1 + 2) }',
     },
     {
-      name = "nested table",
-      input = "let t = {1, {2, 3}}",
-      expected = "local t = { 1, { 2, 3 } }",
+      name = "map in pipeline",
+      input = '{ "key" 42 } |> print',
+      expected = 'print({ ["key"] = 42 })',
     },
     {
-      name = "table with expressions",
-      input = "let t = {1 + 2, 3 * 4}",
-      expected = "local t = { (1 + 2), (3 * 4) }",
+      name = "map with identifier key",
+      input = "let m = { a 1 }",
+      expected = 'local m = { ["a"] = 1 }',
+    },
+    {
+      name = "map with multiple keys",
+      input = 'let m = { "a" 1 "b" 2 "c" 3 }',
+      expected = 'local m = { ["a"] = 1, ["b"] = 2, ["c"] = 3 }',
     },
   },
 }

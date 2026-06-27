@@ -234,39 +234,47 @@ function Parser:parse_call()
   return expr
 end
 
--- table_field := IDENT "=" expression | expression
-function Parser:parse_table_field()
+-- list_constructor := "[" expression* "]"
+function Parser:parse_list_constructor()
+  self:expect("LBRACKET")
+  local values = {}
   self:skip_newlines()
-  if self:peek().type == "IDENT" and self:peek(1).type == "EQ" then
-    local key = self:advance().value
-    self:advance()
-    local value = self:parse_expression()
-    return { type = "field", key = key, value = value }
-  else
-    local value = self:parse_expression()
-    return { type = "field", key = nil, value = value }
+  while self:peek().type ~= "RBRACKET" and self:peek().type ~= "EOF" do
+    table.insert(values, self:parse_expression())
+    self:skip_newlines()
   end
+  self:expect("RBRACKET")
+  return { type = "list", values = values }
 end
 
--- table_constructor := "{" table_field? ("," table_field)* "}"
-function Parser:parse_table_constructor()
+-- map_constructor := "{" (STRING | IDENT expression)* "}"
+function Parser:parse_map_constructor()
   self:expect("LBRACE")
   local fields = {}
   self:skip_newlines()
-  if self:peek().type ~= "RBRACE" then
-    table.insert(fields, self:parse_table_field())
-    while self:peek().type == "COMMA" do
-      self:advance()
+  while self:peek().type ~= "RBRACE" and self:peek().type ~= "EOF" do
+    local tok = self:peek()
+    if tok.type == "STRING" then
+      local raw = self:advance().value
+      local key = raw:sub(2, -2)
       self:skip_newlines()
-      if self:peek().type == "RBRACE" then break end
-      table.insert(fields, self:parse_table_field())
+      local value = self:parse_expression()
+      table.insert(fields, { type = "field", key = key, value = value })
+    elseif tok.type == "IDENT" then
+      local key = self:advance().value
+      self:skip_newlines()
+      local value = self:parse_expression()
+      table.insert(fields, { type = "field", key = key, value = value })
+    else
+      error("Expected string key in map literal but got " .. tok.type)
     end
+    self:skip_newlines()
   end
   self:expect("RBRACE")
   return { type = "table", fields = fields }
 end
 
--- primary := NUMBER | STRING | IDENT | "(" expression ")" | table_constructor
+-- primary := NUMBER | STRING | IDENT | "(" expression ")" | list_constructor | map_constructor
 function Parser:parse_primary()
   local tok = self:peek()
 
@@ -284,8 +292,10 @@ function Parser:parse_primary()
     local expr = self:parse_expression()
     self:expect("RPAREN")
     return expr
+  elseif tok.type == "LBRACKET" then
+    return self:parse_list_constructor()
   elseif tok.type == "LBRACE" then
-    return self:parse_table_constructor()
+    return self:parse_map_constructor()
   else
     error("Unexpected token: " .. tok.type .. " (" .. tostring(tok.value) .. ")")
   end
