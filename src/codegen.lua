@@ -83,7 +83,7 @@ function Codegen:emit_expr(node)
     self.output = saved_output
     self.indent = saved_indent
     return result
-  elseif node.type == "fun" then
+  elseif node.type == "fn" then
     self:emit("local function " .. node.name .. "(" .. table.concat(node.params, ", ") .. ")")
     self.indent = self.indent + 1
     for i, stmt in ipairs(node.body) do

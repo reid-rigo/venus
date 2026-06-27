@@ -17,7 +17,7 @@ local Token = {
   DOT    = "DOT",
   NEWLINE = "NEWLINE",
   LET    = "LET",
-  FUN    = "FUN",
+  FN     = "FN",
   LBRACE = "LBRACE",
   RBRACE = "RBRACE",
   LBRACKET = "LBRACKET",
@@ -41,7 +41,7 @@ end
 
 local keywords = {
   ["let"] = "LET",
-  ["fun"] = "FUN",
+  ["fn"] = "FN",
 }
 
 function Lexer.new(source)

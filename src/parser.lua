@@ -52,7 +52,7 @@ end
 
 -- statement := fun_decl | let_decl | expression
 function Parser:parse_statement()
-  if self:peek().type == "FUN" and self:peek(1).type == "IDENT" then
+  if self:peek().type == "FN" and self:peek(1).type == "IDENT" then
     return self:parse_fun_decl()
   elseif self:peek().type == "LET" then
     return self:parse_let_decl()
@@ -60,9 +60,9 @@ function Parser:parse_statement()
   return self:parse_expression()
 end
 
--- fun_decl := "fun" IDENT "(" params? ")" "{" body "}"
+-- fun_decl := "fn" IDENT "(" params? ")" "{" body "}"
 function Parser:parse_fun_decl()
-  self:expect("FUN")
+  self:expect("FN")
   local name = self:expect("IDENT").value
   self:expect("LPAREN")
   local params = {}
@@ -84,12 +84,12 @@ function Parser:parse_fun_decl()
     self:skip_newlines()
   end
   self:expect("RBRACE")
-  return { type = "fun", name = name, params = params, body = body }
+  return { type = "fn", name = name, params = params, body = body }
 end
 
--- lambda := "fun" "(" params? ")" "{" body "}"
+-- lambda := "fn" "(" params? ")" "{" body "}"
 function Parser:parse_lambda()
-  self:expect("FUN")
+  self:expect("FN")
   self:expect("LPAREN")
   local params = {}
   if self:peek().type ~= "RPAREN" then
@@ -335,7 +335,7 @@ function Parser:parse_primary()
     local expr = self:parse_expression()
     self:expect("RPAREN")
     return expr
-  elseif tok.type == "FUN" then
+  elseif tok.type == "FN" then
     return self:parse_lambda()
   elseif tok.type == "LBRACKET" then
     return self:parse_list_constructor()

@@ -42,11 +42,11 @@ let y = 2 |> math.pow(3)
 ### Functions
 
 ```venus
-fun add(a, b) {
+fn add(a, b) {
   a + b
 }
 
-fun greet(name) {
+fn greet(name) {
   "hello " .. name
 }
 
@@ -58,9 +58,9 @@ The last expression in a function body is returned implicitly.
 ### Inline functions (lambdas)
 
 ```venus
-let double = fun(x) { x * 2 }
-map([1 2 3], fun(x) { x * 2 })
-5 |> fun(x) { x * 2 }
+let double = fn(x) { x * 2 }
+map([1 2 3], fn(x) { x * 2 })
+5 |> fn(x) { x * 2 }
 ```
 
 Same syntax as named functions — just omit the name.
