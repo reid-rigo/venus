@@ -1,18 +1,12 @@
 [tools]
 luajit = "latest"
 
-[vars]
-luajit_dir = "{{env.HOME}}/.local/share/mise/installs/luajit/latest"
-cflags = "-I{{vars.luajit_dir}}/include/luajit-2.1 -std=c99 -Wall -Wextra -O2"
-ldflags = "-L{{vars.luajit_dir}}/lib -lluajit-5.1 -lm -ldl"
-
 [tasks.build]
 description = "Compile Venus interpreter binary (bin/vs)"
-run = "gcc {{vars.cflags}} -o bin/vs src/main.c {{vars.ldflags}}"
 
 [tasks.clean]
 description = "Remove build artifacts"
-run = "rm -rf bin/vs"
+run = "rm -f bin/vs"
 
 [tasks.test]
 description = "Run the Venus test suite"
