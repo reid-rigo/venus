@@ -60,6 +60,29 @@ function Codegen:emit_expr(node)
     else
       return "local " .. lhs
     end
+  elseif node.type == "lambda" then
+    local saved_output = self.output
+    self.output = {}
+    local saved_indent = self.indent
+
+    self:emit("function(" .. table.concat(node.params, ", ") .. ")")
+    self.indent = self.indent + 1
+    for i, stmt in ipairs(node.body) do
+      local line = self:emit_expr(stmt)
+      if line ~= "" then
+        if i == #node.body and stmt.type ~= "let" then
+          line = "return " .. line
+        end
+        self:emit(line)
+      end
+    end
+    self.indent = self.indent - 1
+    self:emit("end")
+
+    local result = table.concat(self.output, "\n")
+    self.output = saved_output
+    self.indent = saved_indent
+    return result
   elseif node.type == "fun" then
     self:emit("local function " .. node.name .. "(" .. table.concat(node.params, ", ") .. ")")
     self.indent = self.indent + 1

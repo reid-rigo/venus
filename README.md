@@ -55,6 +55,16 @@ print(add(2, 3))                    -- 5
 
 The last expression in a function body is returned implicitly.
 
+### Inline functions (lambdas)
+
+```venus
+let double = fun(x) { x * 2 }
+map([1 2 3], fun(x) { x * 2 })
+5 |> fun(x) { x * 2 }
+```
+
+Same syntax as named functions — just omit the name.
+
 ### Lists (`[]`)
 
 ```venus

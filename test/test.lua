@@ -7,6 +7,7 @@ local test_files = {
   "test_fun",
   "test_table",
   "test_list",
+  "test_lambda",
 }
 
 local passed = 0

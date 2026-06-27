@@ -52,7 +52,7 @@ end
 
 -- statement := fun_decl | let_decl | expression
 function Parser:parse_statement()
-  if self:peek().type == "FUN" then
+  if self:peek().type == "FUN" and self:peek(1).type == "IDENT" then
     return self:parse_fun_decl()
   elseif self:peek().type == "LET" then
     return self:parse_let_decl()
@@ -85,6 +85,32 @@ function Parser:parse_fun_decl()
   end
   self:expect("RBRACE")
   return { type = "fun", name = name, params = params, body = body }
+end
+
+-- lambda := "fun" "(" params? ")" "{" body "}"
+function Parser:parse_lambda()
+  self:expect("FUN")
+  self:expect("LPAREN")
+  local params = {}
+  if self:peek().type ~= "RPAREN" then
+    table.insert(params, self:expect("IDENT").value)
+    while self:peek().type == "COMMA" do
+      self:advance()
+      table.insert(params, self:expect("IDENT").value)
+    end
+  end
+  self:expect("RPAREN")
+  self:skip_newlines()
+  self:expect("LBRACE")
+  self:skip_newlines()
+  local body = {}
+  while self:peek().type ~= "RBRACE" and self:peek().type ~= "EOF" do
+    local stmt = self:parse_statement()
+    table.insert(body, stmt)
+    self:skip_newlines()
+  end
+  self:expect("RBRACE")
+  return { type = "lambda", params = params, body = body }
 end
 
 -- let_decl := "let" IDENT ("=" expression)?
@@ -147,6 +173,8 @@ function Parser:parse_pipeline()
       left = right
     elseif right.type == "ident" then
       left = { type = "call", callee = right.name, args = { left } }
+    elseif right.type == "lambda" then
+      left = { type = "call", callee = right, args = { left } }
     else
       error("Pipeline right-hand side must be a function call")
     end
@@ -307,6 +335,8 @@ function Parser:parse_primary()
     local expr = self:parse_expression()
     self:expect("RPAREN")
     return expr
+  elseif tok.type == "FUN" then
+    return self:parse_lambda()
   elseif tok.type == "LBRACKET" then
     return self:parse_list_constructor()
   elseif tok.type == "LBRACE" then
