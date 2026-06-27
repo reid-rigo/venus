@@ -1,6 +1,40 @@
 local Lexer = require("src.lexer")
 local Parser = require("src.parser")
 local Codegen = require("src.codegen")
+List = require("src.list")
+Map = require("src.map")
+
+local orig_tostring = tostring
+_G.tostring = function(v)
+  if type(v) == "table" then
+    local n = #v
+    if n > 0 then
+      local parts = {}
+      for i = 1, n do
+        parts[i] = tostring(v[i])
+      end
+      return "[" .. table.concat(parts, " ") .. "]"
+    end
+    local has_keys = false
+    for _ in pairs(v) do
+      has_keys = true
+      break
+    end
+    if not has_keys then
+      return "[]"
+    end
+    local parts = {}
+    for k in pairs(v) do
+      if type(k) == "string" then
+        table.insert(parts, k .. ": " .. tostring(v[k]))
+      else
+        table.insert(parts, tostring(k) .. ": " .. tostring(v[k]))
+      end
+    end
+    return "{" .. table.concat(parts, " ") .. "}"
+  end
+  return orig_tostring(v)
+end
 
 local function compile(source)
   local lexer = Lexer.new(source)
