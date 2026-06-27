@@ -5,6 +5,7 @@ local test_files = {
   "test_pipeline",
   "test_let",
   "test_fun",
+  "test_table",
 }
 
 local passed = 0

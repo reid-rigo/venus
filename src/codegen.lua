@@ -75,6 +75,16 @@ function Codegen:emit_expr(node)
     self.indent = self.indent - 1
     self:emit("end")
     return ""
+  elseif node.type == "table" then
+    local parts = {}
+    for _, field in ipairs(node.fields) do
+      if field.key then
+        table.insert(parts, field.key .. " = " .. self:emit_expr(field.value))
+      else
+        table.insert(parts, self:emit_expr(field.value))
+      end
+    end
+    return "{ " .. table.concat(parts, ", ") .. " }"
   elseif node.type == "program" then
     for _, stmt in ipairs(node.body) do
       local line = self:emit_expr(stmt)

@@ -234,7 +234,39 @@ function Parser:parse_call()
   return expr
 end
 
--- primary := NUMBER | STRING | IDENT | "(" expression ")"
+-- table_field := IDENT "=" expression | expression
+function Parser:parse_table_field()
+  self:skip_newlines()
+  if self:peek().type == "IDENT" and self:peek(1).type == "EQ" then
+    local key = self:advance().value
+    self:advance()
+    local value = self:parse_expression()
+    return { type = "field", key = key, value = value }
+  else
+    local value = self:parse_expression()
+    return { type = "field", key = nil, value = value }
+  end
+end
+
+-- table_constructor := "{" table_field? ("," table_field)* "}"
+function Parser:parse_table_constructor()
+  self:expect("LBRACE")
+  local fields = {}
+  self:skip_newlines()
+  if self:peek().type ~= "RBRACE" then
+    table.insert(fields, self:parse_table_field())
+    while self:peek().type == "COMMA" do
+      self:advance()
+      self:skip_newlines()
+      if self:peek().type == "RBRACE" then break end
+      table.insert(fields, self:parse_table_field())
+    end
+  end
+  self:expect("RBRACE")
+  return { type = "table", fields = fields }
+end
+
+-- primary := NUMBER | STRING | IDENT | "(" expression ")" | table_constructor
 function Parser:parse_primary()
   local tok = self:peek()
 
@@ -252,6 +284,8 @@ function Parser:parse_primary()
     local expr = self:parse_expression()
     self:expect("RPAREN")
     return expr
+  elseif tok.type == "LBRACE" then
+    return self:parse_table_constructor()
   else
     error("Unexpected token: " .. tok.type .. " (" .. tostring(tok.value) .. ")")
   end

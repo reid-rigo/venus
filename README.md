@@ -48,9 +48,20 @@ print(add(2, 3))                    -- 5
 
 The last expression in a function body is returned implicitly.
 
+### Table literals
+
+```venus
+let t = {}                      -- empty table
+let t = {1, 2, 3}              -- list
+let t = {x = 1, y = 2}         -- record
+let t = {1, key = "val"}       -- mixed
+```
+
+Tables can appear in pipelines, calls, and function bodies.
+
 ### Literals & Operators
 
-Numbers, strings (`"` or `'`), `+`, `-`, `*`, `/`, `( )`, member access (`.`), function calls, comments (`--`).
+Numbers, strings (`"` or `'`), `+`, `-`, `*`, `/`, `( )`, member access (`.`), function calls, table literals (`{ }`), comments (`--`).
 
 ## Project Structure
 
