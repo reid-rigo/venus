@@ -219,13 +219,13 @@
                     (cg-emit-fn-body p (ast-ref node 'body) #t)
                     (cg-indent! -1)
                     (for-each
-                     (lambda (elif)
+                     (lambda (ei)
                        (cg-emit p (string-append "elseif "
-                                                 (cg-emit-expr p (ast-ref elif 'condition)) " then"))
+                                                 (cg-emit-expr p (ast-ref ei 'condition)) " then"))
                        (cg-indent! 1)
-                       (cg-emit-fn-body p (ast-ref elif 'body) #t)
+                       (cg-emit-fn-body p (ast-ref ei 'body) #t)
                        (cg-indent! -1))
-                     (ast-ref node 'elifs))
+                     (ast-ref node 'else-ifs))
                     (when (ast-ref node 'else-body)
                       (cg-emit p "else")
                       (cg-indent! 1)

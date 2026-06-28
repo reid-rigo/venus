@@ -143,13 +143,13 @@ function Parser:parse_if_expr()
   self:skip_newlines()
   local body = self:parse_block()
 
-  local elifs = {}
+  local else_ifs = {}
   while self:peek().type == "ELSE" and self:peek(1).type == "IF" do
     self:advance()
     self:advance()
-    local elif_condition = self:parse_expression()
+    local else_if_condition = self:parse_expression()
     self:skip_newlines()
-    table.insert(elifs, { condition = elif_condition, body = self:parse_block() })
+    table.insert(else_ifs, { condition = else_if_condition, body = self:parse_block() })
   end
 
   local else_body = nil
@@ -159,7 +159,7 @@ function Parser:parse_if_expr()
     else_body = self:parse_block()
   end
 
-  return { type = "if", condition = condition, body = body, elifs = elifs, else_body = else_body }
+  return { type = "if", condition = condition, body = body, else_ifs = else_ifs, else_body = else_body }
 end
 
 -- let_decl := "let" IDENT ("=" expression)?

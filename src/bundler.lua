@@ -220,10 +220,10 @@ function Bundler.collect_modules(entry_file)
           walk_ast(child)
         end
       end
-      if node.elifs then
-        for _, elif in ipairs(node.elifs) do
-          walk_ast(elif.condition)
-          for _, child in ipairs(elif.body) do
+      if node.else_ifs then
+        for _, ei in ipairs(node.else_ifs) do
+          walk_ast(ei.condition)
+          for _, child in ipairs(ei.body) do
             walk_ast(child)
           end
         end

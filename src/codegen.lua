@@ -200,10 +200,10 @@ function Codegen:emit_expr(node)
     self:emit_fn_body(node.body, true)
     self.indent = self.indent - 1
 
-    for _, elif in ipairs(node.elifs) do
-      self:emit("elseif " .. self:emit_expr(elif.condition) .. " then")
+    for _, ei in ipairs(node.else_ifs) do
+      self:emit("elseif " .. self:emit_expr(ei.condition) .. " then")
       self.indent = self.indent + 1
-      self:emit_fn_body(elif.body, true)
+      self:emit_fn_body(ei.body, true)
       self.indent = self.indent - 1
     end
 
