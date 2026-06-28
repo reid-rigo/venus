@@ -109,6 +109,9 @@ function Codegen:emit_expr(node)
     return "(" .. left .. " " .. op .. " " .. right .. ")"
   elseif node.type == "unary" then
     local operand = self:emit_expr(node.operand)
+    if node.op == "!" then
+      return "(not " .. operand .. ")"
+    end
     return "(-" .. operand .. ")"
   elseif node.type == "call" then
     local callee

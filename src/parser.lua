@@ -286,14 +286,16 @@ function Parser:parse_multiplication()
   return left
 end
 
--- unary := ("+" | "-" | "not") unary | call
+-- unary := ("+" | "-" | "!") unary | call
 function Parser:parse_unary()
   local tok = self:peek()
-  if tok.type == "MINUS" or tok.type == "PLUS" then
+  if tok.type == "MINUS" or tok.type == "PLUS" or tok.type == "BANG" then
     self:advance()
     local operand = self:parse_unary()
     if tok.type == "MINUS" then
       return { type = "unary", op = "-", operand = operand }
+    elseif tok.type == "BANG" then
+      return { type = "unary", op = "!", operand = operand }
     end
     return operand
   end

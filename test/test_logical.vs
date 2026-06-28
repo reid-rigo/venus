@@ -19,6 +19,10 @@ test("ge also", fn() { 2 >= 1 })
 test("lt false", fn() { (1 < 1) == false })
 test("gt false", fn() { (1 > 1) == false })
 
+test("not true", fn() { !true == false })
+test("not false", fn() { !false == true })
+test("not not true", fn() { !!true == true })
+
 test("nil literal", fn() { nil == nil })
 test("nil eq nil", fn() { nil == nil })
 test("nil not eq false", fn() { (nil == false) == false })

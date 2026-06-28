@@ -15,6 +15,7 @@ local Token = {
   EQ     = "EQ",
   EQEQ   = "EQEQ",
   BANGEQ = "BANGEQ",
+  BANG    = "BANG",
   LT     = "LT",
   GT     = "GT",
   LE     = "LE",
@@ -298,6 +299,9 @@ function Lexer:tokenize()
     elseif c == "!" and c2 == "=" then
       self:advance(); self:advance()
       table.insert(self.tokens, { type = Token.BANGEQ, value = "!=" })
+    elseif c == "!" then
+      self:advance()
+      table.insert(self.tokens, { type = Token.BANG, value = "!" })
     elseif c == "<" and c2 == "=" then
       self:advance(); self:advance()
       table.insert(self.tokens, { type = Token.LE, value = "<=" })
