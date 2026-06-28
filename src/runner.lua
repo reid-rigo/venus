@@ -1,4 +1,4 @@
-local util = require("test.util")
+local util = require("src.runner_util")
 
 local M = {}
 

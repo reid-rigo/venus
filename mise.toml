@@ -9,8 +9,8 @@ description = "Remove build artifacts"
 run = "rm -f bin/vs"
 
 [tasks.test]
-description = "Run the Venus test suite"
-run = "luajit test/run.lua"
+description = "Build and run the Venus test suite"
+run = "mise run build -- --if-changed && ./bin/vs test/run_all.vs"
 
 [tasks.repl]
 description = "Start the Venus REPL"

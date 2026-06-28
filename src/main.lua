@@ -3,6 +3,8 @@ local Parser = require("src.parser")
 local Codegen = require("src.codegen")
 List = require("src.list")
 Table = require("src.table")
+String = require("src.string")
+Math = require("src.math")
 
 local orig_tostring = tostring
 _G.tostring = function(v)
