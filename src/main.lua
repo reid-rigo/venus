@@ -110,6 +110,8 @@ local function usage()
   io.stderr:write("Options:\n")
   io.stderr:write("  -c           Print compiled Lua only (do not run)\n")
   io.stderr:write("  -e <code>    Execute Venus code from string\n")
+  io.stderr:write("  --bundle     Bundle into standalone executable (requires -o)\n")
+  io.stderr:write("  -o <path>    Output path for --bundle\n")
   io.stderr:write("  --help       Show this help\n")
   os.exit(1)
 end
@@ -118,6 +120,8 @@ local args = arg or {}
 local filename
 local compile_only = false
 local inline_code = false
+local bundle_mode = false
+local output_path
 
 local i = 1
 while i <= #args do
@@ -128,6 +132,12 @@ while i <= #args do
     i = i + 1
     inline_code = args[i]
     if not inline_code then usage() end
+  elseif a == "--bundle" then
+    bundle_mode = true
+  elseif a == "-o" then
+    i = i + 1
+    output_path = args[i]
+    if not output_path then usage() end
   elseif a == "--help" then
     usage()
   elseif a:sub(1, 1) == "-" then
@@ -139,7 +149,21 @@ while i <= #args do
   i = i + 1
 end
 
-if inline_code then
+if bundle_mode then
+  if not filename then
+    io.stderr:write("Error: --bundle requires an input file\n")
+    usage()
+  end
+  if not output_path then
+    output_path = filename:gsub(".*/", ""):gsub("%.vs$", "")
+  end
+  local bundler = require("src.bundler")
+  local ok, err = pcall(bundler.bundle, filename, output_path)
+  if not ok then
+    io.stderr:write("Bundle error: " .. tostring(err) .. "\n")
+    os.exit(1)
+  end
+elseif inline_code then
   local ok, lua_code = pcall(compile, inline_code)
   if not ok then
     io.stderr:write("Compile error: " .. lua_code .. "\n")

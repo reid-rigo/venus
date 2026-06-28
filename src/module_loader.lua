@@ -68,4 +68,8 @@ function M.cache_set(path, value)
   cache[path] = value
 end
 
+function M.resolve_path(path)
+  return resolve_path(path)
+end
+
 return M
