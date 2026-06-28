@@ -99,7 +99,7 @@ function Lexer:skip_whitespace()
     local c = self:peek()
     if c == " " or c == "\t" or c == "\r" then
       self:advance()
-    elseif (c == "-" and self:peek(1) == "-") or (c == "/" and self:peek(1) == "/") then
+    elseif c == "/" and self:peek(1) == "/" then
       while self.pos <= self.len do
         if self:advance() == "\n" then break end
       end
@@ -129,6 +129,20 @@ function Lexer:read_string()
     elseif c == quote then
       break
     end
+  end
+  return self.source:sub(start, self.pos - 1)
+end
+
+function Lexer:read_multiline_string()
+  local start = self.pos
+  self:advance(); self:advance(); self:advance()
+  while self.pos <= self.len do
+    local c = self:peek()
+    if c == '"' and self:peek(1) == '"' and self:peek(2) == '"' then
+      self:advance(); self:advance(); self:advance()
+      break
+    end
+    self:advance()
   end
   return self.source:sub(start, self.pos - 1)
 end
@@ -221,6 +235,9 @@ function Lexer:tokenize()
         self:advance()
         table.insert(self.tokens, { type = Token.DOT, value = "." })
       end
+    elseif c == '"' and c2 == '"' and self:peek(2) == '"' then
+      local str = self:read_multiline_string()
+      table.insert(self.tokens, { type = Token.STRING, value = str })
     elseif c == '"' or c == "'" then
       local str = self:read_string()
       table.insert(self.tokens, { type = Token.STRING, value = str })

@@ -19,8 +19,8 @@ luajit test/run.lua  # run test suite
 ### Pipeline operator (`|>`)
 
 ```venus
-2 |> math.pow(3) |> print           -- print(math.pow(2, 3))
-"hello" |> string.upper |> print     -- print(string.upper("hello"))
+2 |> math.pow(3) |> print           // print(math.pow(2, 3))
+"hello" |> string.upper |> print     // print(string.upper("hello"))
 ```
 
 The left-hand value is inserted as the first argument of the right-hand call.
@@ -28,8 +28,8 @@ The left-hand value is inserted as the first argument of the right-hand call.
 Use `_` to explicitly place the value in a specific position:
 
 ```venus
-2 |> math.pow(3, _)                 -- math.pow(3, 2)
-2 |> math.pow(_, 3)                 -- math.pow(2, 3) -- same as default
+2 |> math.pow(3, _)                 // math.pow(3, 2)
+2 |> math.pow(_, 3)                 // math.pow(2, 3) // same as default
 ```
 
 ### `let` declarations
@@ -51,7 +51,7 @@ fn greet(name) {
   "hello " + name
 }
 
-print(add(2, 3))                    -- 5
+print(add(2, 3))                    // 5
 ```
 
 The last expression in a function body is returned implicitly.
@@ -65,7 +65,7 @@ fn fib(0) { 0 }
 fn fib(1) { 1 }
 fn fib(n) { fib(n-1) + fib(n-2) }
 
-print(fib(10))                     -- 55
+print(fib(10))                     // 55
 ```
 
 Literal params (`NUMBER`, `STRING`) are matched against the argument. Identifier params match any value and bind the argument to the name. The first matching overload wins. Non-literal overloads act as a fallback.
@@ -85,9 +85,9 @@ Same syntax as named functions — just omit the name.
 ### Lists (`[]`)
 
 ```venus
-let t = []                    -- empty list
-let t = [1, 2, 3]            -- comma-separated values
-let t = [1 [2 3]]            -- spaces also work (backward compat)
+let t = []                    // empty list
+let t = [1, 2, 3]            // comma-separated values
+let t = [1 [2 3]]            // spaces also work (backward compat)
 ```
 
 ### Tables (`{}`)
@@ -95,17 +95,17 @@ let t = [1 [2 3]]            -- spaces also work (backward compat)
 Tables are a flexible data structure — they can be maps, objects, or both:
 
 ```venus
-let t = {}                    -- empty table
-let t = { "x" -> 1, "y" -> 2 }  -- string keys with values (map-like)
-let t = { x -> 10 }            -- identifier key (same as "x")
+let t = {}                    // empty table
+let t = { "x" -> 1, "y" -> 2 }  // string keys with values (map-like)
+let t = { x -> 10 }            // identifier key (same as "x")
 ```
 
 Use `.` for field access: `t.x` retrieves the value at key `"x"`. Use `?.` for safe navigation that returns `nil` instead of erroring when the left side is `nil`:
 
 ```venus
 let t = { x -> 10 }
-t?.x       -- 10
-t?.z       -- nil (no error)
+t?.x       // 10
+t?.z       // nil (no error)
 ```
 
 Table keys are always literal strings — identifier keys are not variable lookups. You can store functions in tables to create objects.
@@ -144,8 +144,8 @@ x == 0 or x == 1
 match x {
   1 -> "one"
   2 -> "two"
-  _ -> "other"          -- wildcard fallback
-  y -> y                -- or bind to a variable
+  _ -> "other"          // wildcard fallback
+  y -> y                // or bind to a variable
 }
 ```
 
@@ -156,15 +156,15 @@ Patterns: literal numbers/strings, `_` wildcard, or a variable binding. Arms are
 Venus modules use Lua's `require` for importing and a `return` statement for exporting:
 
 ```venus
-import "math"                    -- side-effect only (no return value)
-let m = import "math"            -- assign the returned module
-print(m.pi)                      -- 3.14159
+import "math"                    // side-effect only (no return value)
+let m = import "math"            // assign the returned module
+print(m.pi)                      // 3.14159
 ```
 
 Export a value to make a file a module:
 
 ```venus
--- math_util.vs
+// math_util.vs
 fn add(a, b) { a + b }
 fn sub(a, b) { a - b }
 
@@ -172,9 +172,9 @@ export { add -> add, sub -> sub }
 ```
 
 ```venus
--- main.vs
+// main.vs
 let util = import "math_util"
-print(util.add(2, 3))            -- 5
+print(util.add(2, 3))            // 5
 ```
 
 `export` must be the last statement in the file (Lua requires `return` to be terminal). Use `import` anywhere an expression is expected.
@@ -182,14 +182,24 @@ print(util.add(2, 3))            -- 5
 ### String Concatenation (`+`)
 
 ```venus
-print("hello " + "world")         -- hello world
+print("hello " + "world")         // hello world
 ```
 
 `+` has addition-level precedence (higher than comparison, lower than unary).
 
+### Multiline Strings (`"""`)
+
+```venus
+let s = """hello
+world"""
+print(s)                            // hello\nworld
+```
+
+Triple-quoted strings can span multiple lines. Open and close with exactly three double-quote characters. The content is emitted as Lua's `[[...]]` long bracket syntax.
+
 ### Literals & Operators
 
-Numbers, strings (`"` or `'`), `nil`, `true`, `false`, `-`, `*`, `/`, `+` (string concat), `==`, `!=`, `<`, `>`, `<=`, `>=`, `and`, `or`, `( )`, member access (`.`), safe navigation (`?.`), function calls, list literals (`[ ]`), table literals (`{ }`), `if`/`else`, match expressions, comments (`//` or `--`).
+Numbers, strings (`"` or `'` or `"""` multiline), `nil`, `true`, `false`, `-`, `*`, `/`, `+` (string concat), `==`, `!=`, `<`, `>`, `<=`, `>=`, `and`, `or`, `( )`, member access (`.`), safe navigation (`?.`), function calls, list literals (`[ ]`), table literals (`{ }`), `if`/`else`, match expressions, comments (`//`).
 
 `nil` and `false` are falsy in conditionals; everything else is truthy.
 
@@ -197,15 +207,15 @@ Numbers, strings (`"` or `'`), `nil`, `true`, `false`, `-`, `*`, `/`, `+` (strin
 
 ```
 src/
-  main.c     -- C harness (loads LuaJIT, runs main.lua)
-  main.lua   -- CLI: flags, compile, run, REPL
-  lexer.lua  -- tokenizer
-  parser.lua -- recursive-descent parser
-  codegen.lua -- code generator
+  main.c     // C harness (loads LuaJIT, runs main.lua)
+  main.lua   // CLI: flags, compile, run, REPL
+  lexer.lua  // tokenizer
+  parser.lua // recursive-descent parser
+  codegen.lua // code generator
 test/
-  run.lua      -- test runner (discovers and runs .vs test files)
-  runner.lua   -- test framework (suite execution, pass/fail reporting)
-  compile.lua  -- compile() and check() helpers for Venus tests
-  util.lua     -- shared compile helper (used by compile.lua)
-  test_*.vs    -- test suites written in Venus
+  run.lua      // test runner (discovers and runs .vs test files)
+  runner.lua   // test framework (suite execution, pass/fail reporting)
+  compile.lua  // compile() and check() helpers for Venus tests
+  util.lua     // shared compile helper (used by compile.lua)
+  test_*.vs    // test suites written in Venus
 ```

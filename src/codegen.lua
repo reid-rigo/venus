@@ -74,6 +74,9 @@ function Codegen:emit_expr(node)
   if node.type == "number" then
     return node.value
   elseif node.type == "string" then
+    if node.value:sub(1, 3) == [["""]] then
+      return "[[" .. node.value:sub(4, -4) .. "]]"
+    end
     return node.value
   elseif node.type == "nil" then
     return "nil"
