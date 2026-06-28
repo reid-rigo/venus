@@ -1,4 +1,5 @@
 [tools]
+chezscheme = "latest"
 luajit = "latest"
 
 [tasks.build]
@@ -15,3 +16,39 @@ run = "mise run build -- --if-changed && ./bin/vs test/run_all.vs"
 [tasks.repl]
 description = "Start the Venus REPL"
 run = "luajit src/main.lua"
+
+[tasks.chez-build]
+description = "Build the Chez Scheme backend (bin/vs-chez)"
+run = """
+mkdir -p bin && \
+echo '#!/usr/bin/env scheme --program' > bin/vs-chez && \
+echo '(import (chezscheme))' >> bin/vs-chez && \
+cat src/lexer.ss src/parser.ss src/codegen.ss >> bin/vs-chez && \
+cat >> bin/vs-chez << 'SCHEME'
+
+(define (read-file path)
+  (call-with-input-file path
+    (lambda (port)
+      (let loop ((chars '()))
+        (let ((c (read-char port)))
+          (if (eof-object? c)
+              (list->string (reverse chars))
+              (loop (cons c chars))))))))
+
+(define (main)
+  (let ((args (cdr (command-line))))
+    (cond
+      ((null? args)
+       (display "Usage: vs-chez <file.vs>\\n")
+       (exit 1))
+      (else
+       (let* ((filename (car args))
+              (source (read-file filename))
+              (ast (parse source))
+              (lua-code (codegen ast)))
+         (display lua-code))))))
+
+(main)
+SCHEME
+chmod +x bin/vs-chez
+"""
