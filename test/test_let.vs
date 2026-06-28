@@ -21,9 +21,8 @@ test("let no init", fn() {
   z == expected
 })
 
-test("let used in expr", fn() {
-  let x = "hello "
-  let y = "world"
+test("let used in interpolation", fn() {
+  let x = "hello"
   let expected = "hello world"
-  x + y == expected
+  "#{x} world" == expected
 })

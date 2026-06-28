@@ -23,16 +23,19 @@
         {
           "name": "string.quoted.triple",
           "begin": "\"\"\"",
-          "end": "\"\"\""
+          "end": "\"\"\"",
+          "patterns": [
+            { "name": "string.interpolated", "match": "\\#\\{[^}]*\\}" }
+          ]
         },
         {
           "name": "string.quoted.double",
           "begin": "\"",
           "end": "\"",
-          "patterns": [{
-            "name": "constant.character.escape",
-            "match": "\\\\."
-          }]
+          "patterns": [
+            { "name": "constant.character.escape", "match": "\\\\." },
+            { "name": "string.interpolated", "match": "\\#\\{[^}]*\\}" }
+          ]
         },
         {
           "name": "string.quoted.single",
@@ -88,7 +91,7 @@
         { "name": "keyword.operator", "match": "->" },
         { "name": "keyword.operator", "match": "\\|>" },
         { "name": "keyword.operator", "match": "\\?\\." },
-        { "name": "keyword.operator", "match": "[+\\-*/=]" }
+        { "name": "keyword.operator", "match": "[\\-*/=]" }
       ]
     },
     "punctuation": {

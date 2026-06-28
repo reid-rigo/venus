@@ -119,31 +119,132 @@ function Lexer:read_number()
   return self.source:sub(start, self.pos - 1)
 end
 
+function Lexer:read_interp_expr()
+  local buf = {}
+  local depth = 1
+  while self.pos <= self.len do
+    local c = self:advance()
+    if c == "{" then
+      depth = depth + 1
+      table.insert(buf, c)
+    elseif c == "}" then
+      depth = depth - 1
+      if depth == 0 then break end
+      table.insert(buf, c)
+    elseif c == '"' or c == "'" then
+      table.insert(buf, c)
+      local str_end = c
+      while self.pos <= self.len do
+        local sc = self:advance()
+        table.insert(buf, sc)
+        if sc == "\\" then
+          local esc = self:advance()
+          table.insert(buf, esc or "")
+        elseif sc == str_end then
+          break
+        end
+      end
+    else
+      table.insert(buf, c)
+    end
+  end
+  return table.concat(buf)
+end
+
 function Lexer:read_string()
   local start = self.pos
   local quote = self:advance()
+  if quote == "'" then
+    while self.pos <= self.len do
+      local c = self:advance()
+      if c == "\\" then
+        self:advance()
+      elseif c == quote then
+        break
+      end
+    end
+    return self.source:sub(start, self.pos - 1)
+  end
+
+  local parts = {}
+  local buf = {}
+
+  local function flush()
+    if #buf > 0 then
+      table.insert(parts, { type = "text", value = table.concat(buf) })
+      buf = {}
+    end
+  end
+
   while self.pos <= self.len do
     local c = self:advance()
     if c == "\\" then
+      table.insert(buf, c)
+      local next = self:advance()
+      table.insert(buf, next or "")
+    elseif c == "#" and self:peek() == "{" then
+      flush()
       self:advance()
+      table.insert(parts, { type = "expr", source = self:read_interp_expr() })
     elseif c == quote then
-      break
+      flush()
+      local has_expr = false
+      for _, part in ipairs(parts) do
+        if part.type == "expr" then
+          has_expr = true
+          break
+        end
+      end
+      if has_expr then
+        return { parts = parts }
+      end
+      return self.source:sub(start, self.pos - 1)
+    else
+      table.insert(buf, c)
     end
   end
+
   return self.source:sub(start, self.pos - 1)
 end
 
 function Lexer:read_multiline_string()
   local start = self.pos
   self:advance(); self:advance(); self:advance()
-  while self.pos <= self.len do
-    local c = self:peek()
-    if c == '"' and self:peek(1) == '"' and self:peek(2) == '"' then
-      self:advance(); self:advance(); self:advance()
-      break
+  local parts = {}
+  local buf = {}
+
+  local function flush()
+    if #buf > 0 then
+      table.insert(parts, { type = "text", value = table.concat(buf) })
+      buf = {}
     end
-    self:advance()
   end
+
+  while self.pos <= self.len do
+    local c = self:advance()
+    if c == "#" and self:peek() == "{" then
+      flush()
+      self:advance()
+      table.insert(parts, { type = "expr", source = self:read_interp_expr() })
+    elseif c == '"' and self:peek() == '"' and self:peek(1) == '"' then
+      flush()
+      self:advance(); self:advance()
+      local has_expr = false
+      for _, part in ipairs(parts) do
+        if part.type == "expr" then
+          has_expr = true
+          break
+        end
+      end
+      if has_expr then
+        return { parts = parts }
+      end
+      return self.source:sub(start, self.pos - 1)
+    else
+      table.insert(buf, c)
+    end
+  end
+
   return self.source:sub(start, self.pos - 1)
 end
 

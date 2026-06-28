@@ -16,6 +16,16 @@ luajit test/run.lua  # run test suite
 
 ## Language
 
+### String interpolation
+
+```venus
+let name = "world"
+print("hello #{name}")             // hello world
+print("2 + 2 = #{2 + 2}")           // 2 + 2 = 4
+```
+
+Use `#{expr}` inside double-quoted (`"`) or triple-quoted (`"""`) strings to embed any expression. Single-quoted strings (`'`) are literal — no interpolation.
+
 ### Pipeline operator (`|>`)
 
 ```venus
@@ -48,7 +58,7 @@ fn add(a, b) {
 }
 
 fn greet(name) {
-  "hello " + name
+  "hello #{name}"
 }
 
 print(add(2, 3))                    // 5
@@ -179,14 +189,6 @@ print(util.add(2, 3))            // 5
 
 `export` must be the last statement in the file (Lua requires `return` to be terminal). Use `import` anywhere an expression is expected.
 
-### String Concatenation (`+`)
-
-```venus
-print("hello " + "world")         // hello world
-```
-
-`+` has addition-level precedence (higher than comparison, lower than unary).
-
 ### Multiline Strings (`"""`)
 
 ```venus
@@ -195,11 +197,11 @@ world"""
 print(s)                            // hello\nworld
 ```
 
-Triple-quoted strings can span multiple lines. Open and close with exactly three double-quote characters. The content is emitted as Lua's `[[...]]` long bracket syntax.
+Triple-quoted strings can span multiple lines and support interpolation: `"""#{expr}"""`.
 
 ### Literals & Operators
 
-Numbers, strings (`"` or `'` or `"""` multiline), `nil`, `true`, `false`, `-`, `*`, `/`, `+` (string concat), `==`, `!=`, `<`, `>`, `<=`, `>=`, `and`, `or`, `( )`, member access (`.`), safe navigation (`?.`), function calls, list literals (`[ ]`), table literals (`{ }`), `if`/`else`, match expressions, comments (`//`).
+Numbers, strings (`"` with interpolation, `'` literal, `"""` multiline with interpolation), `nil`, `true`, `false`, `+`, `-`, `*`, `/`, `==`, `!=`, `<`, `>`, `<=`, `>=`, `and`, `or`, `( )`, member access (`.`), safe navigation (`?.`), function calls, list literals (`[ ]`), table literals (`{ }`), `if`/`else`, match expressions, comments (`//`).
 
 `nil` and `false` are falsy in conditionals; everything else is truthy.
 
@@ -215,7 +217,6 @@ src/
 test/
   run.lua      // test runner (discovers and runs .vs test files)
   runner.lua   // test framework (suite execution, pass/fail reporting)
-  compile.lua  // compile() and check() helpers for Venus tests
-  util.lua     // shared compile helper (used by compile.lua)
+  util.lua     // shared compile helper
   test_*.vs    // test suites written in Venus
 ```

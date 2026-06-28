@@ -1,16 +1,12 @@
 // hello world with various Venus features
 
 fn greet(name) {
-  "hello " + name
+  "hello #{name}"
 }
 
 fn main() {
   let message = greet("world")
   print(message)
-
-  // string concat
-  let s = "foo" + "bar"
-  print(s)
 
   // multiline string
   let multi = """line one

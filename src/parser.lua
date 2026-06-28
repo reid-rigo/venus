@@ -1,3 +1,5 @@
+local Lexer = require("src.lexer")
+
 local Parser = {}
 Parser.__index = Parser
 
@@ -265,8 +267,7 @@ function Parser:parse_addition()
   while self:peek().type == "PLUS" or self:peek().type == "MINUS" do
     local op = self:advance()
     local right = self:parse_multiplication()
-    local op_val = op.type == "PLUS" and ".." or op.value
-    left = { type = "binary", op = op_val, left = left, right = right }
+    left = { type = "binary", op = op.value, left = left, right = right }
   end
 
   return left
@@ -477,6 +478,21 @@ function Parser:parse_primary()
     return { type = "number", value = tok.value }
   elseif tok.type == "STRING" then
     self:advance()
+    if type(tok.value) == "table" then
+      local parts = {}
+      for _, part in ipairs(tok.value.parts) do
+        if part.type == "text" then
+          local escaped = part.value:gsub("\\", "\\\\"):gsub('"', '\\"'):gsub("\n", "\\n")
+          table.insert(parts, { type = "string", value = '"' .. escaped .. '"' })
+        else
+          local lexer = Lexer.new(part.source)
+          local tokens = lexer:tokenize()
+          local parser = Parser.new(tokens)
+          table.insert(parts, parser:parse_expression())
+        end
+      end
+      return { type = "interp_string", parts = parts }
+    end
     return { type = "string", value = tok.value }
   elseif tok.type == "IDENT" then
     self:advance()

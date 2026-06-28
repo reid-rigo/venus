@@ -16,7 +16,7 @@ fn fizzbuzz(n) {
 fn run(i, limit) {
   if i < limit {
     print(fizzbuzz(i))
-    run(i - (-1), limit)
+    run(i + 1, limit)
   }
 }
 

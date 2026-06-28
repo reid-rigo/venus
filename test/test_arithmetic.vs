@@ -1,3 +1,7 @@
+test("addition", fn() {
+  10 + 3 == 13
+})
+
 test("subtraction", fn() {
   10 - 3 == 7
 })

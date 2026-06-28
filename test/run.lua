@@ -22,6 +22,11 @@ local total_failed = 0
 for _, suite in ipairs(suites) do
   print("--- " .. suite.name .. " ---")
   local passed, failed = runner.run_file(suite.file)
+  if not passed then
+    print("  COMPILE ERROR: " .. tostring(failed))
+    passed = 0
+    failed = 1
+  end
   total_passed = total_passed + passed
   total_failed = total_failed + failed
   print()

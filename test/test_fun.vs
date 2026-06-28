@@ -1,8 +1,8 @@
-fn concat(a, b) { a + b }
+fn greet(name) { "hello #{name}" }
 
 test("fn expression body", fn() {
   let expected = "hello world"
-  concat("hello ", "world") == expected
+  greet("world") == expected
 })
 
 test("fn string literal", fn() {
@@ -40,16 +40,14 @@ test("lambda", fn() {
 test("lambda with let", fn() {
   let expected = "ab"
   fn(x) {
-    let y = x + "b"
+    let y = "#{x}b"
     y
   }("a") == expected
 })
 
-fn add(a, b) { a - (-b) }
-
 fn fib(0) { 0 }
 fn fib(1) { 1 }
-fn fib(n) { add(fib(n - 1), fib(n - 2)) }
+fn fib(n) { fib(n - 1) + fib(n - 2) }
 
 test("fib(0) = 0", fn() { fib(0) == 0 })
 test("fib(1) = 1", fn() { fib(1) == 1 })

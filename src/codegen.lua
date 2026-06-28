@@ -73,6 +73,12 @@ end
 function Codegen:emit_expr(node)
   if node.type == "number" then
     return node.value
+  elseif node.type == "interp_string" then
+    local parts = {}
+    for _, part in ipairs(node.parts) do
+      table.insert(parts, self:emit_expr(part))
+    end
+    return table.concat(parts, " .. ")
   elseif node.type == "string" then
     if node.value:sub(1, 3) == [["""]] then
       return "[[" .. node.value:sub(4, -4) .. "]]"
