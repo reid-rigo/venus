@@ -42,4 +42,8 @@ function String.concat(...)
   return table.concat({ ... })
 end
 
+function String.len(s)
+  return #s
+end
+
 return String

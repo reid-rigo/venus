@@ -1,10 +1,28 @@
 local Lexer = require("src.lexer")
 local Parser = require("src.parser")
 local Codegen = require("src.codegen")
+local module_loader = require("src.module_loader")
 List = require("src.list")
 Table = require("src.table")
 String = require("src.string")
 Math = require("src.math")
+
+_G.vs_require = module_loader.vs_require
+
+local function merge_ext(base, ext)
+  for k, v in pairs(ext) do
+    base[k] = v
+  end
+end
+
+local ok_list, list_ext = pcall(vs_require, "src/list.vs")
+if ok_list then merge_ext(List, list_ext) end
+
+local ok_table, table_ext = pcall(vs_require, "src/table.vs")
+if ok_table then merge_ext(Table, table_ext) end
+
+local ok_string, string_ext = pcall(vs_require, "src/string.vs")
+if ok_string then merge_ext(String, string_ext) end
 
 local orig_tostring = tostring
 _G.tostring = function(v)

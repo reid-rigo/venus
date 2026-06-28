@@ -13,6 +13,11 @@ List.each([
   ["string", "test/test_string.vs"],
   ["string module", "test/test_string_module.vs"],
   ["module", "test/test_module.vs"],
+  ["stdlib", "test/test_stdlib.vs"],
+  ["list ext", "test/test_list_ext.vs"],
+  ["table ext", "test/test_table_ext.vs"],
+  ["string ext", "test/test_string_ext.vs"],
+  ["export", "test/test_export.vs"],
 ], fn(s) {
   print("--- #{List.get(s, 1)} ---")
   runner.run_file(List.get(s, 2))

@@ -1,0 +1,14 @@
+test("import exported functions", fn() {
+  let m = import "test/exported_module.vs"
+  m.add(2, 3) == 5
+})
+
+test("import multiple exports", fn() {
+  let m = import "test/exported_module.vs"
+  m.mul(4, 5) == 20
+})
+
+test("export single value", fn() {
+  let m = import "test/exported_module.vs"
+  m.add(10, 20) == 30 and m.mul(3, 7) == 21
+})

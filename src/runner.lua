@@ -19,6 +19,21 @@ function M.run_file(path)
   String = require("src.string")
   Math = require("src.math")
 
+  local function merge_ext(base, ext)
+    for k, v in pairs(ext) do
+      base[k] = v
+    end
+  end
+
+  local ok_le, list_ext = pcall(vs_require, "src/list.vs")
+  if ok_le then merge_ext(List, list_ext) end
+
+  local ok_te, table_ext = pcall(vs_require, "src/table.vs")
+  if ok_te then merge_ext(Table, table_ext) end
+
+  local ok_se, string_ext = pcall(vs_require, "src/string.vs")
+  if ok_se then merge_ext(String, string_ext) end
+
   local tests = {}
   _G.test = function(name, test_fn)
     tests[#tests + 1] = { name = name, fn = test_fn }

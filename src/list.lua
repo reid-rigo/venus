@@ -52,4 +52,35 @@ function List.join(t, sep)
   return table.concat(t, sep or "")
 end
 
+function List.range(start, stop)
+  local out = {}
+  for i = start, stop do
+    out[#out + 1] = i
+  end
+  return out
+end
+
+function List.reverse(t)
+  local out = {}
+  for i = #t, 1, -1 do
+    out[#out + 1] = t[i]
+  end
+  return out
+end
+
+function List.flatten(t)
+  local out = {}
+  for _, v in ipairs(t) do
+    if type(v) == "table" and #v > 0 then
+      local flat = List.flatten(v)
+      for _, fv in ipairs(flat) do
+        out[#out + 1] = fv
+      end
+    else
+      out[#out + 1] = v
+    end
+  end
+  return out
+end
+
 return List

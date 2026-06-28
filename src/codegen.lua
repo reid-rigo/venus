@@ -93,6 +93,9 @@ function Codegen:emit_expr(node)
   elseif node.type == "ident" then
     return node.name
   elseif node.type == "import" then
+    if node.path:match("%.vs$") then
+      return "vs_require(\"" .. node.path .. "\")"
+    end
     return "require(\"" .. node.path .. "\")"
   elseif node.type == "export" then
     return "return " .. self:emit_expr(node.value)
