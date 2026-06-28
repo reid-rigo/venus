@@ -194,7 +194,7 @@ end
 
 -- pipeline := concat ("|>" call)*
 function Parser:parse_pipeline()
-  local left = self:parse_concat()
+  local left = self:parse_addition()
 
   while self:peek().type == "PIPE" do
     self:advance()
@@ -258,19 +258,6 @@ function Parser:parse_comparison()
   return left
 end
 
--- concat := addition (("..") addition)*
-function Parser:parse_concat()
-  local left = self:parse_addition()
-
-  while self:peek().type == "CONCAT" do
-    self:advance()
-    local right = self:parse_addition()
-    left = { type = "binary", op = "..", left = left, right = right }
-  end
-
-  return left
-end
-
 -- addition := multiplication (("+" | "-") multiplication)*
 function Parser:parse_addition()
   local left = self:parse_multiplication()
@@ -278,7 +265,8 @@ function Parser:parse_addition()
   while self:peek().type == "PLUS" or self:peek().type == "MINUS" do
     local op = self:advance()
     local right = self:parse_multiplication()
-    left = { type = "binary", op = op.value, left = left, right = right }
+    local op_val = op.type == "PLUS" and ".." or op.value
+    left = { type = "binary", op = op_val, left = left, right = right }
   end
 
   return left

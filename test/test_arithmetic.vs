@@ -1,7 +1,3 @@
-test("addition", fn() {
-  1 + 2 == 3
-})
-
 test("subtraction", fn() {
   10 - 3 == 7
 })

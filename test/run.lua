@@ -12,6 +12,7 @@ local suites = {
   { name = "list",         file = "test/test_list.vs" },
   { name = "table",        file = "test/test_table.vs" },
   { name = "logical",      file = "test/test_logical.vs" },
+  { name = "string",       file = "test/test_string.vs" },
   { name = "module",       file = "test/test_module.vs" },
 }
 

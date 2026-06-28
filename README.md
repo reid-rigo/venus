@@ -48,7 +48,7 @@ fn add(a, b) {
 }
 
 fn greet(name) {
-  "hello " .. name
+  "hello " + name
 }
 
 print(add(2, 3))                    -- 5
@@ -179,17 +179,17 @@ print(util.add(2, 3))            -- 5
 
 `export` must be the last statement in the file (Lua requires `return` to be terminal). Use `import` anywhere an expression is expected.
 
-### String Concatenation (`..`)
+### String Concatenation (`+`)
 
 ```venus
-print("hello " .. "world")         -- hello world
+print("hello " + "world")         -- hello world
 ```
 
-`..` has precedence between addition and comparison.
+`+` has addition-level precedence (higher than comparison, lower than unary).
 
 ### Literals & Operators
 
-Numbers, strings (`"` or `'`), `nil`, `true`, `false`, `+`, `-`, `*`, `/`, `..`, `==`, `!=`, `<`, `>`, `<=`, `>=`, `and`, `or`, `( )`, member access (`.`), safe navigation (`?.`), function calls, list literals (`[ ]`), table literals (`{ }`), `if`/`else`, match expressions, comments (`--`).
+Numbers, strings (`"` or `'`), `nil`, `true`, `false`, `-`, `*`, `/`, `+` (string concat), `==`, `!=`, `<`, `>`, `<=`, `>=`, `and`, `or`, `( )`, member access (`.`), safe navigation (`?.`), function calls, list literals (`[ ]`), table literals (`{ }`), `if`/`else`, match expressions, comments (`//` or `--`).
 
 `nil` and `false` are falsy in conditionals; everything else is truthy.
 

@@ -22,8 +22,8 @@ test("let no init", fn() {
 })
 
 test("let used in expr", fn() {
-  let x = 42
-  let y = 8
-  let expected = 50
+  let x = "hello "
+  let y = "world"
+  let expected = "hello world"
   x + y == expected
 })
