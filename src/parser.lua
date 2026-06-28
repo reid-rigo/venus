@@ -339,12 +339,16 @@ function Parser:parse_list_constructor()
   while self:peek().type ~= "RBRACKET" and self:peek().type ~= "EOF" do
     table.insert(values, self:parse_expression())
     self:skip_newlines()
+    if self:peek().type == "COMMA" then
+      self:advance()
+      self:skip_newlines()
+    end
   end
   self:expect("RBRACKET")
   return { type = "list", values = values }
 end
 
--- table_constructor := "{" (STRING | IDENT expression)* "}"
+-- table_constructor := "{" (STRING | IDENT "->" expression ("," ...)*)* "}"
 function Parser:parse_table_constructor()
   self:expect("LBRACE")
   local fields = {}
@@ -355,10 +359,14 @@ function Parser:parse_table_constructor()
       local raw = self:advance().value
       local key = raw:sub(2, -2)
       self:skip_newlines()
+      self:expect("ARROW")
+      self:skip_newlines()
       local value = self:parse_expression()
       table.insert(fields, { type = "field", key = key, value = value })
     elseif tok.type == "IDENT" then
       local key = self:advance().value
+      self:skip_newlines()
+      self:expect("ARROW")
       self:skip_newlines()
       local value = self:parse_expression()
       table.insert(fields, { type = "field", key = key, value = value })
@@ -366,6 +374,10 @@ function Parser:parse_table_constructor()
       error("Expected string key in table literal but got " .. tok.type)
     end
     self:skip_newlines()
+    if self:peek().type == "COMMA" then
+      self:advance()
+      self:skip_newlines()
+    end
   end
   self:expect("RBRACE")
   return { type = "table", fields = fields }

@@ -1,6 +1,6 @@
 # Venus
 
-A small language that compiles to LuaJIT.
+A small compiled language built on LuaJIT.
 
 ## Build & Run
 
@@ -85,23 +85,23 @@ Same syntax as named functions — just omit the name.
 
 ```venus
 let t = []                    -- empty list
-let t = [1 2 3]              -- space-separated values
-let t = [1 [2 3]]            -- nested
+let t = [1, 2, 3]            -- comma-separated values
+let t = [1 [2 3]]            -- spaces also work (backward compat)
 ```
 
 ### Tables (`{}`)
 
-Tables are Lua's flexible data structure — they can be maps, objects, or both:
+Tables are a flexible data structure — they can be maps, objects, or both:
 
 ```venus
 let t = {}                    -- empty table
-let t = { "x" 1 "y" 2 }      -- string keys with values (map-like)
-let t = { x 10 }             -- identifier key (same as "x")
+let t = { "x" -> 1, "y" -> 2 }  -- string keys with values (map-like)
+let t = { x -> 10 }            -- identifier key (same as "x")
 ```
 
 Use `.` for field access: `t.x` retrieves the value at key `"x"`. Table keys are always literal strings — identifier keys are not variable lookups. You can store functions in tables to create objects.
 
-### If / elif / else
+### If / else if / else
 
 ```venus
 fn describe(x) {
@@ -119,16 +119,7 @@ fn describe(x) {
 
 ### Comparison & Logical Operators
 
-| Venus | Lua    |
-|-------|--------|
-| `==`  | `==`   |
-| `!=`  | `~=`   |
-| `<`   | `<`    |
-| `>`   | `>`    |
-| `<=`  | `<=`   |
-| `>=`  | `>=`   |
-| `and` | `and`  |
-| `or`  | `or`   |
+`==` `!=` `<` `>` `<=` `>=` `and` `or`
 
 Comparisons and logicals compose naturally with arithmetic:
 
@@ -149,7 +140,7 @@ match x {
 }
 ```
 
-Patterns: literal numbers/strings, `_` wildcard, or a variable binding. Arms are separated by commas (optional). Compiles to an if-else chain. Use `match` when you need `if` as an expression (it returns a value).
+Patterns: literal numbers/strings, `_` wildcard, or a variable binding. Arms are separated by commas (optional). Use `match` when you need `if` as an expression (it returns a value).
 
 ### Literals & Operators
 
@@ -165,7 +156,7 @@ src/
   main.lua   -- CLI: flags, compile, run, REPL
   lexer.lua  -- tokenizer
   parser.lua -- recursive-descent parser
-  codegen.lua -- Lua emitter
+  codegen.lua -- code generator
 test/
   test.lua   -- test runner
   util.lua   -- shared compile helper for tests

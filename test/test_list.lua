@@ -38,5 +38,15 @@ return {
       input = 'let t = ["a" "b" "c"]',
       expected = 'local t = { "a", "b", "c" }',
     },
+    {
+      name = "list with comma separators",
+      input = "let t = [1, 2, 3]",
+      expected = "local t = { 1, 2, 3 }",
+    },
+    {
+      name = "nested list with commas",
+      input = "let t = [1, [2, 3]]",
+      expected = "local t = { 1, { 2, 3 } }",
+    },
   },
 }
