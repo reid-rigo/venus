@@ -242,12 +242,77 @@ function Codegen:emit_overloaded_fn(node)
     return ""
   end
 
+  local catch_all
+  for _, overload in ipairs(overloads) do
+    if not self:has_literal_params(overload) then
+      catch_all = overload
+      break
+    end
+  end
+
+  local use_named = catch_all and (function()
+    for _, overload in ipairs(overloads) do
+      if #overload.params ~= #catch_all.params then
+        return false
+      end
+    end
+    return true
+  end)()
+
+  if use_named then
+    local param_names = {}
+    for _, p in ipairs(catch_all.params) do
+      param_names[#param_names + 1] = p.name
+    end
+    local sig = table.concat(param_names, ", ")
+    self:emit("local function " .. name .. "(" .. sig .. ")")
+    self.indent = self.indent + 1
+
+    local has_chain = false
+    for idx, overload in ipairs(overloads) do
+      if self:has_literal_params(overload) then
+        local conditions = {}
+        for j, p in ipairs(overload.params) do
+          if p.is_literal then
+            conditions[#conditions + 1] = param_names[j] .. " == " .. p.value
+          end
+        end
+        local cond = table.concat(conditions, " and ")
+        if not has_chain then
+          self:emit("if " .. cond .. " then")
+          has_chain = true
+        else
+          self:emit("elseif " .. cond .. " then")
+        end
+
+        self.indent = self.indent + 1
+        for j, p in ipairs(overload.params) do
+          if not p.is_literal then
+            self:emit("local " .. p.name .. " = " .. param_names[j])
+          end
+        end
+        self:emit_fn_body(overload.body, true)
+        self.indent = self.indent - 1
+      end
+    end
+
+    if has_chain then
+      self:emit("else")
+      self.indent = self.indent + 1
+      self:emit_fn_body(catch_all.body, true)
+      self.indent = self.indent - 1
+      self:emit("end")
+    end
+
+    self.indent = self.indent - 1
+    self:emit("end")
+    return ""
+  end
+
   self:emit("local function " .. name .. "(...)")
   self.indent = self.indent + 1
-  self:emit("local _args = {...}")
 
   local has_chain = false
-
   for idx, overload in ipairs(overloads) do
     local has_literal = self:has_literal_params(overload)
 
@@ -255,7 +320,7 @@ function Codegen:emit_overloaded_fn(node)
       local conditions = {}
       for j, p in ipairs(overload.params) do
         if p.is_literal then
-          conditions[#conditions + 1] = "_args[" .. j .. "] == " .. p.value
+          conditions[#conditions + 1] = "select(" .. j .. ", ...) == " .. p.value
         end
       end
       local cond = table.concat(conditions, " and ")
@@ -274,7 +339,7 @@ function Codegen:emit_overloaded_fn(node)
     self.indent = self.indent + 1
     for j, p in ipairs(overload.params) do
       if not p.is_literal then
-        self:emit("local " .. p.name .. " = _args[" .. j .. "]")
+        self:emit("local " .. p.name .. " = select(" .. j .. ", ...)")
       end
     end
     self:emit_fn_body(overload.body, true)
