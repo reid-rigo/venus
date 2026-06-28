@@ -2,7 +2,7 @@
 
 ## Build & Test
 - Build: `mise build`
-- Test: `luajit test/test.lua`
+- Test: `luajit test/run.lua`
 - Run: `./bin/vs file.vs` or `luajit src/main.lua`
 
 ## Structure

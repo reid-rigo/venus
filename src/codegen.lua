@@ -107,6 +107,9 @@ function Codegen:emit_expr(node)
       callee = node.callee
     else
       callee = self:emit_expr(node.callee)
+      if node.callee.type == "lambda" then
+        callee = "(" .. callee .. ")"
+      end
     end
     local args = {}
     for _, arg in ipairs(node.args) do

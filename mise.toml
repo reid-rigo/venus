@@ -10,7 +10,7 @@ run = "rm -f bin/vs"
 
 [tasks.test]
 description = "Run the Venus test suite"
-run = "luajit test/test.lua"
+run = "luajit test/run.lua"
 
 [tasks.repl]
 description = "Start the Venus REPL"

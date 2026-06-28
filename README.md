@@ -11,6 +11,7 @@ mise build           # compile src/main.c -> bin/vs
 ./bin/vs -e 'code'   # run inline Venus code
 ./bin/vs --help      # flags
 luajit src/main.lua  # dev equivalent (no build needed)
+luajit test/run.lua  # run test suite
 ```
 
 ## Language
@@ -178,9 +179,17 @@ print(util.add(2, 3))            -- 5
 
 `export` must be the last statement in the file (Lua requires `return` to be terminal). Use `import` anywhere an expression is expected.
 
+### String Concatenation (`..`)
+
+```venus
+print("hello " .. "world")         -- hello world
+```
+
+`..` has precedence between addition and comparison.
+
 ### Literals & Operators
 
-Numbers, strings (`"` or `'`), `nil`, `true`, `false`, `+`, `-`, `*`, `/`, `==`, `!=`, `<`, `>`, `<=`, `>=`, `and`, `or`, `( )`, member access (`.`), safe navigation (`?.`), function calls, list literals (`[ ]`), table literals (`{ }`), `if`/`else`, match expressions, comments (`--`).
+Numbers, strings (`"` or `'`), `nil`, `true`, `false`, `+`, `-`, `*`, `/`, `..`, `==`, `!=`, `<`, `>`, `<=`, `>=`, `and`, `or`, `( )`, member access (`.`), safe navigation (`?.`), function calls, list literals (`[ ]`), table literals (`{ }`), `if`/`else`, match expressions, comments (`--`).
 
 `nil` and `false` are falsy in conditionals; everything else is truthy.
 
@@ -194,8 +203,9 @@ src/
   parser.lua -- recursive-descent parser
   codegen.lua -- code generator
 test/
-  test.lua   -- test runner
-  util.lua   -- shared compile helper for tests
-  test_*.lua -- tests per feature
-  test_module.lua -- module tests
+  run.lua      -- test runner (discovers and runs .vs test files)
+  runner.lua   -- test framework (suite execution, pass/fail reporting)
+  compile.lua  -- compile() and check() helpers for Venus tests
+  util.lua     -- shared compile helper (used by compile.lua)
+  test_*.vs    -- test suites written in Venus
 ```

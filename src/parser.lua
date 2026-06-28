@@ -187,14 +187,14 @@ function Parser:parse_let_decl()
   return { type = "let", names = names, values = values }
 end
 
--- expression := pipeline
+-- expression := logical
 function Parser:parse_expression()
-  return self:parse_pipeline()
+  return self:parse_logical()
 end
 
--- pipeline := logical ("|>" call)*
+-- pipeline := concat ("|>" call)*
 function Parser:parse_pipeline()
-  local left = self:parse_logical()
+  local left = self:parse_concat()
 
   while self:peek().type == "PIPE" do
     self:advance()
@@ -243,16 +243,29 @@ function Parser:parse_logical()
   return left
 end
 
--- comparison := addition (("==" | "!=" | "<" | ">" | "<=" | ">=") addition)*
+-- comparison := pipeline (("==" | "!=" | "<" | ">" | "<=" | ">=") pipeline)*
 function Parser:parse_comparison()
-  local left = self:parse_addition()
+  local left = self:parse_pipeline()
 
   while self:peek().type == "EQEQ" or self:peek().type == "BANGEQ"
     or self:peek().type == "LT" or self:peek().type == "GT"
     or self:peek().type == "LE" or self:peek().type == "GE" do
     local tok = self:advance()
-    local right = self:parse_addition()
+    local right = self:parse_pipeline()
     left = { type = "binary", op = tok.value, left = left, right = right }
+  end
+
+  return left
+end
+
+-- concat := addition (("..") addition)*
+function Parser:parse_concat()
+  local left = self:parse_addition()
+
+  while self:peek().type == "CONCAT" do
+    self:advance()
+    local right = self:parse_addition()
+    left = { type = "binary", op = "..", left = left, right = right }
   end
 
   return left

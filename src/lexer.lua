@@ -21,6 +21,7 @@ local Token = {
   GE     = "GE",
   COMMA  = "COMMA",
   DOT    = "DOT",
+  CONCAT = "CONCAT",
   QDOT   = "QDOT",
   NEWLINE = "NEWLINE",
   LET    = "LET",
@@ -213,6 +214,9 @@ function Lexer:tokenize()
     elseif c == "?" and c2 == "." then
       self:advance(); self:advance()
       table.insert(self.tokens, { type = Token.QDOT, value = "?." })
+    elseif c == "." and c2 == "." then
+      self:advance(); self:advance()
+      table.insert(self.tokens, { type = Token.CONCAT, value = ".." })
     elseif c == "." then
       if c2 and is_digit(c2) then
         local num = self:read_number()
