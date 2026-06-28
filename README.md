@@ -268,22 +268,4 @@ Numbers, strings (`"` with interpolation, `'` literal, `"""` multiline with inte
 
 `nil` and `false` are falsy in conditionals; everything else is truthy.
 
-## Project Structure
 
-```
-src/
-  main.c     // C harness (loads LuaJIT, runs main.lua)
-  main.lua   // CLI: flags, compile, run, REPL
-  lexer.lua  // tokenizer
-  parser.lua  // recursive-descent parser
-  codegen.lua // code generator
-  list.lua    // List module
-  table.lua   // Table module
-  string.lua  // String module
-  math.lua    // Math module
-test/
-  run.lua      // test runner (discovers and runs .vs test files)
-  runner.lua   // test framework (suite execution, pass/fail reporting)
-  util.lua     // shared compile helper
-  test_*.vs    // test suites written in Venus
-```
