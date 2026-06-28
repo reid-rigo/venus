@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="vscode-venus/icon.png" alt="Venus" width="128" height="128">
+</p>
+
 # Venus
 
 A small, functional-first language built on LuaJIT.

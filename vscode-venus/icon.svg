@@ -1,14 +1,57 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#F5C842"/>
-      <stop offset="100%" stop-color="#E8634A"/>
-    </linearGradient>
-    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#2A2A3E"/>
-      <stop offset="100%" stop-color="#1A1A2E"/>
+    <radialGradient id="glow3" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFD700" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#FFD700" stop-opacity="0"/>
     </radialGradient>
+    <radialGradient id="glow2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFD700" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#FFA500" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFE566" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#FFCC00" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="core" cx="45%" cy="42%" r="50%">
+      <stop offset="0%" stop-color="#FFF2A8"/>
+      <stop offset="30%" stop-color="#FFE566"/>
+      <stop offset="60%" stop-color="#FFD700"/>
+      <stop offset="85%" stop-color="#FFAA00"/>
+      <stop offset="100%" stop-color="#E88D00"/>
+    </radialGradient>
+    <linearGradient id="vg" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#9F6AFF"/>
+      <stop offset="100%" stop-color="#6B21A8"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+    <clipPath id="planet">
+      <circle cx="64" cy="64" r="56"/>
+    </clipPath>
   </defs>
-  <circle cx="64" cy="64" r="64" fill="url(#bg)"/>
-  <path d="M16 16h24l24 56 24-56h24l-36 96h-24z" fill="url(#g)"/>
+  <circle cx="64" cy="64" r="64" fill="url(#glow3)"/>
+  <circle cx="64" cy="64" r="64" fill="url(#glow2)"/>
+  <circle cx="64" cy="64" r="64" fill="url(#glow1)"/>
+  <circle cx="64" cy="64" r="56" fill="url(#core)"/>
+  <g clip-path="url(#planet)">
+    <ellipse cx="64" cy="14" rx="36" ry="3" fill="#E8A030" opacity="0.3"/>
+    <ellipse cx="64" cy="22" rx="48" ry="4" fill="#F5C040" opacity="0.4"/>
+    <ellipse cx="64" cy="32" rx="56" ry="3" fill="#D4902A" opacity="0.35"/>
+    <ellipse cx="64" cy="40" rx="60" ry="4" fill="#F5C040" opacity="0.45"/>
+    <ellipse cx="64" cy="48" rx="58" ry="3" fill="#FFF0A0" opacity="0.25"/>
+    <ellipse cx="64" cy="56" rx="62" ry="4" fill="#E8A030" opacity="0.35"/>
+    <ellipse cx="64" cy="64" rx="56" ry="3" fill="#D4902A" opacity="0.3"/>
+    <ellipse cx="64" cy="72" rx="62" ry="4" fill="#F0B840" opacity="0.4"/>
+    <ellipse cx="64" cy="80" rx="58" ry="3" fill="#FFF0A0" opacity="0.2"/>
+    <ellipse cx="64" cy="88" rx="54" ry="4" fill="#E8A030" opacity="0.35"/>
+    <ellipse cx="64" cy="96" rx="48" ry="3" fill="#D4902A" opacity="0.3"/>
+    <ellipse cx="64" cy="104" rx="40" ry="4" fill="#F5C040" opacity="0.4"/>
+    <ellipse cx="64" cy="112" rx="30" ry="3" fill="#E8A030" opacity="0.3"/>
+    <path d="M8 26 Q36 22 64 28 Q92 34 120 24" fill="none" stroke="#C88020" stroke-width="2" opacity="0.25"/>
+    <path d="M8 52 Q30 48 64 54 Q98 60 120 50" fill="none" stroke="#C88020" stroke-width="2" opacity="0.25"/>
+    <path d="M8 76 Q40 72 64 78 Q88 84 120 74" fill="none" stroke="#C88020" stroke-width="1.5" opacity="0.2"/>
+    <path d="M8 100 Q36 96 64 102 Q92 108 120 98" fill="none" stroke="#C88020" stroke-width="1.5" opacity="0.2"/>
+  </g>
+  <path d="M24 28h18l22 52 22-52h18l-32 72h-16z" fill="url(#vg)" filter="url(#shadow)"/>
 </svg>

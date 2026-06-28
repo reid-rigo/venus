@@ -1,9 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
   <defs>
-    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#F5C842"/>
-      <stop offset="100%" stop-color="#E8634A"/>
+    <linearGradient id="vg" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#9F6AFF"/>
+      <stop offset="100%" stop-color="#6B21A8"/>
     </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="0.3" stdDeviation="0.4" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
   </defs>
-  <path d="M2 2h3l3 7 3-7h3l-4.5 12h-3z" fill="url(#g)"/>
+  <path d="M2 2h3l3 7 3-7h3l-4.5 12h-3z" fill="url(#vg)" filter="url(#shadow)"/>
 </svg>
