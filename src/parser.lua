@@ -60,17 +60,18 @@ function Parser:parse_statement()
   return self:parse_expression()
 end
 
--- fun_decl := "fn" IDENT "(" params? ")" "{" body "}"
+-- fun_decl := "fn" IDENT "(" fn_param ("," fn_param)* ")" "{" body "}"
+-- fn_param := IDENT | NUMBER | STRING
 function Parser:parse_fun_decl()
   self:expect("FN")
   local name = self:expect("IDENT").value
   self:expect("LPAREN")
   local params = {}
   if self:peek().type ~= "RPAREN" then
-    table.insert(params, self:expect("IDENT").value)
+    table.insert(params, self:parse_fn_param())
     while self:peek().type == "COMMA" do
       self:advance()
-      table.insert(params, self:expect("IDENT").value)
+      table.insert(params, self:parse_fn_param())
     end
   end
   self:expect("RPAREN")
@@ -340,6 +341,22 @@ function Parser:parse_match_expression()
   end
   self:expect("RBRACE")
   return { type = "match", value = value, arms = arms }
+end
+
+function Parser:parse_fn_param()
+  local tok = self:peek()
+  if tok.type == "IDENT" then
+    self:advance()
+    return { type = "param", name = tok.value }
+  elseif tok.type == "NUMBER" then
+    self:advance()
+    return { type = "param", value = tok.value, is_literal = true }
+  elseif tok.type == "STRING" then
+    self:advance()
+    return { type = "param", value = tok.value, is_literal = true }
+  else
+    error("Expected parameter name or literal but got " .. tok.type)
+  end
 end
 
 -- pattern := "_" | NUMBER | STRING | IDENT

@@ -55,6 +55,22 @@ print(add(2, 3))                    -- 5
 
 The last expression in a function body is returned implicitly.
 
+### Function overloading
+
+Functions can be overloaded by value — define multiple `fn` with the same name and literal parameters:
+
+```venus
+fn fib(0) { 0 }
+fn fib(1) { 1 }
+fn fib(n) { fib(n-1) + fib(n-2) }
+
+print(fib(10))                     -- 55
+```
+
+Literal params (`NUMBER`, `STRING`) are matched against the argument. Identifier params match any value and bind the argument to the name. The first matching overload wins. Non-literal overloads act as a fallback.
+
+Overloads are collected at compile time into a single dispatch function — no runtime cost beyond a short if-else chain.
+
 ### Inline functions (lambdas)
 
 ```venus
