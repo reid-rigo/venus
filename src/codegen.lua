@@ -85,6 +85,10 @@ function Codegen:emit_expr(node)
     return node.name
   elseif node.type == "member" then
     return self:emit_expr(node.object) .. "." .. node.field
+  elseif node.type == "safe_member" then
+    local obj = self:emit_expr(node.object)
+    local chain = obj .. "." .. table.concat(node.fields, ".")
+    return "(" .. obj .. " ~= nil and " .. chain .. " or nil)"
   elseif node.type == "binary" then
     local left = self:emit_expr(node.left)
     local right = self:emit_expr(node.right)

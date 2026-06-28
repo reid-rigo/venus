@@ -315,6 +315,15 @@ function Parser:parse_call()
       else
         expr = { type = "call", callee = expr, args = args }
       end
+    elseif self:peek().type == "QDOT" then
+      self:advance()
+      local field = self:expect("IDENT")
+      local fields = { field.value }
+      while self:peek().type == "DOT" do
+        self:advance()
+        table.insert(fields, self:expect("IDENT").value)
+      end
+      expr = { type = "safe_member", object = expr, fields = fields }
     elseif self:peek().type == "DOT" then
       self:advance()
       local field = self:expect("IDENT")

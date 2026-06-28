@@ -68,5 +68,15 @@ return {
       input = '{ "a" -> 1 }.a',
       expected = '{ ["a"] = 1 }.a',
     },
+    {
+      name = "safe navigation",
+      input = "a?.b",
+      expected = "(a ~= nil and a.b or nil)",
+    },
+    {
+      name = "safe navigation chained with regular access",
+      input = "a?.b.c",
+      expected = "(a ~= nil and a.b.c or nil)",
+    },
   },
 }

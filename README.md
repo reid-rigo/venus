@@ -99,7 +99,15 @@ let t = { "x" -> 1, "y" -> 2 }  -- string keys with values (map-like)
 let t = { x -> 10 }            -- identifier key (same as "x")
 ```
 
-Use `.` for field access: `t.x` retrieves the value at key `"x"`. Table keys are always literal strings — identifier keys are not variable lookups. You can store functions in tables to create objects.
+Use `.` for field access: `t.x` retrieves the value at key `"x"`. Use `?.` for safe navigation that returns `nil` instead of erroring when the left side is `nil`:
+
+```venus
+let t = { x -> 10 }
+t?.x       -- 10
+t?.z       -- nil (no error)
+```
+
+Table keys are always literal strings — identifier keys are not variable lookups. You can store functions in tables to create objects.
 
 ### If / else if / else
 
@@ -144,7 +152,7 @@ Patterns: literal numbers/strings, `_` wildcard, or a variable binding. Arms are
 
 ### Literals & Operators
 
-Numbers, strings (`"` or `'`), `nil`, `true`, `false`, `+`, `-`, `*`, `/`, `==`, `!=`, `<`, `>`, `<=`, `>=`, `and`, `or`, `( )`, member access (`.`), function calls, list literals (`[ ]`), table literals (`{ }`), `if`/`else`, match expressions, comments (`--`).
+Numbers, strings (`"` or `'`), `nil`, `true`, `false`, `+`, `-`, `*`, `/`, `==`, `!=`, `<`, `>`, `<=`, `>=`, `and`, `or`, `( )`, member access (`.`), safe navigation (`?.`), function calls, list literals (`[ ]`), table literals (`{ }`), `if`/`else`, match expressions, comments (`--`).
 
 `nil` and `false` are falsy in conditionals; everything else is truthy.
 
