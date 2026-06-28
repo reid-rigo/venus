@@ -8,6 +8,7 @@ local test_files = {
   "test_table",
   "test_list",
   "test_lambda",
+  "test_match",
 }
 
 local passed = 0

@@ -110,6 +110,54 @@ function Codegen:emit_expr(node)
       table.insert(parts, "[\"" .. field.key .. "\"] = " .. self:emit_expr(field.value))
     end
     return "{ " .. table.concat(parts, ", ") .. " }"
+  elseif node.type == "match" then
+    self.match_counter = (self.match_counter or 0) + 1
+    local tmp = "_m_" .. self.match_counter
+    local value_code = self:emit_expr(node.value)
+
+    local parts = {}
+    table.insert(parts, "(function()")
+    table.insert(parts, "  local " .. tmp .. " = " .. value_code)
+
+    local has_if = false
+
+    for _, arm in ipairs(node.arms) do
+      local pat = arm.pattern
+      local body_code = self:emit_expr(arm.body)
+
+      if pat.type == "wildcard" then
+        local indent = has_if and "    " or "  "
+        if has_if then
+          table.insert(parts, "  else")
+        end
+        table.insert(parts, indent .. "return " .. body_code)
+        break
+      elseif pat.type == "ident" then
+        local indent = has_if and "    " or "  "
+        if has_if then
+          table.insert(parts, "  else")
+        end
+        table.insert(parts, indent .. "local " .. pat.name .. " = " .. tmp)
+        table.insert(parts, indent .. "return " .. body_code)
+        break
+      else
+        local pat_code = self:emit_expr(pat)
+        if not has_if then
+          table.insert(parts, "  if " .. tmp .. " == " .. pat_code .. " then")
+          has_if = true
+        else
+          table.insert(parts, "  elseif " .. tmp .. " == " .. pat_code .. " then")
+        end
+        table.insert(parts, "    return " .. body_code)
+      end
+    end
+
+    if has_if then
+      table.insert(parts, "  end")
+    end
+    table.insert(parts, "end)()")
+
+    return table.concat(parts, "\n")
   elseif node.type == "placeholder" then
     error("placeholder outside pipeline context")
   elseif node.type == "program" then

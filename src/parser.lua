@@ -317,7 +317,52 @@ function Parser:parse_map_constructor()
   return { type = "table", fields = fields }
 end
 
--- primary := NUMBER | STRING | IDENT | "(" expression ")" | list_constructor | map_constructor
+-- match_expr := "match" expression "{" (pattern "->" expression)* "}"
+function Parser:parse_match_expression()
+  self:expect("MATCH")
+  local value = self:parse_expression()
+  self:skip_newlines()
+  self:expect("LBRACE")
+  self:skip_newlines()
+  local arms = {}
+  while self:peek().type ~= "RBRACE" and self:peek().type ~= "EOF" do
+    local pattern = self:parse_pattern()
+    self:skip_newlines()
+    self:expect("ARROW")
+    self:skip_newlines()
+    local body = self:parse_expression()
+    table.insert(arms, { pattern = pattern, body = body })
+    self:skip_newlines()
+    if self:peek().type == "COMMA" then
+      self:advance()
+      self:skip_newlines()
+    end
+  end
+  self:expect("RBRACE")
+  return { type = "match", value = value, arms = arms }
+end
+
+-- pattern := "_" | NUMBER | STRING | IDENT
+function Parser:parse_pattern()
+  local tok = self:peek()
+  if tok.type == "UNDERSCORE" then
+    self:advance()
+    return { type = "wildcard" }
+  elseif tok.type == "NUMBER" then
+    self:advance()
+    return { type = "number", value = tok.value }
+  elseif tok.type == "STRING" then
+    self:advance()
+    return { type = "string", value = tok.value }
+  elseif tok.type == "IDENT" then
+    self:advance()
+    return { type = "ident", name = tok.value }
+  else
+    error("Unexpected token in pattern: " .. tok.type)
+  end
+end
+
+-- primary := NUMBER | STRING | IDENT | "(" expression ")" | list_constructor | map_constructor | match_expr
 function Parser:parse_primary()
   local tok = self:peek()
 
@@ -341,6 +386,8 @@ function Parser:parse_primary()
     return self:parse_list_constructor()
   elseif tok.type == "LBRACE" then
     return self:parse_map_constructor()
+  elseif tok.type == "MATCH" then
+    return self:parse_match_expression()
   elseif tok.type == "UNDERSCORE" then
     self:advance()
     return { type = "placeholder" }

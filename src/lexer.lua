@@ -18,6 +18,8 @@ local Token = {
   NEWLINE = "NEWLINE",
   LET    = "LET",
   FN     = "FN",
+  MATCH  = "MATCH",
+  ARROW  = "ARROW",
   LBRACE = "LBRACE",
   RBRACE = "RBRACE",
   LBRACKET = "LBRACKET",
@@ -42,6 +44,7 @@ end
 local keywords = {
   ["let"] = "LET",
   ["fn"] = "FN",
+  ["match"] = "MATCH",
 }
 
 function Lexer.new(source)
@@ -134,6 +137,9 @@ function Lexer:tokenize()
     elseif c == "+" then
       self:advance()
       table.insert(self.tokens, { type = Token.PLUS, value = "+" })
+    elseif c == "-" and c2 == ">" then
+      self:advance(); self:advance()
+      table.insert(self.tokens, { type = Token.ARROW, value = "->" })
     elseif c == "-" then
       self:advance()
       table.insert(self.tokens, { type = Token.MINUS, value = "-" })

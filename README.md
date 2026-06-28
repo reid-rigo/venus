@@ -83,9 +83,22 @@ let m = { x 10 }             -- identifier key (same as "x")
 
 Map keys are always literal strings — identifier keys are not variable lookups.
 
+### Match (`match`)
+
+```venus
+match x {
+  1 -> "one"
+  2 -> "two"
+  _ -> "other"          -- wildcard fallback
+  y -> y                -- or bind to a variable
+}
+```
+
+Patterns: literal numbers/strings, `_` wildcard, or a variable binding. Arms are separated by commas (optional). Compiles to an if-else chain.
+
 ### Literals & Operators
 
-Numbers, strings (`"` or `'`), `+`, `-`, `*`, `/`, `( )`, member access (`.`), function calls, list literals (`[ ]`), map literals (`{ }`), comments (`--`).
+Numbers, strings (`"` or `'`), `+`, `-`, `*`, `/`, `( )`, member access (`.`), function calls, list literals (`[ ]`), map literals (`{ }`), match expressions, comments (`--`).
 
 ## Project Structure
 
