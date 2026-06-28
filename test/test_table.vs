@@ -48,3 +48,30 @@ test("safe nav nil object", fn() {
   let expected = nil
   t5?.x == expected
 })
+
+test("Table.each iterates values", fn() {
+  let seen = []
+  Table.each({ a -> 1, b -> 2 }, fn(v, k) { List.add(seen, v) })
+  let expected = 2
+  List.len(seen) == expected
+})
+
+test("Table.each returns nothing", fn() {
+  Table.each({ a -> 1 }, fn(v, k) {}) == nil
+})
+
+test("Table.map transforms values", fn() {
+  let doubled = Table.map({ x -> 5, y -> 10 }, fn(v) { v * 2 })
+  let has_10 = List.filter(doubled, fn(x) { x == 10 })
+  let has_20 = List.filter(doubled, fn(x) { x == 20 })
+  List.len(doubled) == 2 and List.len(has_10) == 1 and List.len(has_20) == 1
+})
+
+test("Table.map empty", fn() {
+  List.len(Table.map({}, fn(v) { v })) == 0
+})
+
+test("Table.map returns list", fn() {
+  let r = Table.map({ a -> 1 }, fn(v) { v })
+  List.len(r) == 1 and List.get(r, 1) == 1
+})

@@ -19,19 +19,19 @@ test("unary negation", fn() {
 })
 
 test("pipeline pipes value as first arg", fn() {
-  2 |> math.pow(3) == 8
+  2 |> Math.pow(3) == 8
 })
 
 test("pipeline placeholder fills last position", fn() {
-  2 |> math.pow(3, _) == 9
+  2 |> Math.pow(3, _) == 9
 })
 
 test("pipeline placeholder fills first position", fn() {
-  2 |> math.pow(_, 3) == 8
+  2 |> Math.pow(_, 3) == 8
 })
 
 test("pipeline chains multiple operations", fn() {
-  16 |> math.sqrt |> math.floor == 4
+  16 |> Math.sqrt |> Math.floor == 4
 })
 
 test("pipeline pipes into lambda", fn() {

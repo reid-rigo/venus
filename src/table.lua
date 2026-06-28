@@ -40,4 +40,18 @@ function Table.remove(m, k)
   return m
 end
 
+function Table.each(m, f)
+  for k, v in pairs(m) do
+    f(v, k)
+  end
+end
+
+function Table.map(m, f)
+  local out = {}
+  for _, v in pairs(m) do
+    out[#out + 1] = f(v)
+  end
+  return out
+end
+
 return Table

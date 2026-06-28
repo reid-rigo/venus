@@ -42,4 +42,14 @@ function List.reduce(t, f, init)
   return acc
 end
 
+function List.each(t, f)
+  for i, v in ipairs(t) do
+    f(v, i)
+  end
+end
+
+function List.join(t, sep)
+  return table.concat(t, sep or "")
+end
+
 return List

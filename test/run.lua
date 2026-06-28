@@ -10,9 +10,11 @@ local suites = {
   { name = "if",           file = "test/test_if.vs" },
   { name = "match",        file = "test/test_match.vs" },
   { name = "list",         file = "test/test_list.vs" },
+  { name = "math",         file = "test/test_math.vs" },
   { name = "table",        file = "test/test_table.vs" },
   { name = "logical",      file = "test/test_logical.vs" },
   { name = "string",       file = "test/test_string.vs" },
+  { name = "string module",file = "test/test_string_module.vs" },
   { name = "module",       file = "test/test_module.vs" },
 }
 

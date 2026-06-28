@@ -25,12 +25,44 @@ test("get last", fn() {
 
 test("map", fn() {
   let doubled = List.map([1, 2, 3], fn(x) { x * 2 })
-  let expected_first = 2
-  let expected_last = 6
-  List.get(doubled, 1) == expected_first and List.get(doubled, 3) == expected_last
+  List.len(doubled) == 3 and List.get(doubled, 1) == 2 and List.get(doubled, 2) == 4 and List.get(doubled, 3) == 6
+})
+
+test("map empty", fn() {
+  List.len(List.map([], fn(x) { x })) == 0
+})
+
+test("map single", fn() {
+  List.get(List.map([7], fn(x) { x * 10 }), 1) == 70
 })
 
 test("nested list", fn() {
   let expected = 2
   List.len([1, [2, 3]]) == expected
+})
+
+test("List.each iterates values", fn() {
+  let seen = []
+  List.each([10, 20, 30], fn(v) { List.add(seen, v) })
+  List.len(seen) == 3 and List.get(seen, 1) == 10 and List.get(seen, 2) == 20 and List.get(seen, 3) == 30
+})
+
+test("List.each returns nothing", fn() {
+  List.each([1], fn(v) {}) == nil
+})
+
+test("List.join", fn() {
+  List.join(["a", "b", "c"], ", ") == "a, b, c"
+})
+
+test("List.join single", fn() {
+  List.join(["x"], ",") == "x"
+})
+
+test("List.join empty", fn() {
+  List.join([], ",") == ""
+})
+
+test("List.join default sep", fn() {
+  List.join(["a", "b", "c"]) == "abc"
 })

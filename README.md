@@ -1,6 +1,6 @@
 # Venus
 
-A small compiled language built on LuaJIT.
+A small, functional-first language built on LuaJIT.
 
 ## Build & Run
 
@@ -29,7 +29,7 @@ Use `#{expr}` inside double-quoted (`"`) or triple-quoted (`"""`) strings to emb
 ### Pipeline operator (`|>`)
 
 ```venus
-2 |> math.pow(3) |> print           // print(math.pow(2, 3))
+2 |> Math.pow(3) |> print           // print(Math.pow(2, 3))
 "hello" |> string.upper |> print     // print(string.upper("hello"))
 ```
 
@@ -38,8 +38,8 @@ The left-hand value is inserted as the first argument of the right-hand call.
 Use `_` to explicitly place the value in a specific position:
 
 ```venus
-2 |> math.pow(3, _)                 // math.pow(3, 2)
-2 |> math.pow(_, 3)                 // math.pow(2, 3) // same as default
+2 |> Math.pow(3, _)                 // Math.pow(3, 2)
+2 |> Math.pow(_, 3)                 // Math.pow(2, 3) // same as default
 ```
 
 ### `let` declarations
@@ -47,7 +47,7 @@ Use `_` to explicitly place the value in a specific position:
 ```venus
 let x = 42
 let a, b = 1, 2
-let y = 2 |> math.pow(3)
+let y = 2 |> Math.pow(3)
 ```
 
 ### Functions
@@ -199,6 +199,65 @@ print(s)                            // hello\nworld
 
 Triple-quoted strings can span multiple lines and support interpolation: `"""#{expr}"""`.
 
+## Standard Library
+
+Built-in modules available as globals:
+
+### `List`
+
+| Function | Description |
+|---|---|
+| `List.add(t, v)` | Append `v` to list `t`, returns `t` |
+| `List.get(t, i)` | Get element at 1-based index `i` |
+| `List.len(t)` | Number of elements |
+| `List.map(t, f)` | New list of `f(v)` for each element |
+| `List.filter(t, f)` | New list of elements where `f(v)` is truthy |
+| `List.reduce(t, f, init)` | Fold left: `f(acc, v)` for each element |
+| `List.each(t, f)` | Call `f(v, i)` for each element, returns nothing |
+| `List.join(t, sep?)` | Join elements into string, default separator is `""` |
+| `List.remove(t, i)` | Remove element at index `i`, returns `t` |
+
+### `Table`
+
+| Function | Description |
+|---|---|
+| `Table.get(m, k)` | Get value at key `k` |
+| `Table.set(m, k, v)` | Set `m[k] = v`, returns `m` |
+| `Table.keys(m)` | List of keys |
+| `Table.values(m)` | List of values |
+| `Table.len(m)` | Number of entries |
+| `Table.has(m, k)` | Whether key exists |
+| `Table.remove(m, k)` | Remove key, returns `m` |
+| `Table.each(m, f)` | Call `f(v, k)` for each entry, returns nothing |
+| `Table.map(m, f)` | New list of `f(v)` for each entry |
+
+### `String`
+
+| Function | Description |
+|---|---|
+| `String.split(s, sep)` | Split string by separator into a list |
+| `String.trim(s)` | Remove leading/trailing whitespace |
+| `String.starts_with(s, prefix)` | Whether string starts with prefix |
+| `String.ends_with(s, suffix)` | Whether string ends with suffix |
+| `String.contains(s, sub)` | Whether string contains substring |
+| `String.concat(...)` | Join varargs into a string |
+
+### `Math`
+
+| Function | Description |
+|---|---|
+| `Math.abs(x)` | Absolute value |
+| `Math.floor(x)` | Round down |
+| `Math.ceil(x)` | Round up |
+| `Math.round(x)` | Round to nearest integer |
+| `Math.sqrt(x)` | Square root |
+| `Math.pow(x, y)` | `x` raised to `y` |
+| `Math.max(x, y)` | Larger of two values |
+| `Math.min(x, y)` | Smaller of two values |
+| `Math.pi` | Constant 3.14159... |
+
+Lua's built-in `string` and `math` libraries (lowercase) are also available directly.
+
 ### Literals & Operators
 
 Numbers, strings (`"` with interpolation, `'` literal, `"""` multiline with interpolation), `nil`, `true`, `false`, `+`, `-`, `*`, `/`, `==`, `!=`, `<`, `>`, `<=`, `>=`, `and`, `or`, `( )`, member access (`.`), safe navigation (`?.`), function calls, list literals (`[ ]`), table literals (`{ }`), `if`/`else`, match expressions, comments (`//`).
@@ -212,8 +271,12 @@ src/
   main.c     // C harness (loads LuaJIT, runs main.lua)
   main.lua   // CLI: flags, compile, run, REPL
   lexer.lua  // tokenizer
-  parser.lua // recursive-descent parser
+  parser.lua  // recursive-descent parser
   codegen.lua // code generator
+  list.lua    // List module
+  table.lua   // Table module
+  string.lua  // String module
+  math.lua    // Math module
 test/
   run.lua      // test runner (discovers and runs .vs test files)
   runner.lua   // test framework (suite execution, pass/fail reporting)

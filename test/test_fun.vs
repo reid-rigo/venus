@@ -27,7 +27,7 @@ test("fn with let", fn() {
 })
 
 test("fn with pipeline", fn() {
-  fn f3(x) { x |> math.sqrt |> math.floor }
+  fn f3(x) { x |> Math.sqrt |> Math.floor }
   let expected = 4
   f3(17) == expected
 })

@@ -5,7 +5,7 @@ test("let with init", fn() {
 })
 
 test("let with pipeline", fn() {
-  let y = 2 |> math.pow(3)
+  let y = 2 |> Math.pow(3)
   let expected = 8
   y == expected
 })

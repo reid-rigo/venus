@@ -16,7 +16,8 @@ function M.run_file(path)
 
   List = require("src.list")
   Table = require("src.table")
-  local Math = math
+  String = require("src.string")
+  Math = require("src.math")
 
   local tests = {}
   _G.test = function(name, test_fn)
