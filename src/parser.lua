@@ -424,6 +424,15 @@ function Parser:parse_pattern()
   elseif tok.type == "STRING" then
     self:advance()
     return { type = "string", value = tok.value }
+  elseif tok.type == "NIL" then
+    self:advance()
+    return { type = "nil" }
+  elseif tok.type == "TRUE" then
+    self:advance()
+    return { type = "true" }
+  elseif tok.type == "FALSE" then
+    self:advance()
+    return { type = "false" }
   elseif tok.type == "IDENT" then
     self:advance()
     return { type = "ident", name = tok.value }
@@ -456,6 +465,15 @@ function Parser:parse_primary()
     return self:parse_list_constructor()
   elseif tok.type == "LBRACE" then
     return self:parse_map_constructor()
+  elseif tok.type == "NIL" then
+    self:advance()
+    return { type = "nil" }
+  elseif tok.type == "TRUE" then
+    self:advance()
+    return { type = "true" }
+  elseif tok.type == "FALSE" then
+    self:advance()
+    return { type = "false" }
   elseif tok.type == "MATCH" then
     return self:parse_match_expression()
   elseif tok.type == "UNDERSCORE" then

@@ -151,7 +151,9 @@ Patterns: literal numbers/strings, `_` wildcard, or a variable binding. Arms are
 
 ### Literals & Operators
 
-Numbers, strings (`"` or `'`), `+`, `-`, `*`, `/`, `==`, `!=`, `<`, `>`, `<=`, `>=`, `and`, `or`, `( )`, member access (`.`), function calls, list literals (`[ ]`), map literals (`{ }`), `if`/`else`, match expressions, comments (`--`).
+Numbers, strings (`"` or `'`), `nil`, `true`, `false`, `+`, `-`, `*`, `/`, `==`, `!=`, `<`, `>`, `<=`, `>=`, `and`, `or`, `( )`, member access (`.`), function calls, list literals (`[ ]`), map literals (`{ }`), `if`/`else`, match expressions, comments (`--`).
+
+`nil` and `false` are falsy in conditionals; everything else is truthy.
 
 ## Project Structure
 

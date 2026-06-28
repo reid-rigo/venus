@@ -75,6 +75,12 @@ function Codegen:emit_expr(node)
     return node.value
   elseif node.type == "string" then
     return node.value
+  elseif node.type == "nil" then
+    return "nil"
+  elseif node.type == "true" then
+    return "true"
+  elseif node.type == "false" then
+    return "false"
   elseif node.type == "ident" then
     return node.name
   elseif node.type == "member" then

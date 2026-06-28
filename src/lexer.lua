@@ -35,6 +35,9 @@ local Token = {
   ELSE   = "ELSE",
   AND    = "AND",
   OR     = "OR",
+  NIL    = "NIL",
+  TRUE   = "TRUE",
+  FALSE  = "FALSE",
   EOF    = "EOF",
 }
 Lexer.Token = Token
@@ -59,6 +62,9 @@ local keywords = {
   ["else"] = "ELSE",
   ["and"] = "AND",
   ["or"] = "OR",
+  ["nil"] = "NIL",
+  ["true"] = "TRUE",
+  ["false"] = "FALSE",
 }
 
 function Lexer.new(source)

@@ -78,5 +78,55 @@ return {
       input = "1 == 2 |> f",
       expected = "f((1 == 2))",
     },
+    {
+      name = "nil literal",
+      input = "nil",
+      expected = "nil",
+    },
+    {
+      name = "nil in let",
+      input = "let x = nil",
+      expected = "local x = nil",
+    },
+    {
+      name = "nil comparison",
+      input = "x == nil",
+      expected = "(x == nil)",
+    },
+    {
+      name = "true literal",
+      input = "true",
+      expected = "true",
+    },
+    {
+      name = "false literal",
+      input = "false",
+      expected = "false",
+    },
+    {
+      name = "false in if condition",
+      input = "if false {\n  1\n} else {\n  2\n}",
+      expected = table.concat({
+        "if false then",
+        "  return 1",
+        "else",
+        "  return 2",
+        "end",
+      }, "\n"),
+    },
+    {
+      name = "nil in match",
+      input = "match x {\n  nil -> \"nothing\"\n  _ -> \"something\"\n}",
+      expected = table.concat({
+        "(function()",
+        "  local _m_1 = x",
+        "  if _m_1 == nil then",
+        '    return "nothing"',
+        "  else",
+        '    return "something"',
+        "  end",
+        "end)()",
+      }, "\n"),
+    },
   },
 }
