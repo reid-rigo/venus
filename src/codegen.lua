@@ -82,7 +82,8 @@ function Codegen:emit_expr(node)
   elseif node.type == "binary" then
     local left = self:emit_expr(node.left)
     local right = self:emit_expr(node.right)
-    return "(" .. left .. " " .. node.op .. " " .. right .. ")"
+    local op = node.op == "!=" and "~=" or node.op
+    return "(" .. left .. " " .. op .. " " .. right .. ")"
   elseif node.type == "unary" then
     local operand = self:emit_expr(node.operand)
     return "(-" .. operand .. ")"
@@ -161,6 +162,29 @@ function Codegen:emit_expr(node)
       table.insert(parts, "[\"" .. field.key .. "\"] = " .. self:emit_expr(field.value))
     end
     return "{ " .. table.concat(parts, ", ") .. " }"
+  elseif node.type == "if" then
+    self:emit("if " .. self:emit_expr(node.condition) .. " then")
+    self.indent = self.indent + 1
+    self:emit_fn_body(node.body, true)
+    self.indent = self.indent - 1
+
+    for _, elif in ipairs(node.elifs) do
+      self:emit("elseif " .. self:emit_expr(elif.condition) .. " then")
+      self.indent = self.indent + 1
+      self:emit_fn_body(elif.body, true)
+      self.indent = self.indent - 1
+    end
+
+    if node.else_body then
+      self:emit("else")
+      self.indent = self.indent + 1
+      self:emit_fn_body(node.else_body, true)
+      self.indent = self.indent - 1
+    end
+
+    self:emit("end")
+    return ""
+
   elseif node.type == "match" then
     self.match_counter = (self.match_counter or 0) + 1
     local tmp = "_m_" .. self.match_counter

@@ -99,6 +99,43 @@ let m = { x 10 }             -- identifier key (same as "x")
 
 Map keys are always literal strings — identifier keys are not variable lookups.
 
+### If / elif / else
+
+```venus
+fn describe(x) {
+  if x == 0 {
+    "zero"
+  } else if x == 1 {
+    "one"
+  } else {
+    "other"
+  }
+}
+```
+
+`if` is a statement (not an expression). Each branch is a `{ }` block; the last expression in each branch is returned. The `else` branch is optional.
+
+### Comparison & Logical Operators
+
+| Venus | Lua    |
+|-------|--------|
+| `==`  | `==`   |
+| `!=`  | `~=`   |
+| `<`   | `<`    |
+| `>`   | `>`    |
+| `<=`  | `<=`   |
+| `>=`  | `>=`   |
+| `and` | `and`  |
+| `or`  | `or`   |
+
+Comparisons and logicals compose naturally with arithmetic:
+
+```venus
+x > 0 and x < 10
+x == 0 or x == 1
+1 + 2 == 3
+```
+
 ### Match (`match`)
 
 ```venus
@@ -110,11 +147,11 @@ match x {
 }
 ```
 
-Patterns: literal numbers/strings, `_` wildcard, or a variable binding. Arms are separated by commas (optional). Compiles to an if-else chain.
+Patterns: literal numbers/strings, `_` wildcard, or a variable binding. Arms are separated by commas (optional). Compiles to an if-else chain. Use `match` when you need `if` as an expression (it returns a value).
 
 ### Literals & Operators
 
-Numbers, strings (`"` or `'`), `+`, `-`, `*`, `/`, `( )`, member access (`.`), function calls, list literals (`[ ]`), map literals (`{ }`), match expressions, comments (`--`).
+Numbers, strings (`"` or `'`), `+`, `-`, `*`, `/`, `==`, `!=`, `<`, `>`, `<=`, `>=`, `and`, `or`, `( )`, member access (`.`), function calls, list literals (`[ ]`), map literals (`{ }`), `if`/`else`, match expressions, comments (`--`).
 
 ## Project Structure
 

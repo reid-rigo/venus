@@ -5,8 +5,10 @@ local test_files = {
   "test_pipeline",
   "test_let",
   "test_fun",
+  "test_if",
   "test_table",
   "test_list",
+  "test_comparison",
   "test_lambda",
   "test_match",
 }

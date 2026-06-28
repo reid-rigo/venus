@@ -13,6 +13,12 @@ local Token = {
   STAR   = "STAR",
   SLASH  = "SLASH",
   EQ     = "EQ",
+  EQEQ   = "EQEQ",
+  BANGEQ = "BANGEQ",
+  LT     = "LT",
+  GT     = "GT",
+  LE     = "LE",
+  GE     = "GE",
   COMMA  = "COMMA",
   DOT    = "DOT",
   NEWLINE = "NEWLINE",
@@ -25,6 +31,10 @@ local Token = {
   LBRACKET = "LBRACKET",
   RBRACKET = "RBRACKET",
   UNDERSCORE = "UNDERSCORE",
+  IF     = "IF",
+  ELSE   = "ELSE",
+  AND    = "AND",
+  OR     = "OR",
   EOF    = "EOF",
 }
 Lexer.Token = Token
@@ -45,6 +55,10 @@ local keywords = {
   ["let"] = "LET",
   ["fn"] = "FN",
   ["match"] = "MATCH",
+  ["if"] = "IF",
+  ["else"] = "ELSE",
+  ["and"] = "AND",
+  ["or"] = "OR",
 }
 
 function Lexer.new(source)
@@ -149,9 +163,27 @@ function Lexer:tokenize()
     elseif c == "/" then
       self:advance()
       table.insert(self.tokens, { type = Token.SLASH, value = "/" })
+    elseif c == "=" and c2 == "=" then
+      self:advance(); self:advance()
+      table.insert(self.tokens, { type = Token.EQEQ, value = "==" })
     elseif c == "=" then
       self:advance()
       table.insert(self.tokens, { type = Token.EQ, value = "=" })
+    elseif c == "!" and c2 == "=" then
+      self:advance(); self:advance()
+      table.insert(self.tokens, { type = Token.BANGEQ, value = "!=" })
+    elseif c == "<" and c2 == "=" then
+      self:advance(); self:advance()
+      table.insert(self.tokens, { type = Token.LE, value = "<=" })
+    elseif c == "<" then
+      self:advance()
+      table.insert(self.tokens, { type = Token.LT, value = "<" })
+    elseif c == ">" and c2 == "=" then
+      self:advance(); self:advance()
+      table.insert(self.tokens, { type = Token.GE, value = ">=" })
+    elseif c == ">" then
+      self:advance()
+      table.insert(self.tokens, { type = Token.GT, value = ">" })
     elseif c == "," then
       self:advance()
       table.insert(self.tokens, { type = Token.COMMA, value = "," })

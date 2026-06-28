@@ -50,12 +50,14 @@ function Parser:parse_program()
   return { type = "program", body = stmts }
 end
 
--- statement := fun_decl | let_decl | expression
+-- statement := fun_decl | let_decl | if_expr | expression
 function Parser:parse_statement()
   if self:peek().type == "FN" and self:peek(1).type == "IDENT" then
     return self:parse_fun_decl()
   elseif self:peek().type == "LET" then
     return self:parse_let_decl()
+  elseif self:peek().type == "IF" then
+    return self:parse_if_expr()
   end
   return self:parse_expression()
 end
@@ -112,6 +114,45 @@ function Parser:parse_lambda()
   end
   self:expect("RBRACE")
   return { type = "lambda", params = params, body = body }
+end
+
+function Parser:parse_block()
+  self:expect("LBRACE")
+  self:skip_newlines()
+  local body = {}
+  while self:peek().type ~= "RBRACE" and self:peek().type ~= "EOF" do
+    local stmt = self:parse_statement()
+    table.insert(body, stmt)
+    self:skip_newlines()
+  end
+  self:expect("RBRACE")
+  return body
+end
+
+-- if_expr := "if" expression block ("else" "if" expression block)* ("else" block)?
+function Parser:parse_if_expr()
+  self:expect("IF")
+  local condition = self:parse_expression()
+  self:skip_newlines()
+  local body = self:parse_block()
+
+  local elifs = {}
+  while self:peek().type == "ELSE" and self:peek(1).type == "IF" do
+    self:advance()
+    self:advance()
+    local elif_condition = self:parse_expression()
+    self:skip_newlines()
+    table.insert(elifs, { condition = elif_condition, body = self:parse_block() })
+  end
+
+  local else_body = nil
+  if self:peek().type == "ELSE" then
+    self:advance()
+    self:skip_newlines()
+    else_body = self:parse_block()
+  end
+
+  return { type = "if", condition = condition, body = body, elifs = elifs, else_body = else_body }
 end
 
 -- let_decl := "let" IDENT ("=" expression)?
@@ -185,19 +226,31 @@ function Parser:parse_pipeline()
 end
 
 -- logical := comparison (("and" | "or") comparison)*
--- For now, we skip logicals and go straight to comparison
-
--- logical := comparison
 function Parser:parse_logical()
-  return self:parse_comparison()
+  local left = self:parse_comparison()
+
+  while self:peek().type == "AND" or self:peek().type == "OR" do
+    local tok = self:advance()
+    local right = self:parse_comparison()
+    left = { type = "binary", op = tok.value, left = left, right = right }
+  end
+
+  return left
 end
 
--- comparison := addition (("==" | "~=" | "<" | ">" | "<=" | ">=") addition)*
--- For now, skip comparisons
-
--- comparison := addition
+-- comparison := addition (("==" | "!=" | "<" | ">" | "<=" | ">=") addition)*
 function Parser:parse_comparison()
-  return self:parse_addition()
+  local left = self:parse_addition()
+
+  while self:peek().type == "EQEQ" or self:peek().type == "BANGEQ"
+    or self:peek().type == "LT" or self:peek().type == "GT"
+    or self:peek().type == "LE" or self:peek().type == "GE" do
+    local tok = self:advance()
+    local right = self:parse_addition()
+    left = { type = "binary", op = tok.value, left = left, right = right }
+  end
+
+  return left
 end
 
 -- addition := multiplication (("+" | "-") multiplication)*
