@@ -1,0 +1,38 @@
+{
+  "name": "vscode-venus",
+  "displayName": "Venus",
+  "description": "Venus language support",
+  "version": "0.1.0",
+  "publisher": "venus-lang",
+  "engines": {
+    "vscode": "^1.50.0"
+  },
+  "categories": ["Programming Languages"],
+  "contributes": {
+    "languages": [{
+      "id": "venus",
+      "aliases": ["Venus", "venus"],
+      "extensions": [".vs"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "venus",
+      "scopeName": "source.venus",
+      "path": "./syntaxes/venus.tmLanguage.json"
+    }],
+    "configurationDefaults": {
+      "[venus]": {
+        "editor.tokenColorCustomizations": {
+          "textMateRules": [
+            {
+              "scope": "comment",
+              "settings": {
+                "foreground": "#888888"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

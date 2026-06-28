@@ -1,0 +1,110 @@
+{
+  "scopeName": "source.venus",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#variables" },
+    { "include": "#function-decl" },
+    { "include": "#keywords" },
+    { "include": "#numbers" },
+    { "include": "#wildcard" },
+    { "include": "#operators" },
+    { "include": "#punctuation" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [{
+        "name": "comment.line.double-slash",
+        "match": "//.*"
+      }]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.triple",
+          "begin": "\"\"\"",
+          "end": "\"\"\""
+        },
+        {
+          "name": "string.quoted.double",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [{
+            "name": "constant.character.escape",
+            "match": "\\\\."
+          }]
+        },
+        {
+          "name": "string.quoted.single",
+          "begin": "'",
+          "end": "'",
+          "patterns": [{
+            "name": "constant.character.escape",
+            "match": "\\\\."
+          }]
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [{
+        "name": "constant.numeric",
+        "match": "\\b\\d+(\\.\\d+)?\\b"
+      }]
+    },
+    "function-decl": {
+      "patterns": [{
+        "match": "\\b(fn)\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+        "captures": {
+          "1": { "name": "keyword.function" },
+          "2": { "name": "entity.name.function" }
+        }
+      }]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control",
+          "match": "\\b(fn|let|if|else|match|import|export)\\b"
+        },
+        {
+          "name": "keyword.operator",
+          "match": "\\b(and|or)\\b"
+        },
+        {
+          "name": "constant.language",
+          "match": "\\b(true|false|nil)\\b"
+        }
+      ]
+    },
+    "wildcard": {
+      "patterns": [{
+        "name": "variable.language",
+        "match": "\\b_\\b"
+      }]
+    },
+    "operators": {
+      "patterns": [
+        { "name": "keyword.operator", "match": "!=|==|<=|>=|<|>" },
+        { "name": "keyword.operator", "match": "->" },
+        { "name": "keyword.operator", "match": "\\|>" },
+        { "name": "keyword.operator", "match": "\\?\\." },
+        { "name": "keyword.operator", "match": "[+\\-*/=]" }
+      ]
+    },
+    "punctuation": {
+      "patterns": [{
+        "name": "punctuation",
+        "match": "[\\[\\](){},]"
+      }]
+    },
+    "variables": {
+      "patterns": [{
+        "match": "\\b(let)\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+        "captures": {
+          "1": { "name": "keyword.control" },
+          "2": { "name": "variable.other" }
+        }
+      }]
+    }
+  }
+}
