@@ -50,7 +50,7 @@ function Parser:parse_program()
   return { type = "program", body = stmts }
 end
 
--- statement := fun_decl | let_decl | if_expr | expression
+-- statement := fun_decl | let_decl | if_expr | import_stmt | export_stmt | expression
 function Parser:parse_statement()
   if self:peek().type == "FN" and self:peek(1).type == "IDENT" then
     return self:parse_fun_decl()
@@ -58,6 +58,11 @@ function Parser:parse_statement()
     return self:parse_let_decl()
   elseif self:peek().type == "IF" then
     return self:parse_if_expr()
+  elseif self:peek().type == "EXPORT" then
+    self:advance()
+    self:skip_newlines()
+    local value = self:parse_expression()
+    return { type = "export", value = value }
   end
   return self:parse_expression()
 end
@@ -497,6 +502,11 @@ function Parser:parse_primary()
     return { type = "false" }
   elseif tok.type == "MATCH" then
     return self:parse_match_expression()
+  elseif tok.type == "IMPORT" then
+    self:advance()
+    self:skip_newlines()
+    local path = self:expect("STRING")
+    return { type = "import", path = path.value:sub(2, -2) }
   elseif tok.type == "UNDERSCORE" then
     self:advance()
     return { type = "placeholder" }

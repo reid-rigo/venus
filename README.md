@@ -150,6 +150,34 @@ match x {
 
 Patterns: literal numbers/strings, `_` wildcard, or a variable binding. Arms are separated by commas (optional). Use `match` when you need `if` as an expression (it returns a value).
 
+### Modules
+
+Venus modules use Lua's `require` for importing and a `return` statement for exporting:
+
+```venus
+import "math"                    -- side-effect only (no return value)
+let m = import "math"            -- assign the returned module
+print(m.pi)                      -- 3.14159
+```
+
+Export a value to make a file a module:
+
+```venus
+-- math_util.vs
+fn add(a, b) { a + b }
+fn sub(a, b) { a - b }
+
+export { add -> add, sub -> sub }
+```
+
+```venus
+-- main.vs
+let util = import "math_util"
+print(util.add(2, 3))            -- 5
+```
+
+`export` must be the last statement in the file (Lua requires `return` to be terminal). Use `import` anywhere an expression is expected.
+
 ### Literals & Operators
 
 Numbers, strings (`"` or `'`), `nil`, `true`, `false`, `+`, `-`, `*`, `/`, `==`, `!=`, `<`, `>`, `<=`, `>=`, `and`, `or`, `( )`, member access (`.`), safe navigation (`?.`), function calls, list literals (`[ ]`), table literals (`{ }`), `if`/`else`, match expressions, comments (`--`).
@@ -169,4 +197,5 @@ test/
   test.lua   -- test runner
   util.lua   -- shared compile helper for tests
   test_*.lua -- tests per feature
+  test_module.lua -- module tests
 ```

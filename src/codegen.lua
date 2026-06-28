@@ -83,6 +83,10 @@ function Codegen:emit_expr(node)
     return "false"
   elseif node.type == "ident" then
     return node.name
+  elseif node.type == "import" then
+    return "require(\"" .. node.path .. "\")"
+  elseif node.type == "export" then
+    return "return " .. self:emit_expr(node.value)
   elseif node.type == "member" then
     return self:emit_expr(node.object) .. "." .. node.field
   elseif node.type == "safe_member" then

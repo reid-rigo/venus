@@ -39,6 +39,8 @@ local Token = {
   NIL    = "NIL",
   TRUE   = "TRUE",
   FALSE  = "FALSE",
+  IMPORT = "IMPORT",
+  EXPORT = "EXPORT",
   EOF    = "EOF",
 }
 Lexer.Token = Token
@@ -66,6 +68,8 @@ local keywords = {
   ["nil"] = "NIL",
   ["true"] = "TRUE",
   ["false"] = "FALSE",
+  ["import"] = "IMPORT",
+  ["export"] = "EXPORT",
 }
 
 function Lexer.new(source)

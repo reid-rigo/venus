@@ -11,6 +11,7 @@ local test_files = {
   "test_comparison",
   "test_lambda",
   "test_match",
+  "test_module",
 }
 
 local passed = 0
