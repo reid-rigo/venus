@@ -2,7 +2,7 @@ local Lexer = require("src.lexer")
 local Parser = require("src.parser")
 local Codegen = require("src.codegen")
 List = require("src.list")
-Map = require("src.map")
+Table = require("src.table")
 
 local orig_tostring = tostring
 _G.tostring = function(v)

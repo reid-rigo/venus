@@ -89,15 +89,17 @@ let t = [1 2 3]              -- space-separated values
 let t = [1 [2 3]]            -- nested
 ```
 
-### Maps (`{}`)
+### Tables (`{}`)
+
+Tables are Lua's flexible data structure — they can be maps, objects, or both:
 
 ```venus
-let m = {}                    -- empty map
-let m = { "x" 1 "y" 2 }      -- string keys with values
-let m = { x 10 }             -- identifier key (same as "x")
+let t = {}                    -- empty table
+let t = { "x" 1 "y" 2 }      -- string keys with values (map-like)
+let t = { x 10 }             -- identifier key (same as "x")
 ```
 
-Map keys are always literal strings — identifier keys are not variable lookups.
+Use `.` for field access: `t.x` retrieves the value at key `"x"`. Table keys are always literal strings — identifier keys are not variable lookups. You can store functions in tables to create objects.
 
 ### If / elif / else
 
@@ -151,7 +153,7 @@ Patterns: literal numbers/strings, `_` wildcard, or a variable binding. Arms are
 
 ### Literals & Operators
 
-Numbers, strings (`"` or `'`), `nil`, `true`, `false`, `+`, `-`, `*`, `/`, `==`, `!=`, `<`, `>`, `<=`, `>=`, `and`, `or`, `( )`, member access (`.`), function calls, list literals (`[ ]`), map literals (`{ }`), `if`/`else`, match expressions, comments (`--`).
+Numbers, strings (`"` or `'`), `nil`, `true`, `false`, `+`, `-`, `*`, `/`, `==`, `!=`, `<`, `>`, `<=`, `>=`, `and`, `or`, `( )`, member access (`.`), function calls, list literals (`[ ]`), table literals (`{ }`), `if`/`else`, match expressions, comments (`--`).
 
 `nil` and `false` are falsy in conditionals; everything else is truthy.
 

@@ -344,8 +344,8 @@ function Parser:parse_list_constructor()
   return { type = "list", values = values }
 end
 
--- map_constructor := "{" (STRING | IDENT expression)* "}"
-function Parser:parse_map_constructor()
+-- table_constructor := "{" (STRING | IDENT expression)* "}"
+function Parser:parse_table_constructor()
   self:expect("LBRACE")
   local fields = {}
   self:skip_newlines()
@@ -363,7 +363,7 @@ function Parser:parse_map_constructor()
       local value = self:parse_expression()
       table.insert(fields, { type = "field", key = key, value = value })
     else
-      error("Expected string key in map literal but got " .. tok.type)
+      error("Expected string key in table literal but got " .. tok.type)
     end
     self:skip_newlines()
   end
@@ -464,7 +464,7 @@ function Parser:parse_primary()
   elseif tok.type == "LBRACKET" then
     return self:parse_list_constructor()
   elseif tok.type == "LBRACE" then
-    return self:parse_map_constructor()
+    return self:parse_table_constructor()
   elseif tok.type == "NIL" then
     self:advance()
     return { type = "nil" }
