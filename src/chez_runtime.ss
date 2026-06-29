@@ -145,7 +145,8 @@
             (if pos
                 (loop (+ pos len) (cons (substring s start pos) result))
                 (reverse (cons (substring s start (string-length s)) result))))))))
-(define String-split string-split)
+(define (String-split s sep)
+  (list->venus-list (string-split s sep)))
 (define (String-trim s)
   (let ((len (string-length s)))
     (let ((l (do ((i 0 (+ i 1))) ((or (>= i len) (not (char-whitespace? (string-ref s i)))) i)))
@@ -161,8 +162,8 @@
     (and (>= slen sflen) (string=? (substring s (- slen sflen) slen) suffix))))
 (define (String-contains s substr)
   (not (not (string-find s substr 0))))
-(define (String-concat lst)
-  (apply string-append lst))
+(define (String-concat . args)
+  (apply string-append args))
 (define (String-upper s) (string-upcase s))
 (define (String-reverse s)
   (list->string (reverse (string->list s))))
@@ -266,6 +267,9 @@
                    (cons "min" Math-min)
                    (cons "pi" Math-pi)))
 
+;; Test accumulator (also defined in chez_test.ss, but initialized here for safety)
+(define *vs-tests* '())
+
 ;; Module system
 (define *module-exports* #f)
 
@@ -281,14 +285,64 @@
               (list->string (reverse chars))
               (loop (cons c chars))))))))
 
+(define (vs-run-file path)
+  (let* ((source (vs-read-file path))
+         (code (codegen (parse source))))
+    (let ((port (open-input-string code)))
+      (let loop ()
+        (let ((expr (read port)))
+          (unless (eof-object? expr)
+            (eval expr (interaction-environment))
+            (loop)))))))
+
+(define (vs-run-file-with-tests path)
+  (let* ((source (vs-read-file path))
+         (code (codegen (parse source))))
+    (set! *vs-tests* '())
+    (let ((port (open-input-string code)))
+      (let loop ()
+        (let ((expr (read port)))
+          (unless (eof-object? expr)
+            (eval expr (interaction-environment))
+            (loop)))))
+    (let ((tests (reverse! *vs-tests*)))
+      (set! *vs-tests* '())
+      (let run ((rest tests) (passed 0) (failed 0))
+        (if (null? rest)
+            (begin
+              (display (string-append "  "
+                         (number->string passed) " passed, "
+                         (number->string failed) " failed"))
+              (newline)
+              (values passed failed))
+            (let* ((t (car rest))
+                   (name (car t))
+                   (thunk (cdr t)))
+              (guard (e (else
+                         (display "  FAIL: ") (display name) (newline)
+                         (display "    ") (display (condition-message e)) (newline)
+                         (run (cdr rest) passed (+ failed 1))))
+                (let ((result (thunk)))
+                  (if result
+                      (begin
+                        (display "  PASS: ") (display name) (newline)
+                        (run (cdr rest) (+ passed 1) failed))
+                      (begin
+                        (display "  FAIL: ") (display name) (newline)
+                        (display "    returned ") (display result) (newline)
+                        (run (cdr rest) passed (+ failed 1))))))))))))
+
 (define (vs-import path)
   (cond
     ((string=? path "math")
      Math)
+    ((string=? path "src.runner")
+     (list (cons "run_file" vs-run-file-with-tests)))
     (else
      (let ((full-path (if (string-find path ".vs" 0)
                           path
-                          (string-append "src/" path ".vs"))))
+                          (let ((slash-path (string-replace path "." "/")))
+                            (string-append slash-path ".vs")))))
        (let ((source (vs-read-file full-path)))
          (let ((code (codegen (parse source))))
            (set! *module-exports* '())
