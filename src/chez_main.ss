@@ -11,6 +11,22 @@
 (load (string-append *root* "/src/codegen.ss"))
 (load (string-append *root* "/src/chez_runtime.ss"))
 
+;; Load Venus standard library extensions into the interaction environment.
+;; Each Venus export is a top-level binding created by the codegen.
+;; We reference functions by name so eval can look them up.
+(define (load-vs-extension! path module-name)
+  (let ((exports (vs-import path)))
+    (for-each (lambda (kv)
+                (let ((key (car kv))
+                      (var-name (string->symbol (car kv))))
+                  (eval `(set! ,module-name
+                               (cons (cons ,key ,var-name) ,module-name)))))
+              exports)))
+
+(load-vs-extension! "src/string.vs" 'String)
+(load-vs-extension! "src/list.vs" 'List)
+(load-vs-extension! "src/table.vs" 'Table)
+
 (define (read-file path)
   (call-with-input-file path
     (lambda (port)
