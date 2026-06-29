@@ -245,6 +245,8 @@
                                     (cons 'args (list left)))))
                      ((eq? r-type 'lambda)
                       (loop (ast 'call (cons 'callee right) (cons 'args (list left)))))
+                     ((eq? r-type 'member)
+                      (loop (ast 'call (cons 'callee right) (cons 'args (list left)))))
                      (else
                       (error 'parser "Pipeline right-hand side must be a function call"))))))
         left)))
@@ -308,13 +310,11 @@
                              (reverse! fs)))))
            (loop (ast 'safe-member (cons 'object expr) (cons 'fields fields)))))
 
-        ;; Member: .field (or compound name for idents)
+        ;; Member: .field
         ((eq? (tok-type t) *tok-dot*)
          (p:advance! p)
          (let* ((field (tok-value (p:expect! p *tok-ident*))))
-           (if (eq? (cdr (assq 'type expr)) 'ident)
-               (loop (ast 'ident (cons 'name (string-append (cdr (assq 'name expr)) "." field))))
-               (loop (ast 'member (cons 'object expr) (cons 'field field))))))
+           (loop (ast 'member (cons 'object expr) (cons 'field field)))))
 
         (else expr)))))
 

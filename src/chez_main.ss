@@ -9,6 +9,7 @@
 (load (string-append *root* "/src/lexer.ss"))
 (load (string-append *root* "/src/parser.ss"))
 (load (string-append *root* "/src/codegen.ss"))
+(load (string-append *root* "/src/chez_runtime.ss"))
 
 (define (read-file path)
   (call-with-input-file path
@@ -19,17 +20,69 @@
               (list->string (reverse chars))
               (loop (cons c chars))))))))
 
+(define (compile-source source)
+  (let* ((ast (parse source))
+         (code (codegen ast)))
+    code))
+
+(define (eval-code code)
+  (let ((port (open-input-string code)))
+    (let loop ()
+      (let ((expr (read port)))
+        (unless (eof-object? expr)
+          (eval expr (interaction-environment))
+          (loop))))))
+
+(define (display-code code)
+  (display code)
+  (when (and (> (string-length code) 0)
+             (not (char=? (string-ref code (- (string-length code) 1)) #\newline)))
+    (newline)))
+
+(define (usage)
+  (display "Usage: vs-chez [options] <file.vs>\n")
+  (display "Options:\n")
+  (display "  -c           Print compiled Scheme only (do not run)\n")
+  (display "  -e <code>    Execute Venus code from string\n")
+  (display "  --help       Show this help\n")
+  (exit 1))
+
 (define (main)
   (let ((args (cdr (command-line))))
-    (cond
-      ((null? args)
-       (display "Usage: vs-chez <file.vs>\n")
-       (exit 1))
-      (else
-       (let* ((filename (car args))
-              (source (read-file filename))
-              (ast (parse source))
-              (lua-code (codegen ast)))
-         (display lua-code))))))
+    (let parse-args ((remaining args)
+                     (compile-only #f)
+                     (inline-code #f)
+                     (filename #f))
+      (cond
+        ((and (null? remaining) (not inline-code) (not filename))
+         (usage))
+        ((and (null? remaining) inline-code)
+         (let ((code (compile-source inline-code)))
+           (if compile-only
+               (display-code code)
+               (eval-code code))))
+        ((and (null? remaining) filename)
+         (let* ((source (read-file filename))
+                (code (compile-source source)))
+           (if compile-only
+               (display-code code)
+               (eval-code code))))
+        (else
+         (let ((arg (car remaining))
+               (rest (cdr remaining)))
+           (cond
+             ((string=? arg "-c")
+              (parse-args rest #t inline-code filename))
+             ((string=? arg "-e")
+              (if (null? rest)
+                  (usage)
+                  (parse-args (cdr rest) compile-only (car rest) filename)))
+             ((string=? arg "--help")
+              (usage))
+             ((char=? (string-ref arg 0) #\-)
+              (display (string-append "Unknown option: " arg "\n"))
+              (usage))
+             (else
+              (parse-args rest compile-only inline-code arg)))))))))
 
 (main)
