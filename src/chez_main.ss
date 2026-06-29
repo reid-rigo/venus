@@ -33,6 +33,20 @@
           (eval expr (interaction-environment))
           (loop))))))
 
+(define (string-contains? s substr)
+  (let ((slen (string-length s))
+        (sublen (string-length substr)))
+    (let loop ((i 0))
+      (and (<= (+ i sublen) slen)
+           (or (string=? (substring s i (+ i sublen)) substr)
+               (loop (+ i 1)))))))
+
+(define (eval-code/run-tests code)
+  (eval-code code)
+  (guard (e (else #f))
+    (when (and (not (null? *vs-tests*)) (procedure? run-tests))
+      (run-tests))))
+
 (define (display-code code)
   (display code)
   (when (and (> (string-length code) 0)
@@ -66,7 +80,10 @@
                 (code (compile-source source)))
            (if compile-only
                (display-code code)
-               (eval-code code))))
+               (begin
+                 (when (string-contains? filename "test/")
+                   (load (string-append *root* "/src/chez_test.ss")))
+                 (eval-code/run-tests code)))))
         (else
          (let ((arg (car remaining))
                (rest (cdr remaining)))
