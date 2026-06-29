@@ -1,22 +1,17 @@
 [tools]
 chezscheme = "latest"
-luajit = "latest"
 
 [tasks.build]
 description = "Compile Venus interpreter binary (bin/vs)"
 
 [tasks.clean]
 description = "Remove build artifacts"
-run = "rm -f bin/vs bin/vs-chez && rm -rf lib/chez"
+run = "rm -f bin/vs"
 
 [tasks.test]
 description = "Build and run the Venus test suite"
-run = "mise run build -- --if-changed && ./bin/vs test/run_all.vs"
+run = "mise run build && ./bin/vs test/run_all.vs"
 
 [tasks.repl]
 description = "Start the Venus REPL"
-run = "luajit src/main.lua"
-
-[tasks.chez-clean]
-description = "Remove Chez Scheme build artifacts"
-run = "rm -f bin/vs-chez && rm -rf lib/chez"
+run = "./bin/vs"

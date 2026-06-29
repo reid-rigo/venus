@@ -1,5 +1,4 @@
 bin/
-lib/chez/
 tmp/
 
 .vscode/

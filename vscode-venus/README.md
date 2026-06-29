@@ -1,6 +1,6 @@
 # Venus
 
-Syntax highlighting for [Venus](https://github.com/reid/venus) (`.vs`) files — a small language that compiles to LuaJIT.
+Syntax highlighting for [Venus](https://github.com/reid/venus) (`.vs`) files — a small language that compiles to Chez Scheme.
 
 ## Installing
 

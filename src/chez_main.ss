@@ -54,7 +54,7 @@
     (newline)))
 
 (define (usage)
-  (display "Usage: vs-chez [options] <file.vs>\n")
+  (display "Usage: vs [options] <file.vs>\n")
   (display "Options:\n")
   (display "  -c           Print compiled Scheme only (do not run)\n")
   (display "  -e <code>    Execute Venus code from string\n")

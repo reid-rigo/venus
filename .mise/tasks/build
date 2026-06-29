@@ -1,12 +1,16 @@
 #!/bin/sh
 set -eu
 
-if [ "${1:-}" = "--if-changed" ] && [ -x bin/vs ] && [ ! src/main.c -nt bin/vs ]; then
-  exit 0
-fi
+mkdir -p bin
 
-luajit_dir=$(mise where luajit 2>/dev/null || echo "$HOME/.local/share/mise/installs/luajit/latest")
-cflags="-I$luajit_dir/include/luajit-2.1 -std=c99 -Wall -Wextra -O2"
-ldflags="-L$luajit_dir/lib -lluajit-5.1 -lm -ldl -Wl,-rpath,$luajit_dir/lib"
+CHEZ_DIR=$(mise where chezscheme)
+CHEZ_LIB="$CHEZ_DIR/lib/csv10.4.1/tarm64osx"
 
-gcc $cflags -o bin/vs src/main.c $ldflags
+cc -o bin/vs \
+  src/chez_main.c \
+  -I"$CHEZ_LIB" \
+  -DCHEZ_BOOT_DIR="\"$CHEZ_LIB\"" \
+  "$CHEZ_LIB/libkernel.a" \
+  "$CHEZ_LIB/liblz4.a" \
+  "$CHEZ_LIB/libz.a" \
+  -liconv -lncurses

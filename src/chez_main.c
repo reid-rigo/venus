@@ -10,6 +10,10 @@
 
 static void custom_init(void) {}
 
+#ifndef CHEZ_BOOT_DIR
+#define CHEZ_BOOT_DIR "/usr/lib/csv"
+#endif
+
 int main(int argc, char *argv[]) {
   /* Resolve binary location */
   char bin[1024];
@@ -34,41 +38,12 @@ int main(int argc, char *argv[]) {
   chdir(root);
   setenv("VENUS_ROOT", root, 1);
 
-  /* Find boot files: try project lib/chez first, then CHEZ_DIR, then scheme in PATH */
-  char boot_dir[2048];
-  int found = 0;
-
-  /* 1. Check lib/chez/ relative to project root */
-  snprintf(boot_dir, sizeof(boot_dir), "%s/lib/chez", root);
-  char test_path[2048];
-  snprintf(test_path, sizeof(test_path), "%s/petite.boot", boot_dir);
-  if (access(test_path, R_OK) == 0) {
-    found = 1;
-  }
-
-  /* 2. Check CHEZ_DIR env */
-  if (!found) {
-    const char *chez_dir = getenv("CHEZ_DIR");
-    if (chez_dir) {
-      snprintf(boot_dir, sizeof(boot_dir), "%s/lib/csv10.4.1/tarm64osx", chez_dir);
-      snprintf(test_path, sizeof(test_path), "%s/petite.boot", boot_dir);
-      if (access(test_path, R_OK) == 0) {
-        found = 1;
-      }
-    }
-  }
-
-  if (!found) {
-    fprintf(stderr, "Error: cannot find Chez Scheme boot files\n");
-    fprintf(stderr, "Ensure lib/chez/ has boot files, or set CHEZ_DIR\n");
-    return 1;
-  }
-
+  /* Register boot files from compile-time path */
   Sscheme_init(NULL);
 
   char petite_boot[2048], scheme_boot[2048];
-  snprintf(petite_boot, sizeof(petite_boot), "%s/petite.boot", boot_dir);
-  snprintf(scheme_boot, sizeof(scheme_boot), "%s/scheme.boot", boot_dir);
+  snprintf(petite_boot, sizeof(petite_boot), "%s/petite.boot", CHEZ_BOOT_DIR);
+  snprintf(scheme_boot, sizeof(scheme_boot), "%s/scheme.boot", CHEZ_BOOT_DIR);
   Sregister_boot_file(petite_boot);
   Sregister_boot_file(scheme_boot);
 

@@ -4,18 +4,16 @@
 
 # Venus
 
-A small, functional-first language built on LuaJIT.
+A small, functional-first language built on Chez Scheme.
 
 ## Build & Run
 
 ```sh
-mise build           # compile src/main.c -> bin/vs
+mise build           # compile src/chez_main.c -> bin/vs
 ./bin/vs file.vs     # compile and run
-./bin/vs -c file.vs  # compile only (show Lua output)
+./bin/vs -c file.vs  # compile only (show Scheme output)
 ./bin/vs -e 'code'   # run inline Venus code
 ./bin/vs --help      # flags
-luajit src/main.lua  # dev equivalent (no build needed)
-luajit test/run.lua  # run test suite
 ```
 
 ## Language
@@ -167,7 +165,7 @@ Patterns: literal numbers/strings, `_` wildcard, or a variable binding. Arms are
 
 ### Modules
 
-Venus modules use Lua's `require` for importing and a `return` statement for exporting:
+Venus modules use `import` for importing and `export` for exporting:
 
 ```venus
 import "math"                    // side-effect only (no return value)
@@ -259,12 +257,6 @@ Built-in modules available as globals:
 | `Math.max(x, y)` | Larger of two values |
 | `Math.min(x, y)` | Smaller of two values |
 | `Math.pi` | Constant 3.14159... |
-
-Lua's built-in `string` and `math` libraries (lowercase) are also available directly.
-
-### Literals & Operators
-
-Numbers, strings (`"` with interpolation, `'` literal, `"""` multiline with interpolation), `nil`, `true`, `false`, `+`, `-`, `*`, `/`, `==`, `!=`, `<`, `>`, `<=`, `>=`, `and`, `or`, `( )`, member access (`.`), safe navigation (`?.`), function calls, list literals (`[ ]`), table literals (`{ }`), `if`/`else`, match expressions, comments (`//`).
 
 `nil` and `false` are falsy in conditionals; everything else is truthy.
 
