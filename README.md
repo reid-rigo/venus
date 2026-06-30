@@ -185,7 +185,7 @@ Triple-quoted strings can span multiple lines and support interpolation: `"""${e
 |---|---|---|---|---|---|
 | `List` | No | `[a, b, c]` | `[a, b, c]` | Functional dequeue (ideque) |
 | `Vector` | Yes | `#[a, b, c]` | `#[a, b, c]` | Dynamic array (doubling growth) |
-| `Map` | No | `Map.make(k, v, ...)` | SRFI 146 format | HAMT (persistent, O(log n)) |
+| `Map` | No | `Map.make(k, v, ...)` | `{k -> v}` | HAMT (persistent, O(log n)) |
 | `Table` | Yes | `{k -> v}` / `#{k -> v}` | `#{"k" -> v}` | Chez hash table (O(1)) |
 
 Use `.` for field access on tables and modules: `t.x`, `math.pi`. Use `?.` for safe navigation that returns `nil` instead of erroring when the left side is `nil`.
@@ -236,7 +236,7 @@ Mutable dynamic array with doubling growth. All operations mutate in place and r
 
 ### `Map`
 
-Immutable HAMT (SRFI 146). All operations return a new map. Prints as SRFI 146's default representation.
+Immutable HAMT (SRFI 146). All operations return a new map. Prints as `{k -> v}`.
 
 | Function | Description |
 |---|---|
