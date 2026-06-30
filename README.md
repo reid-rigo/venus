@@ -183,8 +183,8 @@ Triple-quoted strings can span multiple lines and support interpolation: `"""${e
 
 | | Mutable | Literal | Prints as | Backed by |
 |---|---|---|---|---|---|
-| `List` | No | `[a b c]` | `[a b c]` | Functional dequeue (ideque) |
-| `Vector` | Yes | `#[a b c]` | `#[a b c]` | Dynamic array (doubling growth) |
+| `List` | No | `[a b c]` | `[a, b, c]` | Functional dequeue (ideque) |
+| `Vector` | Yes | `#[a b c]` | `#[a, b, c]` | Dynamic array (doubling growth) |
 | `Map` | No | `Map.make(k, v, ...)` | SRFI 146 format | HAMT (persistent, O(log n)) |
 | `Table` | Yes | `{k -> v}` / `#{k -> v}` | `#{"k" -> v}` | Chez hash table (O(1)) |
 
@@ -196,7 +196,7 @@ Built-in modules available as globals:
 
 ### `List`
 
-Immutable functional dequeue (ideque). Operations like `add` return a new list. Prints as `[1 2 3]`.
+Immutable functional dequeue (ideque). Operations like `add` return a new list. Prints as `[a, b, c]`.
 
 | Function | Description |
 |---|---|
@@ -218,7 +218,7 @@ Immutable functional dequeue (ideque). Operations like `add` return a new list. 
 
 ### `Vector`
 
-Mutable dynamic array with doubling growth. All operations mutate in place and return the vector. Prints as `#[1 2 3]`.
+Mutable dynamic array with doubling growth. All operations mutate in place and return the vector. Prints as `#[a, b, c]`.
 
 | Function | Description |
 |---|---|
