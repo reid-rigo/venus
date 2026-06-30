@@ -210,6 +210,15 @@ print(s)                            // hello\nworld
 
 Triple-quoted strings can span multiple lines and support interpolation: `"""${expr}"""`.
 
+## Data Structures
+
+| | Mutable | Literal | Prints as | Backed by |
+|---|---|---|---|---|
+| `List` | No | `[a b c]` | `[a b c]` | Functional dequeue (ideque) |
+| `Table` | Yes | `{k -> v}` / `#{k -> v}` | `#{"k" -> v}` | Chez hash table (O(1)) |
+| `Map` | No | `Map.make(k, v, ...)` | SRFI 146 format | HAMT (persistent, O(log n)) |
+| `Vector` | Yes | `#[a b c]` | `#[a b c]` | Dynamic array (doubling growth) |
+
 ## Standard Library
 
 Built-in modules available as globals:
