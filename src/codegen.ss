@@ -248,14 +248,14 @@
        (ident->scheme (ast-ref node 'name)))
 
        ((eq? type 'member)
-        (string-append "(cdr (assoc \"" (ast-ref node 'field) "\" (tu "
-                       (cg-emit-expr port (ast-ref node 'object)) ")))"))
+        (string-append "(venus-ref " (cg-emit-expr port (ast-ref node 'object))
+                       " \"" (ast-ref node 'field) "\")"))
 
        ((eq? type 'safe-member)
         (let ((obj (cg-emit-expr port (ast-ref node 'object)))
               (fields (ast-ref node 'fields)))
           (string-append "(and " obj
-                         " (let ((_v (assoc \"" (car fields) "\" (tu " obj ")))) (and _v (cdr _v))))")))
+                         " (venus-ref " obj " \"" (car fields) "\"))")))
 
       ((eq? type 'binary)
        (let ((left (cg-emit-expr port (ast-ref node 'left)))
@@ -298,7 +298,7 @@
                                          (string-downcase prefix)))
                            (string-append "(" prefix "-" (field->func field) " " args-joined ")")
                            (string-append "(" prefix "-" (field->func field) " " obj " " args-joined ")"))
-                       (string-append "((cdr (assoc \"" field "\" (tu " obj "))) " args-joined ")")))
+                       (string-append "((venus-ref " obj " \"" field "\") " args-joined ")")))
               (let ((callee
                      (cond
                        ((string? callee-raw) callee-raw)

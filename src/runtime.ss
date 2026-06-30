@@ -103,6 +103,11 @@
 (define *vs-tests* '())
 
 ;; Module system
+(define (venus-ref obj key)
+  (if (hashtable? obj)
+      (hashtable-ref obj key #f)
+      (cdr (assoc key obj))))
+
 (define *module-exports* (make-parameter #f))
 
 (define (vs-export! key val)
