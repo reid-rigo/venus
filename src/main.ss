@@ -6,6 +6,8 @@
 
 (define *root* (or (getenv "VENUS_ROOT") (current-directory)))
 
+(library-directories (list (string-append *root* "/src") "."))
+
 (load (string-append *root* "/src/lexer.ss"))
 (load (string-append *root* "/src/parser.ss"))
 (load (string-append *root* "/src/codegen.ss"))

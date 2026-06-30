@@ -3,6 +3,7 @@
 (load (string-append *root* "/src/list.ss"))
 (load (string-append *root* "/src/string.ss"))
 (load (string-append *root* "/src/math.ss"))
+(load (string-append *root* "/src/map.ss"))
 
 ;; Module alists for dynamic method dispatch
 (define Table (list (cons "has" Table-has)
@@ -66,6 +67,20 @@
                    (cons "max" Math-max)
                    (cons "min" Math-min)
                    (cons "pi" Math-pi)))
+
+(define Map (list (cons "make" Map-make)
+                  (cons "has" Map-has)
+                  (cons "get" Map-get)
+                  (cons "set" Map-set)
+                  (cons "remove" Map-remove)
+                  (cons "len" Map-len)
+                  (cons "keys" Map-keys)
+                  (cons "values" Map-values)
+                  (cons "each" Map-each)
+                  (cons "map" Map-map)
+                  (cons "filter" Map-filter)
+                  (cons "merge" Map-merge)
+                  (cons "to_list" Map-to_list)))
 
 ;; Lowercase aliases for Venus standard library compatibility
 (define string-len String-len)
@@ -138,6 +153,8 @@
 
 (define (vs-import path)
   (cond
+    ((string=? path "map")
+     Map)
     ((string=? path "math")
      Math)
     ((string=? path "src.runner")

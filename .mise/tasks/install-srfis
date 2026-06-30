@@ -1,25 +1,18 @@
 #!/bin/sh
 set -eu
 
-SRFI_DIR="src/srfi"
+RAW_DIR="$(mktemp -d)"
+OUT_DIR="src/srfi"
 
-if [ -d "$SRFI_DIR/.git" ]; then
-  echo "Updating chez-srfi..."
-  (cd "$SRFI_DIR" && git pull --ff-only)
-else
-  echo "Cloning chez-srfi..."
-  git clone --depth 1 --single-branch \
-    https://github.com/arcfide/chez-srfi.git "$SRFI_DIR"
-fi
+echo "Cloning chez-srfi..."
+git clone --depth 1 --single-branch \
+  https://github.com/arcfide/chez-srfi.git "$RAW_DIR"
 
-# Rename %3a -> : in filenames (git on macOS encodes colons)
-find "$SRFI_DIR" -depth -name '*%3a*' | while IFS= read -r f; do
-  dir=$(dirname "$f")
-  base=$(basename "$f")
-  newbase=$(echo "$base" | sed 's/%3a/:/g')
-  if [ "$base" != "$newbase" ] && [ ! -e "$dir/$newbase" ]; then
-    mv "$f" "$dir/$newbase"
-  fi
-done
+echo "Installing SRFI libraries to $OUT_DIR..."
+rm -rf "$OUT_DIR"
+(cd "$RAW_DIR" && scheme --script install.chezscheme.sps "$(pwd)/..")
 
-echo "Done — SRFI libraries in $SRFI_DIR"
+echo "Cleaning up..."
+rm -rf "$RAW_DIR"
+
+echo "Done — SRFI libraries in $OUT_DIR"
