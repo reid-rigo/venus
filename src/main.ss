@@ -4,6 +4,17 @@
 
 (import (chezscheme))
 
+;; Try to load libedit for readline support in REPL
+(define *have-readline* #f)
+(define *readline-fn* #f)
+(define *add-history-fn* #f)
+
+(guard (e (else #f))
+  (load-shared-object "libedit.dylib")
+  (set! *readline-fn* (foreign-procedure "readline" (string) string))
+  (set! *add-history-fn* (foreign-procedure "add_history" (string) void))
+  (set! *have-readline* #t))
+
 (define *root* (or (getenv "VENUS_ROOT") (current-directory)))
 
 (library-directories (list (string-append *root* "/src") "."))
@@ -83,30 +94,33 @@
 (define (repl)
   (display "Venus REPL\n")
   (let loop ()
-    (display "> ")
-    (flush-output-port (current-output-port))
-    (let ((line (get-line (current-input-port))))
-      (unless (eof-object? line)
-        (unless (string=? line "")
-              (let ((code (guard (e (else
-                                     (display "Error: ")
-                                     (display (condition-message e))
-                                     (newline) #f))
-                           (compile-source line))))
-                (when code
-                  (guard (e (else
-                             (display "Error: ")
-                             (display (condition-message e))
-                             (newline)))
-                (let ((port (open-input-string code)))
-                  (let eval-loop ()
-                    (let ((expr (read port)))
-                      (unless (eof-object? expr)
-                        (let ((val (eval expr (interaction-environment))))
-                             (unless (eq? val (void))
-                             (venus-write val) (newline)))
-                        (eval-loop)))))))))
-        (loop)))))
+    (let ((line (if *have-readline*
+                    (*readline-fn* "> ")
+                    (begin (display "> ")
+                           (flush-output-port (current-output-port))
+                           (get-line (current-input-port))))))
+      (when (and line (not (string=? line "")))
+        (when *have-readline*
+          (*add-history-fn* line))
+        (let ((code (guard (e (else
+                               (display "Error: ")
+                               (display (condition-message e))
+                               (newline) #f))
+                      (compile-source line))))
+          (when code
+            (guard (e (else
+                       (display "Error: ")
+                       (display (condition-message e))
+                       (newline)))
+              (let ((port (open-input-string code)))
+                (let eval-loop ()
+                  (let ((expr (read port)))
+                    (unless (eof-object? expr)
+                      (let ((val (eval expr (interaction-environment))))
+                        (unless (eq? val (void))
+                          (venus-write val) (newline)))
+                      (eval-loop)))))))))
+      (when line (loop)))))
 
 (define (main)
   (let ((args (cdr (command-line))))
