@@ -196,6 +196,8 @@ Built-in modules available as globals:
 
 ### `List`
 
+Immutable functional dequeue (ideque). Operations like `add` return a new list. Prints as `[1 2 3]`.
+
 | Function | Description |
 |---|---|
 | `List.add(t, v)` | Append `v` to list, returns list |
@@ -253,6 +255,8 @@ Immutable HAMT (SRFI 146). All operations return a new map. Prints as SRFI 146's
 | `Map.to_list(m)` | List of `[k, v]` pairs |
 
 ### `Table`
+
+Mutable hash table (O(1) access). All operations mutate in place and return the table. Prints as `#{"key" -> value}`.
 
 | Function | Description |
 |---|---|
