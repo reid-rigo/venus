@@ -91,7 +91,7 @@ Overloads are collected at compile time into a single dispatch function — no r
 
 ```venus
 let double = fn(x) { x * 2 }
-map([1 2 3], fn(x) { x * 2 })
+map([1, 2, 3], fn(x) { x * 2 })
 5 |> fn(x) { x * 2 }
 ```
 
@@ -183,8 +183,8 @@ Triple-quoted strings can span multiple lines and support interpolation: `"""${e
 
 | | Mutable | Literal | Prints as | Backed by |
 |---|---|---|---|---|---|
-| `List` | No | `[a b c]` | `[a, b, c]` | Functional dequeue (ideque) |
-| `Vector` | Yes | `#[a b c]` | `#[a, b, c]` | Dynamic array (doubling growth) |
+| `List` | No | `[a, b, c]` | `[a, b, c]` | Functional dequeue (ideque) |
+| `Vector` | Yes | `#[a, b, c]` | `#[a, b, c]` | Dynamic array (doubling growth) |
 | `Map` | No | `Map.make(k, v, ...)` | SRFI 146 format | HAMT (persistent, O(log n)) |
 | `Table` | Yes | `{k -> v}` / `#{k -> v}` | `#{"k" -> v}` | Chez hash table (O(1)) |
 
