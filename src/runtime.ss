@@ -103,10 +103,10 @@
 (define *vs-tests* '())
 
 ;; Module system
-(define *module-exports* #f)
+(define *module-exports* (make-parameter #f))
 
 (define (vs-export! key val)
-  (set! *module-exports* (cons (cons key val) *module-exports*)))
+  (*module-exports* (cons (cons key val) (*module-exports*))))
 
 (define (vs-read-file path)
   (call-with-input-file path
@@ -181,11 +181,11 @@
                             (string-append slash-path ".vs")))))
        (let ((source (vs-read-file full-path)))
          (let ((code (codegen (parse source))))
-           (set! *module-exports* '())
-           (let ((port (open-input-string code)))
-             (let loop ()
-               (let ((expr (read port)))
-                 (unless (eof-object? expr)
-                   (eval expr (interaction-environment))
-                   (loop)))))
-           (reverse! *module-exports*)))))))
+           (parameterize ((*module-exports* '()))
+             (let ((port (open-input-string code)))
+               (let loop ()
+                 (let ((expr (read port)))
+                   (unless (eof-object? expr)
+                     (eval expr (interaction-environment))
+                     (loop)))))
+             (reverse! (*module-exports*)))))))))
