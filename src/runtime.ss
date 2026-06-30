@@ -4,6 +4,7 @@
 (load (string-append *root* "/src/string.ss"))
 (load (string-append *root* "/src/math.ss"))
 (load (string-append *root* "/src/map.ss"))
+(load (string-append *root* "/src/vector.ss"))
 
 ;; Module alists for dynamic method dispatch
 (define Table (list (cons "has" Table-has)
@@ -67,6 +68,18 @@
                    (cons "max" Math-max)
                    (cons "min" Math-min)
                    (cons "pi" Math-pi)))
+
+(define Vector (list (cons "make" Vector-make)
+                     (cons "len" Vector-len)
+                     (cons "get" Vector-get)
+                     (cons "set" Vector-set)
+                     (cons "push" Vector-push)
+                     (cons "pop" Vector-pop)
+                     (cons "each" Vector-each)
+                     (cons "map" Vector-map)
+                     (cons "filter" Vector-filter)
+                     (cons "to_list" Vector-to_list)
+                     (cons "copy" Vector-copy)))
 
 (define Map (list (cons "make" Map-make)
                   (cons "has" Map-has)
@@ -153,6 +166,8 @@
 
 (define (vs-import path)
   (cond
+    ((string=? path "vector")
+     Vector)
     ((string=? path "map")
      Map)
     ((string=? path "math")
