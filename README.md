@@ -14,6 +14,7 @@ mise run build       # compile main.c -> bin/vs
 ./bin/vs -c file.vs  # compile only (show Scheme output)
 ./bin/vs -e 'code'   # run inline Venus code
 ./bin/vs --help      # flags
+./bin/vs             # start REPL
 ```
 
 Tests: `mise run test`
