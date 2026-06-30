@@ -1,13 +1,16 @@
-(define (vec-data v) (vector-ref v 0))
-(define (vec-len v) (vector-ref v 1))
-(define (vec-set-data! v d) (vector-set! v 0 d))
-(define (vec-set-len! v n) (vector-set! v 1 n))
+(define (venus-vector? v)
+  (and (vector? v) (>= (vector-length v) 3) (eq? (vector-ref v 0) 'venus-vector)))
+
+(define (vec-data v) (vector-ref v 1))
+(define (vec-len v) (vector-ref v 2))
+(define (vec-set-data! v d) (vector-set! v 1 d))
+(define (vec-set-len! v n) (vector-set! v 2 n))
 
 (define (Vector-make . args)
   (let ((n (if (null? args) 0 (car args)))
         (init (if (or (null? args) (= (length args) 1)) #f (cadr args))))
     (let ((v (make-vector (max n 4) init)))
-      (vector v n))))
+      (vector 'venus-vector v n))))
 
 (define (Vector-len v) (vec-len v))
 
@@ -81,4 +84,4 @@
          (new-data (make-vector len)))
     (do ((i 0 (+ i 1))) ((= i len))
       (vector-set! new-data i (vector-ref old-data i)))
-    (vector new-data len)))
+    (vector 'venus-vector new-data len)))

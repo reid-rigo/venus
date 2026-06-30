@@ -103,8 +103,8 @@
                     (let ((expr (read port)))
                       (unless (eof-object? expr)
                         (let ((val (eval expr (interaction-environment))))
-                            (unless (eq? val (void))
-                            (write val) (newline)))
+                             (unless (eq? val (void))
+                             (venus-write val) (newline)))
                         (eval-loop)))))))))
         (loop)))))
 
