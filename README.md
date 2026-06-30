@@ -97,37 +97,6 @@ map([1 2 3], fn(x) { x * 2 })
 
 Same syntax as named functions — just omit the name.
 
-### Lists (`[]`)
-
-```venus
-let t = []                    // empty list
-let t = [1, 2, 3]            // comma-separated values
-let t = [1 [2 3]]            // spaces also work (backward compat)
-```
-
-Immutable, backed by a functional dequeue (ideque). Operations like `add` return a new list. Prints as `[1 2 3]`.
-
-### Tables (`{}` / `#{}`)
-
-Mutable hash-table. All operations mutate in place and return the table. Prints as `#{"key" -> value}`.
-
-```venus
-let t = {}                    // empty table
-let t = #{ x -> 1, y -> 2 }  // same as { x -> 1, y -> 2 }
-let t = { "x" -> 1, "y" -> 2 }  // string keys with values
-let t = { x -> 10 }           // identifier key (same as "x")
-```
-
-Use `.` for field access: `t.x` retrieves the value at key `"x"`. Use `?.` for safe navigation that returns `nil` instead of erroring when the left side is `nil`:
-
-```venus
-let t = { x -> 10 }
-t?.x       // 10
-t?.z       // nil (no error)
-```
-
-Table keys are always literal strings — identifier keys are not variable lookups.
-
 ### If / else if / else
 
 ```venus
@@ -218,6 +187,8 @@ Triple-quoted strings can span multiple lines and support interpolation: `"""${e
 | `Table` | Yes | `{k -> v}` / `#{k -> v}` | `#{"k" -> v}` | Chez hash table (O(1)) |
 | `Map` | No | `Map.make(k, v, ...)` | SRFI 146 format | HAMT (persistent, O(log n)) |
 | `Vector` | Yes | `#[a b c]` | `#[a b c]` | Dynamic array (doubling growth) |
+
+Use `.` for field access on tables and modules: `t.x`, `math.pi`. Use `?.` for safe navigation that returns `nil` instead of erroring when the left side is `nil`.
 
 ## Standard Library
 
