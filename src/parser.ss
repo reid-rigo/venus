@@ -64,6 +64,15 @@
     ((pred (car lst)) #t)
     (else (any pred (cdr lst)))))
 
+(define (parse-comma-separated p closer parse-item)
+  (if (eq? (tok-type (p:peek p 0)) closer)
+      '()
+      (let loop ((items (list (parse-item p))))
+        (if (eq? (tok-type (p:peek p 0)) *tok-comma*)
+            (begin (p:advance! p)
+                   (loop (cons (parse-item p) items)))
+            (reverse! items)))))
+
 ;;; ---- Parse functions ----
 
 (define (parse-program p)
@@ -106,13 +115,7 @@
        (error 'parser (format "Expected parameter name or literal but got ~a" (tok-type t)))))))
 
 (define (parse-param-list p)
-  (if (eq? (tok-type (p:peek p 0)) *tok-rparen*)
-      '()
-      (let loop ((params (list (parse-fn-param p))))
-        (if (eq? (tok-type (p:peek p 0)) *tok-comma*)
-            (begin (p:advance! p)
-                   (loop (cons (parse-fn-param p) params)))
-            (reverse! params)))))
+  (parse-comma-separated p *tok-rparen* parse-fn-param))
 
 (define (parse-body p)
   (let loop ((stmts '()))
@@ -145,14 +148,8 @@
 (define (parse-lambda p)
   (p:expect! p *tok-fn*)
   (p:expect! p *tok-lparen*)
-  (let* ((params
-         (if (eq? (tok-type (p:peek p 0)) *tok-rparen*)
-             '()
-             (let loop ((ps (list (tok-value (p:expect! p *tok-ident*)))))
-               (if (eq? (tok-type (p:peek p 0)) *tok-comma*)
-                   (begin (p:advance! p)
-                          (loop (cons (tok-value (p:expect! p *tok-ident*)) ps)))
-                   (reverse! ps))))))
+  (let* ((params (parse-comma-separated p *tok-rparen*
+                  (lambda (p) (tok-value (p:expect! p *tok-ident*))))))
     (p:expect! p *tok-rparen*)
     (p:skip-newlines! p)
     (p:expect! p *tok-lbrace*)
@@ -289,12 +286,7 @@
         ;; Function call
         ((eq? (tok-type t) *tok-lparen*)
          (p:advance! p)
-         (let* ((args (if (eq? (tok-type (p:peek p 0)) *tok-rparen*)
-                        '()
-                        (let argloop ((a (list (parse-expression p))))
-                          (if (eq? (tok-type (p:peek p 0)) *tok-comma*)
-                              (begin (p:advance! p) (argloop (cons (parse-expression p) a)))
-                              (reverse! a))))))
+          (let* ((args (parse-comma-separated p *tok-rparen* parse-expression)))
            (p:expect! p *tok-rparen*)
            (if (eq? (cdr (assq 'type expr)) 'ident)
                (loop (ast 'call (cons 'callee (cdr (assq 'name expr))) (cons 'args args)))

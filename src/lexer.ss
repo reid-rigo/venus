@@ -72,6 +72,16 @@
     [(string=? word "export") *tok-export*]
     [else #f]))
 
+(define (single-token-type c)
+  (case c
+    ((#\() *tok-lparen*)   ((#\)) *tok-rparen*)
+    ((#\+) *tok-plus*)     ((#\*) *tok-star*)
+    ((#\/) *tok-slash*)    ((#\,) *tok-comma*)
+    ((#\{) *tok-lbrace*)   ((#\}) *tok-rbrace*)
+    ((#\[) *tok-lbracket*) ((#\]) *tok-rbracket*)
+    ((#\_) *tok-underscore*)
+    (else #f)))
+
 (define (tokenize source)
   (let ([len (string-length source)]
         [pos 0])
@@ -217,28 +227,16 @@
               [(and (char=? c #\|) (char=?/safe c2 #\>))
                (advance!) (advance!)
                (loop (cons (tok *tok-pipe* "|>") tokens))]
-              [(char=? c #\()
-               (advance!)
-               (loop (cons (tok *tok-lparen* "(") tokens))]
-              [(char=? c #\))
-               (advance!)
-               (loop (cons (tok *tok-rparen* ")") tokens))]
-              [(char=? c #\+)
-               (advance!)
-               (loop (cons (tok *tok-plus* "+") tokens))]
-              [(and (char=? c #\-) (char=?/safe c2 #\>))
+               [(single-token-type c) => (lambda (type)
+                                          (advance!)
+                                          (loop (cons (tok type (string c)) tokens)))]
+               [(and (char=? c #\-) (char=?/safe c2 #\>))
                (advance!) (advance!)
                (loop (cons (tok *tok-arrow* "->") tokens))]
               [(char=? c #\-)
                (advance!)
                (loop (cons (tok *tok-minus* "-") tokens))]
-              [(char=? c #\*)
-               (advance!)
-               (loop (cons (tok *tok-star* "*") tokens))]
-              [(char=? c #\/)
-               (advance!)
-               (loop (cons (tok *tok-slash* "/") tokens))]
-              [(and (char=? c #\=) (char=?/safe c2 #\=))
+               [(and (char=? c #\=) (char=?/safe c2 #\=))
                (advance!) (advance!)
                (loop (cons (tok *tok-eqeq* "==") tokens))]
               [(char=? c #\=)
@@ -262,22 +260,7 @@
               [(char=? c #\>)
                (advance!)
                (loop (cons (tok *tok-gt* ">") tokens))]
-              [(char=? c #\,)
-               (advance!)
-               (loop (cons (tok *tok-comma* ",") tokens))]
-              [(char=? c #\{)
-               (advance!)
-               (loop (cons (tok *tok-lbrace* "{") tokens))]
-              [(char=? c #\})
-               (advance!)
-               (loop (cons (tok *tok-rbrace* "}") tokens))]
-              [(char=? c #\[)
-               (advance!)
-               (loop (cons (tok *tok-lbracket* "[") tokens))]
-              [(char=? c #\])
-               (advance!)
-               (loop (cons (tok *tok-rbracket* "]") tokens))]
-              [(and (char=? c #\?) (char=?/safe c2 #\.))
+               [(and (char=? c #\?) (char=?/safe c2 #\.))
                (advance!) (advance!)
                (loop (cons (tok *tok-qdot* "?.") tokens))]
               [(char=? c #\.)
@@ -291,10 +274,7 @@
                (loop (cons (tok *tok-string* (read-string)) tokens))]
               [(char-digit? c)
                (loop (cons (tok *tok-number* (read-number)) tokens))]
-              [(char=? c #\_)
-               (advance!)
-               (loop (cons (tok *tok-underscore* "_") tokens))]
-              [(char-alpha? c)
+               [(char-alpha? c)
                (let* ([start pos]
                       [_ (let scan ()
                            (when (char-alnum? (peek 0))
