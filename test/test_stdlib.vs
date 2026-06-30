@@ -1,7 +1,6 @@
 test("List.remove", fn() {
-  let t = [1, 2, 3]
-  List.remove(t, 2)
-  List.len(t) == 2 and List.get(t, 1) == 1 and List.get(t, 2) == 3
+  let result = List.remove([1, 2, 3], 2)
+  List.len(result) == 2 and List.get(result, 1) == 1 and List.get(result, 2) == 3
 })
 
 test("List.filter", fn() {

@@ -38,6 +38,11 @@ int main(int argc, char *argv[]) {
   chdir(root);
   setenv("VENUS_ROOT", root, 1);
 
+  /* Set library path for chez-srfi (via src/srfi symlink) */
+  char libdirs[2048];
+  snprintf(libdirs, sizeof(libdirs), "%s/src:.", root);
+  setenv("CHEZSCHEMELIBDIRS", libdirs, 1);
+
   /* Register boot files from compile-time path */
   Sscheme_init(NULL);
 

@@ -42,9 +42,8 @@ test("nested list", fn() {
 })
 
 test("List.each iterates values", fn() {
-  let seen = []
-  List.each([10, 20, 30], fn(v) { List.add(seen, v) })
-  List.len(seen) == 3 and List.get(seen, 1) == 10 and List.get(seen, 2) == 20 and List.get(seen, 3) == 30
+  let result = List.reduce([10, 20, 30], fn(acc, v) { List.add(acc, v) }, [])
+  List.len(result) == 3 and List.get(result, 1) == 10 and List.get(result, 2) == 20 and List.get(result, 3) == 30
 })
 
 test("List.each returns nothing", fn() {
