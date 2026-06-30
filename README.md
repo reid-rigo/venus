@@ -182,11 +182,11 @@ Triple-quoted strings can span multiple lines and support interpolation: `"""${e
 ## Data Structures
 
 | | Mutable | Literal | Prints as | Backed by |
-|---|---|---|---|---|
+|---|---|---|---|---|---|
 | `List` | No | `[a b c]` | `[a b c]` | Functional dequeue (ideque) |
-| `Table` | Yes | `{k -> v}` / `#{k -> v}` | `#{"k" -> v}` | Chez hash table (O(1)) |
-| `Map` | No | `Map.make(k, v, ...)` | SRFI 146 format | HAMT (persistent, O(log n)) |
 | `Vector` | Yes | `#[a b c]` | `#[a b c]` | Dynamic array (doubling growth) |
+| `Map` | No | `Map.make(k, v, ...)` | SRFI 146 format | HAMT (persistent, O(log n)) |
+| `Table` | Yes | `{k -> v}` / `#{k -> v}` | `#{"k" -> v}` | Chez hash table (O(1)) |
 
 Use `.` for field access on tables and modules: `t.x`, `math.pi`. Use `?.` for safe navigation that returns `nil` instead of erroring when the left side is `nil`.
 
@@ -214,26 +214,23 @@ Built-in modules available as globals:
 | `List.any(t, f)` | Whether any element satisfies `f(v)` |
 | `List.all(t, f)` | Whether all elements satisfy `f(v)` |
 
-### `Table`
+### `Vector`
+
+Mutable dynamic array with doubling growth. All operations mutate in place and return the vector. Prints as `#[1 2 3]`.
 
 | Function | Description |
 |---|---|
-| `Table.get(m, k)` | Value at key `k` |
-| `Table.set(m, k, v)` | Set `m[k] = v`, returns `m` |
-| `Table.keys(m)` | List of keys |
-| `Table.values(m)` | List of values |
-| `Table.len(m)` | Number of entries |
-| `Table.has(m, k)` | Whether key exists |
-| `Table.remove(m, k)` | Remove key, returns `m` |
-| `Table.each(m, f)` | Call `f(v, k)` for each entry, returns nothing |
-| `Table.map(m, f)` | New list of `f(v)` for each entry |
-| `Table.merge(a, b)` | New table merging `b` into `a` (b wins conflicts) |
-| `Table.invert(m)` | New table swapping keys and values |
-| `Table.pick(m, ks)` | New table with only the given keys |
-| `Table.omit(m, ks)` | New table without the given keys |
-| `Table.map_keys(m, f)` | New table with keys transformed by `f(k)` |
-| `Table.filter(m, f)` | New table where `f(v, k)` is truthy |
-| `Table.to_list(m)` | List of values |
+| `Vector.make(n?, init?)` | Create vector, optional size and default value |
+| `Vector.len(v)` | Number of elements |
+| `Vector.get(v, i)` | Element at 1-based index |
+| `Vector.set(v, i, val)` | Set element, returns `v` |
+| `Vector.push(v, val)` | Append element, returns `v` |
+| `Vector.pop(v)` | Remove and return last element |
+| `Vector.each(v, f)` | Call `f(val)` for each element |
+| `Vector.map(v, f)` | New list of `f(val)` for each element |
+| `Vector.filter(v, f)` | New list where `f(val)` is truthy |
+| `Vector.to_list(v)` | Convert to list |
+| `Vector.copy(v)` | Shallow copy |
 
 ### `Map`
 
@@ -255,23 +252,26 @@ Immutable HAMT (SRFI 146). All operations return a new map. Prints as SRFI 146's
 | `Map.merge(a, b)` | New map merging `b` into `a` (b wins) |
 | `Map.to_list(m)` | List of `[k, v]` pairs |
 
-### `Vector`
-
-Mutable dynamic array with doubling growth. All operations mutate in place and return the vector. Prints as `#[1 2 3]`.
+### `Table`
 
 | Function | Description |
 |---|---|
-| `Vector.make(n?, init?)` | Create vector, optional size and default value |
-| `Vector.len(v)` | Number of elements |
-| `Vector.get(v, i)` | Element at 1-based index |
-| `Vector.set(v, i, val)` | Set element, returns `v` |
-| `Vector.push(v, val)` | Append element, returns `v` |
-| `Vector.pop(v)` | Remove and return last element |
-| `Vector.each(v, f)` | Call `f(val)` for each element |
-| `Vector.map(v, f)` | New list of `f(val)` for each element |
-| `Vector.filter(v, f)` | New list where `f(val)` is truthy |
-| `Vector.to_list(v)` | Convert to list |
-| `Vector.copy(v)` | Shallow copy |
+| `Table.get(m, k)` | Value at key `k` |
+| `Table.set(m, k, v)` | Set `m[k] = v`, returns `m` |
+| `Table.keys(m)` | List of keys |
+| `Table.values(m)` | List of values |
+| `Table.len(m)` | Number of entries |
+| `Table.has(m, k)` | Whether key exists |
+| `Table.remove(m, k)` | Remove key, returns `m` |
+| `Table.each(m, f)` | Call `f(v, k)` for each entry, returns nothing |
+| `Table.map(m, f)` | New list of `f(v)` for each entry |
+| `Table.merge(a, b)` | New table merging `b` into `a` (b wins conflicts) |
+| `Table.invert(m)` | New table swapping keys and values |
+| `Table.pick(m, ks)` | New table with only the given keys |
+| `Table.omit(m, ks)` | New table without the given keys |
+| `Table.map_keys(m, f)` | New table with keys transformed by `f(k)` |
+| `Table.filter(m, f)` | New table where `f(v, k)` is truthy |
+| `Table.to_list(m)` | List of values |
 
 ### `String`
 
