@@ -24,5 +24,5 @@ test("let no init", fn() {
 test("let used in interpolation", fn() {
   let x = "hello"
   let expected = "hello world"
-  "#{x} world" == expected
+  "${x} world" == expected
 })

@@ -131,7 +131,7 @@ test("omit non-existent key", fn() {
 
 test("map_keys", fn() {
   let m = { "a" -> 1, "b" -> 2 }
-  let result = Table.map_keys(m, fn(k) { "#{k}!" })
+  let result = Table.map_keys(m, fn(k) { "${k}!" })
   Table.get(result, "a!") == 1 and Table.get(result, "b!") == 2
 })
 

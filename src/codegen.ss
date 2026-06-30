@@ -359,6 +359,17 @@
                            (ast-ref node 'fields))))
           (string-append "(venus-table (list " (string-join fields " ") "))")))
 
+       ((eq? type 'vector)
+        (let ((elts (ast-ref node 'elements)))
+          (if (null? elts)
+              "(Vector-make)"
+              (string-append
+                "(let ((v (Vector-make))) "
+                (string-join
+                  (map (lambda (e) (string-append "(Vector-push v " (cg-emit-expr port e) ")")) elts)
+                  " ")
+                " v)"))))
+
        ((eq? type 'if)
         (let ((saved-indent codegen-indent))
           (let ((result

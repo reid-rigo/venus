@@ -1,26 +1,26 @@
 test("interpolation with ident", fn() {
   let name = "world"
-  "hello #{name}" == "hello world"
+  "hello ${name}" == "hello world"
 })
 
 test("interpolation with expression", fn() {
-  "10 - 7 = #{10 - 7}" == "10 - 7 = 3"
+  "10 - 7 = ${10 - 7}" == "10 - 7 = 3"
 })
 
 test("interpolation with multiple exprs", fn() {
   let a = 10
   let b = 4
-  "#{a} - #{b} = #{a - b}" == "10 - 4 = 6"
+  "${a} - ${b} = ${a - b}" == "10 - 4 = 6"
 })
 
 test("interpolation with function call", fn() {
-  "hello #{string.upper("world")}" == "hello WORLD"
+  "hello ${string.upper("world")}" == "hello WORLD"
 })
 
 test("multiline string interpolation", fn() {
   let x = "world"
   let s = """hello
-#{x}"""
+${x}"""
   s == "hello\nworld"
 })
 

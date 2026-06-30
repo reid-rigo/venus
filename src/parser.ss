@@ -360,6 +360,17 @@
       ((eq? (tok-type t) *tok-lbrace*)
        (parse-table-constructor p))
 
+      ((eq? (tok-type t) *tok-hash*)
+       (p:advance! p)
+       (let ((next (p:peek p 0)))
+         (cond
+           ((eq? (tok-type next) *tok-lbrace*)
+            (parse-table-constructor p))
+           ((eq? (tok-type next) *tok-lbracket*)
+            (parse-vector-literal p))
+           (else
+            (error 'parser (format "Expected {{ or [ after #, got ~a" (tok-type next)))))))
+
       ((eq? (tok-type t) *tok-nil*)
        (p:advance! p)
        (ast 'nil))
@@ -429,6 +440,20 @@
             (p:advance! p))
           (p:skip-newlines! p)
           (loop (cons (ast 'field (cons 'key key) (cons 'value val)) fields))))))
+
+(define (parse-vector-literal p)
+  (p:expect! p *tok-lbracket*)
+  (p:skip-newlines! p)
+  (let loop ((elts '()))
+    (if (eq? (tok-type (p:peek p 0)) *tok-rbracket*)
+        (begin (p:expect! p *tok-rbracket*)
+               (ast 'vector (cons 'elements (reverse! elts))))
+        (let* ((e (parse-expression p)))
+          (p:skip-newlines! p)
+          (when (eq? (tok-type (p:peek p 0)) *tok-comma*)
+            (p:advance! p))
+          (p:skip-newlines! p)
+          (loop (cons e elts))))))
 
 (define (parse-match-expr p)
   (p:expect! p *tok-match*)

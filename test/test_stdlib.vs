@@ -17,7 +17,7 @@ test("List.reduce sum", fn() {
 })
 
 test("List.reduce strings", fn() {
-  List.reduce(["a", "b", "c"], fn(acc, x) { "#{acc}#{x}" }, "") == "abc"
+  List.reduce(["a", "b", "c"], fn(acc, x) { "${acc}${x}" }, "") == "abc"
 })
 
 test("List.reduce single", fn() {

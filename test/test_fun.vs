@@ -1,4 +1,4 @@
-fn greet(name) { "hello #{name}" }
+fn greet(name) { "hello ${name}" }
 
 test("fn expression body", fn() {
   let expected = "hello world"
@@ -40,7 +40,7 @@ test("lambda", fn() {
 test("lambda with let", fn() {
   let expected = "ab"
   fn(x) {
-    let y = "#{x}b"
+    let y = "${x}b"
     y
   }("a") == expected
 })

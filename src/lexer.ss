@@ -41,6 +41,7 @@
 (define *tok-false*     'false)
 (define *tok-import*    'import)
 (define *tok-export*    'export)
+(define *tok-hash*      'hash)
 (define *tok-eof*       'eof)
 
 (define (tok type val) (vector type val))
@@ -171,7 +172,7 @@
                        (write-char c buf)
                        (when (< pos len) (write-char (advance!) buf))
                        (loop)]
-                      [(and (char=? c #\#) (char=? (peek 0) #\{))
+                       [(and (char=? c #\$) (char=? (peek 0) #\{))
                        (flush!)
                        (advance!)
                        (set! parts (cons (cons 'expr (read-interp-expr)) parts))
@@ -275,12 +276,15 @@
               [(char-digit? c)
                (loop (cons (tok *tok-number* (read-number)) tokens))]
                [(char-alpha? c)
-               (let* ([start pos]
-                      [_ (let scan ()
-                           (when (char-alnum? (peek 0))
-                             (advance!) (scan)))]
-                      [word (substring source start pos)]
-                      [kw (keyword-type word)])
-                 (loop (cons (tok (or kw *tok-ident*) word) tokens)))]
+                (let* ([start pos]
+                       [_ (let scan ()
+                            (when (char-alnum? (peek 0))
+                              (advance!) (scan)))]
+                       [word (substring source start pos)]
+                       [kw (keyword-type word)])
+                  (loop (cons (tok (or kw *tok-ident*) word) tokens)))]
+               [(char=? c #\#)
+                (advance!)
+                (loop (cons (tok *tok-hash* "#") tokens))]
                 [else
                  (error 'tokenize "Unexpected character:" c)]))))))))
