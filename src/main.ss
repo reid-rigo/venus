@@ -9,7 +9,7 @@
 (load (string-append *root* "/src/lexer.ss"))
 (load (string-append *root* "/src/parser.ss"))
 (load (string-append *root* "/src/codegen.ss"))
-(load (string-append *root* "/src/chez_runtime.ss"))
+(load (string-append *root* "/src/runtime.ss"))
 
 ;; Load Venus standard library extensions into the interaction environment.
 ;; Each Venus export is a top-level binding created by the codegen.
@@ -98,7 +98,7 @@
                (display-code code)
                (begin
                  (when (string-contains? filename "test/")
-                   (load (string-append *root* "/src/chez_test.ss")))
+                    (load (string-append *root* "/src/test.ss")))
                  (eval-code/run-tests code)))))
         (else
          (let ((arg (car remaining))

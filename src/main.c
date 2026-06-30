@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 
   /* Build path to chez_main.ss */
   char script[2048];
-  snprintf(script, sizeof(script), "%s/src/chez_main.ss", root);
+  snprintf(script, sizeof(script), "%s/src/main.ss", root);
 
   int ret = Sscheme_script(script, argc, (const char **)argv);
 

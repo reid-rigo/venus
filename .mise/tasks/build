@@ -7,7 +7,7 @@ CHEZ_DIR=$(mise where chezscheme)
 CHEZ_LIB="$CHEZ_DIR/lib/csv10.4.1/tarm64osx"
 
 cc -o bin/vs \
-  src/chez_main.c \
+  src/main.c \
   -I"$CHEZ_LIB" \
   -DCHEZ_BOOT_DIR="\"$CHEZ_LIB\"" \
   "$CHEZ_LIB/libkernel.a" \
