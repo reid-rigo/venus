@@ -12,6 +12,7 @@ List.each([
   ["logical", "test/test_logical.vs"],
   ["string", "test/test_string.vs"],
   ["string module", "test/test_string_module.vs"],
+  ["map", "test/test_map.vs"],
   ["vector", "test/test_vector.vs"],
   ["module", "test/test_module.vs"],
   ["stdlib", "test/test_stdlib.vs"],

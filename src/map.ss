@@ -1,7 +1,7 @@
 (import (srfi :146))
 (import (srfi :128))
 
-(define *map-comparator* (make-equal-comparator))
+(define *map-comparator* (make-default-comparator))
 
 (define (Map-make . args)
   (if (null? args)
@@ -9,7 +9,7 @@
       (apply mapping *map-comparator* args)))
 
 (define (Map-has m k) (mapping-contains? m k))
-(define (Map-get m k) (mapping-ref m k))
+(define (Map-get m k) (mapping-ref/default m k #f))
 (define (Map-set m k v) (mapping-set m k v))
 (define (Map-remove m k) (mapping-delete m k))
 (define (Map-len m) (mapping-size m))
@@ -24,7 +24,7 @@
   (mapping-for-each (lambda (k v) (f v k)) m))
 
 (define (Map-map m f)
-  (list->venus-list (mapping-map (lambda (k v) (f v)) m)))
+  (list->venus-list (mapping-map->list (lambda (k v) (f v)) m)))
 
 (define (Map-filter m pred)
   (mapping-filter (lambda (k v) (pred v k)) m))

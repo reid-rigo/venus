@@ -1,0 +1,108 @@
+test("empty map", fn() {
+  Map.len(Map.make()) == 0
+})
+
+test("map with initial pairs", fn() {
+  let m = Map.make("a", 1, "b", 2)
+  Map.len(m) == 2 and Map.get(m, "a") == 1 and Map.get(m, "b") == 2
+})
+
+test("has key", fn() {
+  let m = Map.make("x", 10)
+  Map.has(m, "x") and Map.has(m, "y") == false
+})
+
+test("set returns new map", fn() {
+  let m1 = Map.make("a", 1)
+  let m2 = Map.set(m1, "b", 2)
+  Map.len(m1) == 1 and Map.len(m2) == 2
+  Map.get(m2, "b") == 2
+})
+
+test("set overwrites", fn() {
+  let m1 = Map.make("a", 1)
+  let m2 = Map.set(m1, "a", 99)
+  Map.get(m1, "a") == 1 and Map.get(m2, "a") == 99
+})
+
+test("remove returns new map", fn() {
+  let m1 = Map.make("a", 1, "b", 2)
+  let m2 = Map.remove(m1, "a")
+  Map.len(m1) == 2 and Map.len(m2) == 1 and Map.has(m2, "a") == false
+})
+
+test("remove missing key", fn() {
+  let m = Map.make("a", 1)
+  let m2 = Map.remove(m, "z")
+  Map.len(m2) == 1
+})
+
+test("get missing key", fn() {
+  let m = Map.make("a", 1)
+  Map.get(m, "z") == nil
+})
+
+test("len", fn() {
+  Map.len(Map.make("a", 1, "b", 2, "c", 3)) == 3
+})
+
+test("keys", fn() {
+  let m = Map.make("a", 1, "b", 2)
+  List.len(Map.keys(m)) == 2
+})
+
+test("values", fn() {
+  let m = Map.make("a", 1, "b", 2)
+  List.len(Map.values(m)) == 2
+})
+
+test("each iterates pairs", fn() {
+  let m = Map.make("a", 1, "b", 2)
+  let acc = Vector.make()
+  Map.each(m, fn(v, k) { Vector.push(Vector.push(acc, k), v) })
+  Vector.len(acc) == 4
+})
+
+test("each returns nil", fn() {
+  Map.each(Map.make("a", 1), fn(v, k) {}) == nil
+})
+
+test("map transforms values to list", fn() {
+  let m = Map.make("a", 1, "b", 2)
+  let doubled = Map.map(m, fn(v) { v * 2 })
+  List.len(doubled) == 2
+})
+
+test("map empty", fn() {
+  Map.map(Map.make(), fn(v) { v }) == []
+})
+
+test("filter", fn() {
+  let m = Map.make("a", 1, "b", 2, "c", 3)
+  let big = Map.filter(m, fn(v, k) { v > 1 })
+  Map.len(big) == 2 and Map.has(big, "b") and Map.has(big, "c")
+  Map.len(m) == 3
+})
+
+test("filter empty", fn() {
+  Map.len(Map.filter(Map.make(), fn(v, k) { true })) == 0
+})
+
+test("merge combines maps", fn() {
+  let m1 = Map.make("a", 1, "b", 2)
+  let m2 = Map.make("c", 3)
+  let merged = Map.merge(m1, m2)
+  Map.len(merged) == 3 and Map.get(merged, "c") == 3
+})
+
+test("merge m1 wins conflicts", fn() {
+  let m1 = Map.make("x", 1)
+  let m2 = Map.make("x", 99)
+  Map.get(Map.merge(m1, m2), "x") == 1
+})
+
+test("to_list", fn() {
+  let m = Map.make("a", 1, "b", 2)
+  let pairs = Map.to_list(m)
+  List.len(pairs) == 2
+})
