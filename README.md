@@ -25,11 +25,11 @@ Tests: `mise run test`
 
 ```venus
 let name = "world"
-print("hello #{name}")             // hello world
-print("2 + 2 = #{2 + 2}")          // 2 + 2 = 4
+print("hello ${name}")             // hello world
+print("2 + 2 = ${2 + 2}")          // 2 + 2 = 4
 ```
 
-Use `#{expr}` inside double-quoted (`"`) or triple-quoted (`"""`) strings to embed any expression. Single-quoted strings (`'`) are literal — no interpolation.
+Use `${expr}` inside double-quoted (`"`) or triple-quoted (`"""`) strings to embed any expression. Single-quoted strings (`'`) are literal — no interpolation.
 
 ### Pipeline operator (`|>`)
 
@@ -63,7 +63,7 @@ fn add(a, b) {
 }
 
 fn greet(name) {
-  "hello #{name}"
+  "hello ${name}"
 }
 
 print(add(2, 3))                    // 5
@@ -105,14 +105,15 @@ let t = [1, 2, 3]            // comma-separated values
 let t = [1 [2 3]]            // spaces also work (backward compat)
 ```
 
-Lists are immutable (ideque-backed). Operations like `add` return a new list.
+Immutable, backed by a functional dequeue (ideque). Operations like `add` return a new list. Prints as `[1 2 3]`.
 
-### Tables (`{}`)
+### Tables (`{}` / `#{}`)
 
-Tables are mutable map-like structures:
+Mutable hash-table. All operations mutate in place and return the table. Prints as `#{"key" -> value}`.
 
 ```venus
 let t = {}                    // empty table
+let t = #{ x -> 1, y -> 2 }  // same as { x -> 1, y -> 2 }
 let t = { "x" -> 1, "y" -> 2 }  // string keys with values
 let t = { x -> 10 }           // identifier key (same as "x")
 ```
@@ -207,7 +208,7 @@ world"""
 print(s)                            // hello\nworld
 ```
 
-Triple-quoted strings can span multiple lines and support interpolation: `"""#{expr}"""`.
+Triple-quoted strings can span multiple lines and support interpolation: `"""${expr}"""`.
 
 ## Standard Library
 
@@ -256,7 +257,7 @@ Built-in modules available as globals:
 
 ### `Map`
 
-Immutable (SRFI 146 HAMT-backed). All operations return a new map.
+Immutable HAMT (SRFI 146). All operations return a new map. Prints as SRFI 146's default representation.
 
 | Function | Description |
 |---|---|
@@ -276,7 +277,7 @@ Immutable (SRFI 146 HAMT-backed). All operations return a new map.
 
 ### `Vector`
 
-Mutable dynamic array (boxed `#(data len)` with doubling growth).
+Mutable dynamic array with doubling growth. All operations mutate in place and return the vector. Prints as `#[1 2 3]`.
 
 | Function | Description |
 |---|---|
