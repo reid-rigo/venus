@@ -14,3 +14,32 @@
 (define (assert_not_equal a b)
   (or (not (equal? a b))
       (error 'assert_not_equal "expected ~s != ~s" a b)))
+
+(define (ve-time f)
+  (define sanitize
+    (lambda (s)
+      (define sanitize-time
+        (lambda (t)
+          (if (< (time-second t) 0)
+              (make-time 'time-duration 0 0)
+              t)))
+      (define sanitize-count
+        (lambda (n) (max n 0)))
+      (make-sstats
+        (sanitize-time (sstats-cpu s))
+        (sanitize-time (sstats-real s))
+        (sanitize-count (sstats-bytes s))
+        (sanitize-count (sstats-gc-count s))
+        (sanitize-time (sstats-gc-cpu s))
+        (sanitize-time (sstats-gc-real s))
+        (sanitize-count (sstats-gc-bytes s)))))
+  (let* ((b1 (statistics))
+         (b2 (statistics))
+         (result (f))
+         (a (statistics))
+         (elapsed (sstats-difference a b2))
+         (overhead (sstats-difference b2 b1))
+         (adjusted (sanitize (sstats-difference elapsed overhead))))
+    (sstats-print adjusted (console-output-port))
+    (flush-output-port (console-output-port))
+    result))

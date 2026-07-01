@@ -309,9 +309,13 @@
                        ((string? callee-raw) callee-raw)
                        ((eq? (ast-type callee-raw) 'lambda) (cg-emit-expr port callee-raw))
                        (else (cg-emit-expr port callee-raw)))))
-                (if (string=? callee "print")
-                    (string-append "(ve-print " args-joined ")")
-                    (string-append "(" callee (if (string=? args-joined "") "" (string-append " " args-joined)) ")"))))))
+                 (string-append "("
+                                (cond
+                                  ((string=? callee "print") "ve-print")
+                                  ((string=? callee "time") "ve-time")
+                                  (else callee))
+                                (if (string=? args-joined "") "" (string-append " " args-joined))
+                                ")")))))
 
       ((eq? type 'let)
        (let ((names (ast-ref node 'names))

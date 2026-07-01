@@ -35,3 +35,7 @@ test("assert_equal with strings", fn() {
 test("assert_not_equal passes", fn() {
   assert_not_equal(1, 2)
 })
+
+test("time returns result", fn() {
+  time(fn() { 42 }) == 42
+})
