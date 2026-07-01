@@ -9,7 +9,7 @@
       (apply mapping *map-comparator* args)))
 
 (define (Map-has m k) (mapping-contains? m k))
-(define (Map-get m k) (mapping-ref/default m k #f))
+(define (Map-get m k) (mapping-ref/default m k venus-nil))
 (define (Map-set m k v) (mapping-set m k v))
 (define (Map-remove m k) (mapping-delete m k))
 (define (Map-len m) (mapping-size m))
@@ -21,7 +21,8 @@
   (list->venus-list (mapping-values m)))
 
 (define (Map-each m f)
-  (mapping-for-each (lambda (k v) (f v k)) m))
+  (mapping-for-each (lambda (k v) (f v k)) m)
+  venus-nil)
 
 (define (Map-map m f)
   (list->venus-list (mapping-map->list (lambda (k v) (f v)) m)))

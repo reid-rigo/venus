@@ -8,7 +8,7 @@
 
 (define (Table-len t) (hashtable-size t))
 (define (Table-has t k) (hashtable-contains? t k))
-(define (Table-get t k) (hashtable-ref t k #f))
+(define (Table-get t k) (hashtable-ref t k venus-nil))
 
 (define (Table-set t k v)
   (hashtable-set! t k v) t)
@@ -19,7 +19,7 @@
 (define (Table-each t f)
   (do ((i 0 (+ i 1))
        (cells (ht-cells t)))
-      ((= i (vector-length cells)) #f)
+      ((= i (vector-length cells)) venus-nil)
     (let ((kv (vector-ref cells i)))
       (f (cdr kv) (car kv)))))
 

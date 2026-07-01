@@ -8,7 +8,7 @@
 
 (define (Vector-make . args)
   (let ((n (if (null? args) 0 (car args)))
-        (init (if (or (null? args) (= (length args) 1)) #f (cadr args))))
+        (init (if (or (null? args) (= (length args) 1)) venus-nil (cadr args))))
     (let ((v (make-vector (max n 4) init)))
       (vector 'venus-vector v n))))
 
@@ -50,7 +50,7 @@
         (len (vec-len v)))
     (do ((i 0 (+ i 1))) ((= i len))
       (f (vector-ref data i)))
-    #f))
+    venus-nil))
 
 (define (Vector-map v f)
   (list->venus-list

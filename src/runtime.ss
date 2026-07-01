@@ -96,6 +96,18 @@
                   (cons "merge" Map-merge)
                   (cons "to_list" Map-to_list)))
 
+;; Nil sentinel (falsey but distinct from #f)
+(define venus-nil 'nil)
+
+(define (venus-truthy? v)
+  (and (not (eq? v #f)) (not (eq? v venus-nil))))
+
+(define (venus-and a b)
+  (if (venus-truthy? a) b a))
+
+(define (venus-or a b)
+  (if (venus-truthy? a) a b))
+
 ;; Lowercase aliases for Venus standard library compatibility
 (define string-len String-len)
 (define string-upper String-upper)
@@ -106,8 +118,9 @@
 ;; Module system
 (define (venus-ref obj key)
   (cond
-    ((hashtable? obj) (hashtable-ref obj key #f))
-    ((mapping? obj) (mapping-ref/default obj key #f))
+    ((hashtable? obj) (hashtable-ref obj key venus-nil))
+    ((mapping? obj) (mapping-ref/default obj key venus-nil))
+    ((eq? obj venus-nil) venus-nil)
     (else (cdr (assoc key obj)))))
 
 (define *module-exports* (make-parameter #f))

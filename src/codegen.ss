@@ -142,7 +142,7 @@
                          (string-append "(" n " " v ")"))
                        names
                        (if (null? values)
-                           (map (lambda (n) "#f") names)
+                           (map (lambda (n) "venus-nil") names)
                            (map (lambda (v) (cg-emit-expr port v)) values)))))
     (string-append "(" (string-join bindings " ") ")")))
 
@@ -239,7 +239,7 @@
                        ")"))
 
       ((eq? type 'nil)
-       "#f")
+       "venus-nil")
 
       ((eq? type 'true)
        "#t")
@@ -254,11 +254,11 @@
         (string-append "(venus-ref " (cg-emit-expr port (ast-ref node 'object))
                        " \"" (ast-ref node 'field) "\")"))
 
-       ((eq? type 'safe-member)
-        (let ((obj (cg-emit-expr port (ast-ref node 'object)))
-              (fields (ast-ref node 'fields)))
-          (string-append "(and " obj
-                         " (venus-ref " obj " \"" (car fields) "\"))")))
+        ((eq? type 'safe-member)
+         (let ((obj (cg-emit-expr port (ast-ref node 'object)))
+               (fields (ast-ref node 'fields)))
+           (string-append "(if (venus-truthy? " obj
+                          ") (venus-ref " obj " \"" (car fields) "\") venus-nil)")))
 
       ((eq? type 'binary)
        (let ((left (cg-emit-expr port (ast-ref node 'left)))
@@ -269,10 +269,10 @@
              (string-append "(if (equal? " left " " right ") #t #f)"))
             ((string=? op "!=")
              (string-append "(if (not (equal? " left " " right ")) #t #f)"))
-           ((string=? op "and")
-            (string-append "(and " left " " right ")"))
+            ((string=? op "and")
+             (string-append "(venus-and " left " " right ")"))
             ((string=? op "or")
-             (string-append "(or " left " " right ")"))
+             (string-append "(venus-or " left " " right ")"))
             ((string=? op "%")
              (string-append "(modulo " left " " right ")"))
             (else
@@ -317,7 +317,7 @@
        (let ((names (ast-ref node 'names))
              (values (ast-ref node 'values)))
          (if (null? values)
-             (string-append "(define " (car names) " #f)")
+             (string-append "(define " (car names) " venus-nil)")
              (string-append "(define " (car names)
                             " " (cg-emit-expr port (car values)) ")"))))
 
@@ -396,14 +396,14 @@
                      (let ((p (current-output-port)))
                        (cg-emit p "(cond")
                        (cg-indent! 1)
-                       (cg-emit p (string-append "(" (cg-emit-expr p (ast-ref node 'condition))))
-                       (cg-indent! 1)
-                       (cg-emit-fn-body p (ast-ref node 'body))
-                       (cg-indent! -1)
-                       (cg-emit p ")")
-                       (for-each
-                        (lambda (ei)
-                          (cg-emit p (string-append "(" (cg-emit-expr p (ast-ref ei 'condition))))
+                        (cg-emit p (string-append "((venus-truthy? " (cg-emit-expr p (ast-ref node 'condition)) ")"))
+                        (cg-indent! 1)
+                        (cg-emit-fn-body p (ast-ref node 'body))
+                        (cg-indent! -1)
+                        (cg-emit p ")")
+                        (for-each
+                         (lambda (ei)
+                           (cg-emit p (string-append "((venus-truthy? " (cg-emit-expr p (ast-ref ei 'condition)) ")"))
                           (cg-indent! 1)
                           (cg-emit-fn-body p (ast-ref ei 'body))
                           (cg-indent! -1)

@@ -16,8 +16,8 @@ test("print displays list", fn() {
   print_str([1, 2, 3]) == "[1, 2, 3]"
 })
 
-test("nil prints as false", fn() {
-  repl_str(nil) == "#f"
+test("nil prints as nil", fn() {
+  repl_str(nil) == "nil"
 })
 
 test("print displays vector", fn() {

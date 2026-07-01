@@ -25,5 +25,5 @@ test("not not true", fn() { !!true == true })
 
 test("nil literal", fn() { nil == nil })
 test("nil eq nil", fn() { nil == nil })
-test("nil eq false", fn() { nil == false })
-test("false eq nil", fn() { false == nil })
+test("nil not eq false", fn() { (nil == false) == false })
+test("false not eq nil", fn() { (false == nil) == false })

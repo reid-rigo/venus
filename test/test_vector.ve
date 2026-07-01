@@ -37,14 +37,20 @@ test("pop returns last element", fn() {
   let v = Vector.make()
   Vector.push(v, 1)
   Vector.push(v, 2)
-  Vector.pop(v) == 2 and Vector.len(v) == 1
+  let a = Vector.pop(v) == 2
+  let b = Vector.len(v) == 1
+  a and b
 })
 
 test("pop shrinks len", fn() {
   let v = Vector.make(3, "x")
-  Vector.pop(v) == "x" and Vector.len(v) == 2
-  Vector.pop(v) == "x" and Vector.len(v) == 1
-  Vector.pop(v) == "x" and Vector.len(v) == 0
+  let a = Vector.pop(v) == "x"
+  let b = Vector.len(v) == 2
+  let c = Vector.pop(v) == "x"
+  let d = Vector.len(v) == 1
+  let e = Vector.pop(v) == "x"
+  let f = Vector.len(v) == 0
+  a and b and c and d and e and f
 })
 
 test("each iterates values", fn() {
