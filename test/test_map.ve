@@ -107,3 +107,13 @@ test("to_list", fn() {
   let pairs = Map.to_list(m)
   List.len(pairs) == 2
 })
+
+test("map KV access [\"key\"]", fn() {
+  let m = Map.make("x", 10, "y", 20)
+  m["x"] == 10 and m["y"] == 20
+})
+
+test("map KV access missing key", fn() {
+  let m = Map.make("x", 10)
+  m["z"] == nil
+})

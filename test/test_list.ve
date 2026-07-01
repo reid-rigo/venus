@@ -229,3 +229,24 @@ test("List.range single", fn() {
 test("List.range empty", fn() {
   List.len(List.range(5, 1)) == 0
 })
+
+test("index access [0] first", fn() {
+  [10, 20, 30][0] == 10
+})
+
+test("index access [1] second", fn() {
+  [10, 20, 30][1] == 20
+})
+
+test("index access [2] last", fn() {
+  [10, 20, 30][2] == 30
+})
+
+test("index access chained on member call", fn() {
+  let xs = [10, 20, 30]
+  xs[0] == 10
+})
+
+test("index access on nested list", fn() {
+  [[1, 2], [3, 4]][0][1] == 2
+})

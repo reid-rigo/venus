@@ -317,6 +317,13 @@
          (let* ((field (tok-value (p:expect! p *tok-ident*))))
            (loop (ast 'member (cons 'object expr) (cons 'field field)))))
 
+        ;; Index access: [expr]
+        ((eq? (tok-type t) *tok-lbracket*)
+         (p:advance! p)
+         (let* ((index (parse-expression p)))
+           (p:expect! p *tok-rbracket*)
+           (loop (ast 'index (cons 'object expr) (cons 'index index)))))
+
         (else expr)))))
 
 (define (parse-primary p)

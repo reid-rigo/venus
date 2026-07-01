@@ -472,6 +472,10 @@
               (set! codegen-indent saved-indent)
               result))))
 
+       ((eq? type 'index)
+        (string-append "(venus-get " (cg-emit-expr port (ast-ref node 'object))
+                       " " (cg-emit-expr port (ast-ref node 'index)) ")"))
+
        ((eq? type 'import)
         (string-append "(ve-import \"" (ast-ref node 'path) "\")"))
 

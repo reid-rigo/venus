@@ -194,6 +194,23 @@ Triple-quoted strings can span multiple lines and support interpolation: `"""${e
 
 Use `.` for field access on tables and modules: `t.x`, `math.pi`. Use `?.` for safe navigation that returns `nil` instead of erroring when the left side is `nil`.
 
+Bracket access with `[index]` or `["key"]` works on lists, vectors, tables, and maps:
+
+```venus
+let xs = [10, 20, 30]
+xs[0]                             // 10
+xs[0] + xs[2]                     // 40
+
+let v = Vector.make()
+Vector.push(v, 42)
+v[0]                              // 42
+
+let t = #{ x -> 10 }
+t["x"]                            // 10
+```
+
+`[n]` on lists and vectors is 0-based. `["key"]` on tables and maps is equivalent to `.key`.
+
 ## Standard Library
 
 Built-in modules available as globals:

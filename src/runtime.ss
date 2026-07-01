@@ -108,6 +108,15 @@
 (define (venus-or a b)
   (if (venus-truthy? a) a b))
 
+;; Generic index access — dispatches on type (0-based at Venus level)
+(define (venus-get obj key)
+  (cond
+    ((ideque? obj) (List-get obj (+ key 1)))
+    ((venus-vector? obj) (Vector-get obj (+ key 1)))
+    ((hashtable? obj) (hashtable-ref obj key venus-nil))
+    ((mapping? obj) (mapping-ref/default obj key venus-nil))
+    (else (error 'venus-get "expected a list, vector, table, or map"))))
+
 ;; Lowercase aliases for Venus standard library compatibility
 (define string-len String-len)
 (define string-upper String-upper)

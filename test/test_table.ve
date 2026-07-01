@@ -178,3 +178,18 @@ test("Table.remove", fn() {
   Table.remove(m, "a")
   Table.has(m, "a") == false and Table.has(m, "b") == true
 })
+
+test("table KV access [\"key\"]", fn() {
+  let t = #{ x -> 10, y -> 20 }
+  t["x"] == 10 and t["y"] == 20
+})
+
+test("table KV access missing key", fn() {
+  let t = #{ x -> 10 }
+  t["z"] == nil
+})
+
+test("table KV access chained", fn() {
+  let t = #{ inner -> #{ a -> 42 } }
+  t["inner"]["a"] == 42
+})

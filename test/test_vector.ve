@@ -119,3 +119,17 @@ test("copy is independent", fn() {
   Vector.set(c, 1, 99)
   Vector.get(v, 1) == 1 and Vector.get(c, 1) == 99
 })
+
+test("vector index access [0]", fn() {
+  let v = Vector.make()
+  Vector.push(v, 10)
+  Vector.push(v, 20)
+  v[0] == 10
+})
+
+test("vector index access [1]", fn() {
+  let v = Vector.make()
+  Vector.push(v, 10)
+  Vector.push(v, 20)
+  v[1] == 20
+})
