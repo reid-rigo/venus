@@ -104,9 +104,10 @@
 
 ;; Module system
 (define (venus-ref obj key)
-  (if (hashtable? obj)
-      (hashtable-ref obj key #f)
-      (cdr (assoc key obj))))
+  (cond
+    ((hashtable? obj) (hashtable-ref obj key #f))
+    ((mapping? obj) (mapping-ref/default obj key #f))
+    (else (cdr (assoc key obj)))))
 
 (define *module-exports* (make-parameter #f))
 

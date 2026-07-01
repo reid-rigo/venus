@@ -185,8 +185,8 @@ Triple-quoted strings can span multiple lines and support interpolation: `"""${e
 |---|---|---|---|---|---|
 | `List` | No | `[a, b, c]` | `[a, b, c]` | Functional dequeue (ideque) |
 | `Vector` | Yes | `#[a, b, c]` | `#[a, b, c]` | Dynamic array (doubling growth) |
-| `Map` | No | `Map.make(k, v, ...)` | `{k -> v}` | HAMT (persistent, O(log n)) |
-| `Table` | Yes | `{k -> v}` / `#{k -> v}` | `#{"k" -> v}` | Chez hash table (O(1)) |
+| `Map` | No | `{k -> v}` | `{k -> v}` | HAMT (persistent, O(log n)) |
+| `Table` | Yes | `#{k -> v}` | `#{"k" -> v}` | Chez hash table (O(1)) |
 
 Use `.` for field access on tables and modules: `t.x`, `math.pi`. Use `?.` for safe navigation that returns `nil` instead of erroring when the left side is `nil`.
 
@@ -236,7 +236,7 @@ Mutable dynamic array with doubling growth. All operations mutate in place and r
 
 ### `Map`
 
-Immutable HAMT (SRFI 146). All operations return a new map. Prints as `{k -> v}`.
+Immutable HAMT (SRFI 146). All operations return a new map. Uses `{k -> v}` literal syntax and prints the same way.
 
 | Function | Description |
 |---|---|
@@ -256,7 +256,7 @@ Immutable HAMT (SRFI 146). All operations return a new map. Prints as `{k -> v}`
 
 ### `Table`
 
-Mutable hash table (O(1) access). All operations mutate in place and return the table. Prints as `#{"key" -> value}`.
+Mutable hash table (O(1) access). All operations mutate in place and return the table. Uses `#{k -> v}` literal syntax and prints as `#{"key" -> value}`.
 
 | Function | Description |
 |---|---|

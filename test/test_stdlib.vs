@@ -43,29 +43,29 @@ test("List.range empty", fn() {
 })
 
 test("Table.set", fn() {
-  let m = {}
+  let m = #{}
   Table.set(m, "x", 10)
   Table.get(m, "x") == 10
 })
 
 test("Table.set overwrite", fn() {
-  let m = { "x" -> 5 }
+  let m = #{ "x" -> 5 }
   Table.set(m, "x", 10)
   Table.get(m, "x") == 10
 })
 
 test("Table.keys", fn() {
-  let m = { "a" -> 1, "b" -> 2 }
+  let m = #{ "a" -> 1, "b" -> 2 }
   List.len(Table.keys(m)) == 2
 })
 
 test("Table.values", fn() {
-  let m = { "a" -> 1, "b" -> 2 }
+  let m = #{ "a" -> 1, "b" -> 2 }
   List.len(Table.values(m)) == 2
 })
 
 test("Table.remove", fn() {
-  let m = { "a" -> 1, "b" -> 2 }
+  let m = #{ "a" -> 1, "b" -> 2 }
   Table.remove(m, "a")
   Table.has(m, "a") == false and Table.has(m, "b") == true
 })

@@ -358,7 +358,7 @@
        (parse-list-constructor p))
 
       ((eq? (tok-type t) *tok-lbrace*)
-       (parse-table-constructor p))
+       (parse-map-constructor p))
 
       ((eq? (tok-type t) *tok-hash*)
        (p:advance! p)
@@ -415,13 +415,13 @@
             (p:skip-newlines! p)
             (loop (cons v vals)))))))
 
-(define (parse-table-constructor p)
+(define (parse-kv-constructor p type)
   (p:expect! p *tok-lbrace*)
   (p:skip-newlines! p)
   (let loop ((fields '()))
     (if (eq? (tok-type (p:peek p 0)) *tok-rbrace*)
         (begin (p:expect! p *tok-rbrace*)
-               (ast 'table (cons 'fields (reverse! fields))))
+               (ast type (cons 'fields (reverse! fields))))
         (let* ((t (p:peek p 0))
                (key (cond
                       ((eq? (tok-type t) *tok-string*)
@@ -430,7 +430,7 @@
                       ((eq? (tok-type t) *tok-ident*)
                        (tok-value (p:advance! p)))
                       (else
-                       (error 'parser (format "Expected key in table but got ~a" (tok-type t))))))
+                       (error 'parser (format "Expected key in literal but got ~a" (tok-type t))))))
                (_ (p:skip-newlines! p))
                (_ (p:expect! p *tok-arrow*))
                (_ (p:skip-newlines! p))
@@ -440,6 +440,12 @@
             (p:advance! p))
           (p:skip-newlines! p)
           (loop (cons (ast 'field (cons 'key key) (cons 'value val)) fields))))))
+
+(define (parse-map-constructor p)
+  (parse-kv-constructor p 'map))
+
+(define (parse-table-constructor p)
+  (parse-kv-constructor p 'table))
 
 (define (parse-vector-literal p)
   (p:expect! p *tok-lbracket*)

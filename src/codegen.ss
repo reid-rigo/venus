@@ -351,11 +351,24 @@
        (let ((vals (map (lambda (v) (cg-emit-expr port v)) (ast-ref node 'values))))
          (string-append "(venus-list " (string-join vals " ") ")")))
 
+       ((eq? type 'map)
+        (let ((fields (ast-ref node 'fields)))
+          (if (null? fields)
+              "(Map-make)"
+              (string-append "(Map-make "
+                             (string-join
+                               (map (lambda (f)
+                                      (string-append "\"" (ast-ref f 'key) "\" "
+                                                     (cg-emit-expr port (ast-ref f 'value))))
+                                    fields)
+                               " ")
+                             ")"))))
+
        ((eq? type 'table)
         (let ((fields (map (lambda (f)
                              (string-append "(cons \""
-                                            (ast-ref f 'key) "\" "
-                                            (cg-emit-expr port (ast-ref f 'value)) ")"))
+                                             (ast-ref f 'key) "\" "
+                                             (cg-emit-expr port (ast-ref f 'value)) ")"))
                            (ast-ref node 'fields))))
           (string-append "(venus-table (list " (string-join fields " ") "))")))
 
@@ -453,7 +466,7 @@
 
        ((eq? type 'export)
         (let ((val (ast-ref node 'value)))
-          (if (eq? (ast-type val) 'table)
+          (if (or (eq? (ast-type val) 'table) (eq? (ast-type val) 'map))
               (let ((fields (ast-ref val 'fields)))
                 (string-join
                  (map (lambda (f)

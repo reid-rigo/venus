@@ -1,44 +1,44 @@
 test("empty table", fn() {
   let expected = 0
-  Table.len({}) == expected
+  Table.len(#{}) == expected
 })
 
 test("field access", fn() {
-  let t = { x -> 10 }
+  let t = #{ x -> 10 }
   let expected = 10
   t.x == expected
 })
 
 test("has key", fn() {
-  let t = { x -> 10 }
+  let t = #{ x -> 10 }
   Table.has(t, "x")
 })
 
 test("not has key", fn() {
-  let t = { x -> 10 }
+  let t = #{ x -> 10 }
   let expected = false
   Table.has(t, "y") == expected
 })
 
 test("chained field", fn() {
-  let t2 = { x -> { y -> 20 } }
+  let t2 = #{ x -> #{ y -> 20 } }
   let expected = 20
   t2.x.y == expected
 })
 
 test("string keys", fn() {
-  let t3 = { "a" -> 1, "b" -> 2 }
+  let t3 = #{ "a" -> 1, "b" -> 2 }
   t3.a == 1 and t3.b == 2
 })
 
 test("safe nav existing", fn() {
-  let t4 = { x -> 10 }
+  let t4 = #{ x -> 10 }
   let expected = 10
   t4?.x == expected
 })
 
 test("safe nav missing", fn() {
-  let t4 = { x -> 10 }
+  let t4 = #{ x -> 10 }
   let expected = nil
   t4?.z == expected
 })
@@ -51,103 +51,103 @@ test("safe nav nil object", fn() {
 
 test("Table.each iterates values", fn() {
   let seen = []
-  Table.each({ a -> 1, b -> 2 }, fn(v, k) { List.add(seen, v) })
+  Table.each(#{ a -> 1, b -> 2 }, fn(v, k) { List.add(seen, v) })
   let expected = 2
   List.len(seen) == expected
 })
 
 test("Table.each returns nothing", fn() {
-  Table.each({ a -> 1 }, fn(v, k) {}) == nil
+  Table.each(#{ a -> 1 }, fn(v, k) {}) == nil
 })
 
 test("Table.map transforms values", fn() {
-  let doubled = Table.map({ x -> 5, y -> 10 }, fn(v) { v * 2 })
+  let doubled = Table.map(#{ x -> 5, y -> 10 }, fn(v) { v * 2 })
   let has_10 = List.filter(doubled, fn(x) { x == 10 })
   let has_20 = List.filter(doubled, fn(x) { x == 20 })
   List.len(doubled) == 2 and List.len(has_10) == 1 and List.len(has_20) == 1
 })
 
 test("Table.map empty", fn() {
-  List.len(Table.map({}, fn(v) { v })) == 0
+  List.len(Table.map(#{}, fn(v) { v })) == 0
 })
 
 test("Table.map returns list", fn() {
-  let r = Table.map({ a -> 1 }, fn(v) { v })
+  let r = Table.map(#{ a -> 1 }, fn(v) { v })
   List.len(r) == 1 and List.get(r, 1) == 1
 })
 
 test("merge", fn() {
-  let a = { "x" -> 1, "y" -> 2 }
-  let b = { "y" -> 3, "z" -> 4 }
+  let a = #{ "x" -> 1, "y" -> 2 }
+  let b = #{ "y" -> 3, "z" -> 4 }
   let result = Table.merge(a, b)
   Table.get(result, "x") == 1 and Table.get(result, "y") == 3 and Table.get(result, "z") == 4
 })
 
 test("merge empty", fn() {
-  let result = Table.merge({}, {})
+  let result = Table.merge(#{}, #{})
   Table.len(result) == 0
 })
 
 test("merge left wins on conflict", fn() {
-  let a = { "x" -> 1 }
-  let b = { "x" -> 2 }
+  let a = #{ "x" -> 1 }
+  let b = #{ "x" -> 2 }
   let result = Table.merge(a, b)
   Table.get(result, "x") == 2
 })
 
 test("invert", fn() {
-  let result = Table.invert({ "a" -> 1, "b" -> 2 })
+  let result = Table.invert(#{ "a" -> 1, "b" -> 2 })
   Table.get(result, 1) == "a" and Table.get(result, 2) == "b"
 })
 
 test("invert empty", fn() {
-  let result = Table.invert({})
+  let result = Table.invert(#{})
   Table.len(result) == 0
 })
 
 test("pick", fn() {
-  let m = { "a" -> 1, "b" -> 2, "c" -> 3 }
+  let m = #{ "a" -> 1, "b" -> 2, "c" -> 3 }
   let result = Table.pick(m, ["a", "c"])
   Table.get(result, "a") == 1 and Table.get(result, "c") == 3 and Table.has(result, "b") == false
 })
 
 test("pick missing key", fn() {
-  let m = { "a" -> 1 }
+  let m = #{ "a" -> 1 }
   let result = Table.pick(m, ["a", "z"])
   Table.get(result, "a") == 1 and Table.len(result) == 1
 })
 
 test("omit", fn() {
-  let m = { "a" -> 1, "b" -> 2, "c" -> 3 }
+  let m = #{ "a" -> 1, "b" -> 2, "c" -> 3 }
   let result = Table.omit(m, ["b"])
   Table.get(result, "a") == 1 and Table.get(result, "c") == 3 and Table.has(result, "b") == false
 })
 
 test("omit non-existent key", fn() {
-  let m = { "a" -> 1, "b" -> 2 }
+  let m = #{ "a" -> 1, "b" -> 2 }
   let result = Table.omit(m, ["z"])
   Table.len(result) == 2
 })
 
 test("map_keys", fn() {
-  let m = { "a" -> 1, "b" -> 2 }
+  let m = #{ "a" -> 1, "b" -> 2 }
   let result = Table.map_keys(m, fn(k) { "${k}!" })
   Table.get(result, "a!") == 1 and Table.get(result, "b!") == 2
 })
 
 test("filter", fn() {
-  let m = { "a" -> 1, "b" -> 2, "c" -> 3 }
+  let m = #{ "a" -> 1, "b" -> 2, "c" -> 3 }
   let result = Table.filter(m, fn(v) { v > 1 })
   Table.get(result, "b") == 2 and Table.get(result, "c") == 3 and Table.has(result, "a") == false
 })
 
 test("filter empty", fn() {
-  let result = Table.filter({}, fn(v) { true })
+  let result = Table.filter(#{}, fn(v) { true })
   Table.len(result) == 0
 })
 
 test("to_list", fn() {
-  let m = { "a" -> 1, "b" -> 2 }
+  let m = #{ "a" -> 1, "b" -> 2 }
   let result = Table.to_list(m)
   List.len(result) == 2
 })
