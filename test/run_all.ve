@@ -16,6 +16,7 @@ List.each([
   ["module", "test/test_module.ve"],
   ["stdlib", "test/test_stdlib.ve"],
   ["export", "test/test_export.ve"],
+  ["repl", "test/test_repl.ve"],
 ], fn(s) {
   print("--- ${List.get(s, 1)} ---")
   runner.run_file(List.get(s, 2))

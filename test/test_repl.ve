@@ -1,0 +1,35 @@
+test("print displays string without quotes", fn() {
+  print_str("hello") == "hello"
+})
+
+test("repl displays string with quotes", fn() {
+  let s = repl_str("hello")
+  let cs = String.chars(s)
+  String.len(s) == 7 and List.get(cs, 1) == '"' and List.get(cs, 7) == '"'
+})
+
+test("print displays number without quotes", fn() {
+  print_str(42) == "42"
+})
+
+test("print displays list", fn() {
+  print_str([1, 2, 3]) == "[1, 2, 3]"
+})
+
+test("nil prints as false", fn() {
+  repl_str(nil) == "#f"
+})
+
+test("print displays vector", fn() {
+  print_str(#[1, 2]) == "#[1, 2]"
+})
+
+test("print displays map with quoted keys", fn() {
+  let s = print_str({ "a" -> 1 })
+  String.len(s) == 9 and String.contains(s, "a") and String.contains(s, "1")
+})
+
+test("repl displays map with quoted keys", fn() {
+  let s = repl_str({ "a" -> 1 })
+  String.len(s) == 9 and String.contains(s, "a") and String.contains(s, "1")
+})

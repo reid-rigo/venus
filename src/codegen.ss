@@ -83,17 +83,20 @@
 
 (define (cg-process-string val)
   (let ((len (string-length val)))
-    (if (and (>= len 6)
-             (string=? (substring val 0 3) "\"\"\"")
-             (string=? (substring val (- len 3) len) "\"\"\""))
-        (string-append "\""
-                       (string-replace
-                        (string-replace
-                         (substring val 3 (- len 3))
-                         "\\" "\\\\")
-                        "\"" "\\\"")
-                       "\"")
-        val)))
+    (define (escape s)
+      (string-replace (string-replace s "\\" "\\\\") "\"" "\\\""))
+    (cond
+      ((and (>= len 6)
+            (string=? (substring val 0 3) "\"\"\"")
+            (string=? (substring val (- len 3) len) "\"\"\""))
+       (string-append "\"" (escape (substring val 3 (- len 3))) "\""))
+      ((and (>= len 2)
+            (char=? (string-ref val 0) (string-ref val (- len 1)))
+            (or (char=? (string-ref val 0) #\")
+                (char=? (string-ref val 0) #\')))
+       (string-append "\"" (escape (substring val 1 (- len 1))) "\""))
+      (else
+       (string-append "\"" (escape val) "\"")))))
 
 (define (cg-has-literal-params fn-node)
   (any (lambda (p) (eq? (ast-ref p 'is-literal) #t))
@@ -486,8 +489,8 @@
        (cg-indent! 1)
        (cg-emit port "(unless (null? args)")
        (cg-indent! 1)
-       (cg-emit port "(venus-write (car args))")
-       (cg-emit port "(for-each (lambda (x) (display \" \") (venus-write x)) (cdr args))")
+(cg-emit port "(venus-display (car args))")
+        (cg-emit port "(for-each (lambda (x) (display \" \") (venus-display x)) (cdr args))")
        (cg-indent! -1)
        (cg-emit port ")")
        (cg-emit port "(newline)")
