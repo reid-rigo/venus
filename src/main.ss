@@ -42,6 +42,9 @@
 (load-ve-extension! "src/vector.ve" 'Vector)
 (load-ve-extension! "src/map.ve" 'Map)
 
+;; Load global built-in functions
+(load (string-append *root* "/src/builtins.ss"))
+
 (define (read-file path)
   (call-with-input-file path
     (lambda (port)

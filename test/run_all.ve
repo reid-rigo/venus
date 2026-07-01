@@ -17,6 +17,7 @@ List.each([
   ["stdlib", "test/test_stdlib.ve"],
   ["export", "test/test_export.ve"],
   ["repl", "test/test_repl.ve"],
+  ["builtins", "test/test_builtins.ve"],
 ], fn(s) {
   print("--- ${List.get(s, 1)} ---")
   runner.run_file(List.get(s, 2))

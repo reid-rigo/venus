@@ -1,0 +1,37 @@
+test("times calls f n times", fn() {
+  let result = Vector.make()
+  times(5, fn(i) { Vector.push(result, i) })
+  Vector.len(result) == 5
+})
+
+test("times passes index 0..n-1", fn() {
+  let result = Vector.make()
+  times(4, fn(i) { Vector.push(result, i) })
+  Vector.get(result, 1) == 0 and Vector.get(result, 2) == 1 and Vector.get(result, 3) == 2 and Vector.get(result, 4) == 3
+})
+
+test("times 0 does nothing", fn() {
+  let result = Vector.make()
+  times(0, fn(i) { Vector.push(result, i) })
+  Vector.len(result) == 0
+})
+
+test("assert passes", fn() {
+  assert(true)
+})
+
+test("assert with truthy value", fn() {
+  assert(42)
+})
+
+test("assert_equal passes", fn() {
+  assert_equal(42, 42)
+})
+
+test("assert_equal with strings", fn() {
+  assert_equal("hello", "hello")
+})
+
+test("assert_not_equal passes", fn() {
+  assert_not_equal(1, 2)
+})
