@@ -125,6 +125,10 @@ x == 0 or x == 1
 1 + 2 == 3
 ```
 
+### Boolean Logic
+
+`nil` and `false` are falsy in conditionals; everything else is truthy.
+
 ### Match (`match`)
 
 ```venus
@@ -181,8 +185,8 @@ Triple-quoted strings can span multiple lines and support interpolation: `"""${e
 
 ## Data Structures
 
-| | Mutable | Literal | Prints as | Backed by |
-|---|---|---|---|---|---|
+| Type | Mutable | Literal | Prints as | Backed by |
+| --- | --- | --- | --- | --- |
 | `List` | No | `[a, b, c]` | `[a, b, c]` | Functional dequeue (ideque) |
 | `Vector` | Yes | `#[a, b, c]` | `#[a, b, c]` | Dynamic array (doubling growth) |
 | `Map` | No | `{k -> v}` | `{k -> v}` | HAMT (persistent, O(log n)) |
@@ -310,5 +314,3 @@ Mutable hash table (O(1) access). All operations mutate in place and return the 
 | `Math.max(...)` | Largest of values |
 | `Math.min(...)` | Smallest of values |
 | `Math.pi` | Constant 3.14159... |
-
-`nil` and `false` are falsy in conditionals; everything else is truthy.
