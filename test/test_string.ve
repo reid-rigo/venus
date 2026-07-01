@@ -171,3 +171,11 @@ test("is_empty true", fn() {
 test("is_empty false", fn() {
   String.is_empty("hello") == false
 })
+
+test("String.len", fn() {
+  String.len("hello") == 5
+})
+
+test("String.len empty", fn() {
+  String.len("") == 0
+})
