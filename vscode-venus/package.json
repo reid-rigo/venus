@@ -13,7 +13,7 @@
     "languages": [{
       "id": "venus",
       "aliases": ["Venus", "venus"],
-      "extensions": [".vs"],
+      "extensions": [".ve"],
       "configuration": "./language-configuration.json",
       "icon": {
         "light": "./icons/venus-file-icon.svg",

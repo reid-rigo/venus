@@ -27,8 +27,8 @@
 ;; Load Venus standard library extensions into the interaction environment.
 ;; Each Venus export is a top-level binding created by the codegen.
 ;; We reference functions by name so eval can look them up.
-(define (load-vs-extension! path module-name)
-  (let ((exports (vs-import path)))
+(define (load-ve-extension! path module-name)
+  (let ((exports (ve-import path)))
     (for-each (lambda (kv)
                 (let ((key (car kv))
                       (var-name (string->symbol (car kv))))
@@ -36,9 +36,9 @@
                                (cons (cons ,key ,var-name) ,module-name)))))
               exports)))
 
-(load-vs-extension! "src/string.vs" 'String)
-(load-vs-extension! "src/list.vs" 'List)
-(load-vs-extension! "src/table.vs" 'Table)
+(load-ve-extension! "src/string.ve" 'String)
+(load-ve-extension! "src/list.ve" 'List)
+(load-ve-extension! "src/table.ve" 'Table)
 
 (define (read-file path)
   (call-with-input-file path
@@ -73,7 +73,7 @@
 (define (eval-code/run-tests code)
   (eval-code code)
   (guard (e (else #f))
-    (when (and (not (null? *vs-tests*)) (procedure? run-tests))
+    (when (and (not (null? *ve-tests*)) (procedure? run-tests))
       (run-tests))))
 
 (define (display-code code)
@@ -83,7 +83,7 @@
     (newline)))
 
 (define (usage)
-  (display "Usage: vs [options] <file.vs>\n")
+  (display "Usage: ve [options] <file.ve>\n")
   (display "Options:\n")
   (display "  -c           Print compiled Scheme only (do not run)\n")
   (display "  -e <code>    Execute Venus code from string\n")

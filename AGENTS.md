@@ -2,8 +2,8 @@
 
 ## Build & Test
 - Build: `mise build`
-- Test: `./bin/vs test/run_all.vs`
-- Run: `./bin/vs file.vs`
+- Test: `./bin/ve test/run_all.ve`
+- Run: `./bin/ve file.ve`
 
 ## Structure
 - `src/chez_main.c` — C harness for Chez Scheme

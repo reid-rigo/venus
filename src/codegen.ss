@@ -305,7 +305,7 @@
                        ((eq? (ast-type callee-raw) 'lambda) (cg-emit-expr port callee-raw))
                        (else (cg-emit-expr port callee-raw)))))
                 (if (string=? callee "print")
-                    (string-append "(vs-print " args-joined ")")
+                    (string-append "(ve-print " args-joined ")")
                     (string-append "(" callee (if (string=? args-joined "") "" (string-append " " args-joined)) ")"))))))
 
       ((eq? type 'let)
@@ -462,7 +462,7 @@
               result))))
 
        ((eq? type 'import)
-        (string-append "(vs-import \"" (ast-ref node 'path) "\")"))
+        (string-append "(ve-import \"" (ast-ref node 'path) "\")"))
 
        ((eq? type 'export)
         (let ((val (ast-ref node 'value)))
@@ -470,7 +470,7 @@
               (let ((fields (ast-ref val 'fields)))
                 (string-join
                  (map (lambda (f)
-                        (string-append "(vs-export! \"" (ast-ref f 'key) "\" "
+                        (string-append "(ve-export! \"" (ast-ref f 'key) "\" "
                                        (cg-emit-expr port (ast-ref f 'value)) ")"))
                       fields)
                  "\n"))
@@ -482,7 +482,7 @@
       ((eq? type 'program)
        (cg-emit port "(import (chezscheme))")
        (cg-emit port "")
-       (cg-emit port "(define (vs-print . args)")
+       (cg-emit port "(define (ve-print . args)")
        (cg-indent! 1)
        (cg-emit port "(unless (null? args)")
        (cg-indent! 1)

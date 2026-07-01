@@ -2,16 +2,16 @@
 chezscheme = "latest"
 
 [tasks.build]
-description = "Compile Venus interpreter binary (bin/vs)"
+description = "Compile Venus interpreter binary (bin/ve)"
 
 [tasks.clean]
 description = "Remove build artifacts"
-run = "rm -f bin/vs"
+run = "rm -f bin/ve"
 
 [tasks.test]
 description = "Build and run the Venus test suite"
-run = "mise run build && ./bin/vs test/run_all.vs"
+run = "mise run build && ./bin/ve test/run_all.ve"
 
 [tasks.repl]
 description = "Start the Venus REPL"
-run = "./bin/vs"
+run = "./bin/ve"

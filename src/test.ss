@@ -1,13 +1,13 @@
 ;;; Venus test helper for Chez Scheme backend
 
-(define *vs-tests* '())
+(define *ve-tests* '())
 
 (define (test name thunk)
-  (set! *vs-tests* (cons (cons name thunk) *vs-tests*)))
+  (set! *ve-tests* (cons (cons name thunk) *ve-tests*)))
 
 (define (run-tests)
-  (set! *vs-tests* (reverse! *vs-tests*))
-  (let loop ((tests *vs-tests*) (passed 0) (failed 0))
+  (set! *ve-tests* (reverse! *ve-tests*))
+  (let loop ((tests *ve-tests*) (passed 0) (failed 0))
     (if (null? tests)
         (begin
           (display (string-append "\n" (number->string passed) " passed, "

@@ -1,5 +1,5 @@
 ;;; Venus Lexer for Chez Scheme
-;;; Tokenizes .vs source into a vector of #(type value) pairs.
+;;; Tokenizes .ve source into a vector of #(type value) pairs.
 
 (define *tok-number*    'number)
 (define *tok-string*    'string)

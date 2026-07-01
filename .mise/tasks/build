@@ -6,7 +6,7 @@ mkdir -p bin
 CHEZ_DIR=$(mise where chezscheme)
 CHEZ_LIB="$CHEZ_DIR/lib/csv10.4.1/tarm64osx"
 
-cc -o bin/vs \
+cc -o bin/ve \
   src/main.c \
   -I"$CHEZ_LIB" \
   -DCHEZ_BOOT_DIR="\"$CHEZ_LIB\"" \

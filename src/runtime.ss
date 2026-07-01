@@ -100,7 +100,7 @@
 (define string-upper String-upper)
 
 ;; Test accumulator (also defined in chez_test.ss, but initialized here for safety)
-(define *vs-tests* '())
+(define *ve-tests* '())
 
 ;; Module system
 (define (venus-ref obj key)
@@ -111,10 +111,10 @@
 
 (define *module-exports* (make-parameter #f))
 
-(define (vs-export! key val)
+(define (ve-export! key val)
   (*module-exports* (cons (cons key val) (*module-exports*))))
 
-(define (vs-read-file path)
+(define (ve-read-file path)
   (call-with-input-file path
     (lambda (port)
       (let loop ((chars '()))
@@ -123,8 +123,8 @@
               (list->string (reverse chars))
               (loop (cons c chars))))))))
 
-(define (vs-run-file path)
-  (let* ((source (vs-read-file path))
+(define (ve-run-file path)
+  (let* ((source (ve-read-file path))
          (code (codegen (parse source))))
     (let ((port (open-input-string code)))
       (let loop ()
@@ -133,18 +133,18 @@
             (eval expr (interaction-environment))
             (loop)))))))
 
-(define (vs-run-file-with-tests path)
-  (let* ((source (vs-read-file path))
+(define (ve-run-file-with-tests path)
+  (let* ((source (ve-read-file path))
          (code (codegen (parse source))))
-    (set! *vs-tests* '())
+    (set! *ve-tests* '())
     (let ((port (open-input-string code)))
       (let loop ()
         (let ((expr (read port)))
           (unless (eof-object? expr)
             (eval expr (interaction-environment))
             (loop)))))
-    (let ((tests (reverse! *vs-tests*)))
-      (set! *vs-tests* '())
+    (let ((tests (reverse! *ve-tests*)))
+      (set! *ve-tests* '())
       (let run ((rest tests) (passed 0) (failed 0))
         (if (null? rest)
             (begin
@@ -170,7 +170,7 @@
                         (display "    returned ") (display result) (newline)
                         (run (cdr rest) passed (+ failed 1))))))))))))
 
-(define (vs-import path)
+(define (ve-import path)
   (cond
     ((string=? path "vector")
      Vector)
@@ -179,13 +179,13 @@
     ((string=? path "math")
      Math)
     ((string=? path "src.runner")
-     (list (cons "run_file" vs-run-file-with-tests)))
+     (list (cons "run_file" ve-run-file-with-tests)))
     (else
-     (let ((full-path (if (string-find path ".vs" 0)
+     (let ((full-path (if (string-find path ".ve" 0)
                           path
                           (let ((slash-path (string-replace path "." "/")))
-                            (string-append slash-path ".vs")))))
-       (let ((source (vs-read-file full-path)))
+                            (string-append slash-path ".ve")))))
+       (let ((source (ve-read-file full-path)))
          (let ((code (codegen (parse source))))
            (parameterize ((*module-exports* '()))
              (let ((port (open-input-string code)))

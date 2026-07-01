@@ -9,12 +9,12 @@ A small, functional-first language built on Chez Scheme.
 ## Build & Run
 
 ```sh
-mise run build       # compile main.c -> bin/vs
-./bin/vs file.vs     # compile and run
-./bin/vs -c file.vs  # compile only (show Scheme output)
-./bin/vs -e 'code'   # run inline Venus code
-./bin/vs --help      # flags
-./bin/vs             # start REPL
+mise run build       # compile main.c -> bin/ve
+./bin/ve file.ve     # compile and run
+./bin/ve -c file.ve  # compile only (show Scheme output)
+./bin/ve -e 'code'   # run inline Venus code
+./bin/ve --help      # flags
+./bin/ve             # start REPL
 ```
 
 Tests: `mise run test`
@@ -156,7 +156,7 @@ print(m.pi)                      // 3.14159
 Export a value to make a file a module:
 
 ```venus
-// math_util.vs
+// math_util.ve
 fn add(a, b) { a + b }
 fn sub(a, b) { a - b }
 
@@ -164,7 +164,7 @@ export { add -> add, sub -> sub }
 ```
 
 ```venus
-// main.vs
+// main.ve
 let util = import "math_util"
 print(util.add(2, 3))            // 5
 ```

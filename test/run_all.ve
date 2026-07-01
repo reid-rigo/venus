@@ -1,0 +1,23 @@
+let runner = import "src.runner"
+
+List.each([
+  ["arithmetic", "test/test_arithmetic.ve"],
+  ["let", "test/test_let.ve"],
+  ["function", "test/test_fun.ve"],
+  ["if", "test/test_if.ve"],
+  ["match", "test/test_match.ve"],
+  ["list", "test/test_list.ve"],
+  ["math", "test/test_math.ve"],
+  ["table", "test/test_table.ve"],
+  ["logical", "test/test_logical.ve"],
+  ["string", "test/test_string.ve"],
+  ["map", "test/test_map.ve"],
+  ["vector", "test/test_vector.ve"],
+  ["module", "test/test_module.ve"],
+  ["stdlib", "test/test_stdlib.ve"],
+  ["export", "test/test_export.ve"],
+], fn(s) {
+  print("--- ${List.get(s, 1)} ---")
+  runner.run_file(List.get(s, 2))
+  print("")
+})
