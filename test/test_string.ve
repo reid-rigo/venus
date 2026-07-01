@@ -109,16 +109,16 @@ test("reverse empty", fn() {
   String.reverse("") == ""
 })
 
-test("repeat_str", fn() {
-  String.repeat_str("ha", 3) == "hahaha"
+test("repeat", fn() {
+  String.repeat("ha", 3) == "hahaha"
 })
 
-test("repeat_str zero", fn() {
-  String.repeat_str("x", 0) == ""
+test("repeat zero", fn() {
+  String.repeat("x", 0) == ""
 })
 
-test("repeat_str one", fn() {
-  String.repeat_str("ab", 1) == "ab"
+test("repeat one", fn() {
+  String.repeat("ab", 1) == "ab"
 })
 
 test("pad", fn() {

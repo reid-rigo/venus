@@ -287,7 +287,7 @@ Mutable hash table (O(1) access). All operations mutate in place and return the 
 |---|---|
 | `String.len(s)` | Character count |
 | `String.reverse(s)` | Reversed string |
-| `String.repeat_str(s, n)` | `s` repeated `n` times |
+| `String.repeat(s, n)` | `s` repeated `n` times |
 | `String.pad(s, w)` | Right-pad with spaces to width `w` |
 | `String.pad_left(s, w)` | Left-pad with spaces to width `w` |
 | `String.replace(s, from, to)` | Replace all occurrences |

@@ -33,6 +33,7 @@
                    (cons "filter" List-filter)
                    (cons "reduce" List-reduce)
                    (cons "range" List-range)
+                   (cons "repeat" List-repeat)
                    (cons "flat_map" List-flat_map)
                    (cons "zip" List-zip)
                    (cons "take_while" List-take_while)
@@ -45,7 +46,7 @@
 
 (define String (list (cons "len" String-len)
                      (cons "reverse" String-reverse)
-                     (cons "repeat_str" String-repeat_str)
+                      (cons "repeat" String-repeat)
                      (cons "pad" String-pad)
                      (cons "pad_left" String-pad_left)
                      (cons "replace" String-replace)

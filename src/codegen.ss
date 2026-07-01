@@ -52,8 +52,8 @@
 (define match-counter 0)
 
 (define module-fields
-  (let ((string-fields '("len" "reverse" "repeat_str" "pad" "pad_left" "replace" "chars" "is_empty" "split" "trim" "starts_with" "ends_with" "contains" "concat" "upper"))
-        (list-fields '("len" "get" "add" "each" "map" "join" "remove" "filter" "reduce" "range" "flat_map" "zip" "take_while" "drop_while" "flatten" "reverse" "find" "any" "all"))
+  (let ((string-fields '("len" "reverse" "repeat" "pad" "pad_left" "replace" "chars" "is_empty" "split" "trim" "starts_with" "ends_with" "contains" "concat" "upper"))
+        (list-fields '("len" "get" "add" "each" "map" "join" "remove" "filter" "reduce" "range" "repeat" "flat_map" "zip" "take_while" "drop_while" "flatten" "reverse" "find" "any" "all"))
         (table-fields '("has" "len" "each" "map" "set" "keys" "values" "remove" "merge" "invert" "pick" "omit" "map_keys" "filter" "to_list"))
         (math-fields '("abs" "floor" "ceil" "round" "sqrt" "pow" "max" "min" "pi")))
     (append string-fields list-fields table-fields math-fields)))

@@ -2,11 +2,11 @@ fn is_empty(s) {
   String.len(s) == 0
 }
 
-fn repeat_str(s, n) {
-  List.join(List.map(List.range(1, n), fn(x) { s }), "")
+fn repeat(s, n) {
+  List.join(List.repeat(s, n), "")
 }
 
 export {
   is_empty -> is_empty,
-  repeat_str -> repeat_str
+  repeat -> repeat
 }
