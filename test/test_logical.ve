@@ -27,3 +27,18 @@ test("nil literal", fn() { nil == nil })
 test("nil eq nil", fn() { nil == nil })
 test("nil not eq false", fn() { (nil == false) == false })
 test("false not eq nil", fn() { (false == nil) == false })
+
+test("and has higher precedence than or", fn() {
+  let a = true or true and false
+  a == true
+})
+
+test("or parens override precedence", fn() {
+  let a = (true or true) and false
+  a == false
+})
+
+test("and-or mixed chain", fn() {
+  let a = false and false or true
+  a == true
+})
