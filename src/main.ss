@@ -4,6 +4,10 @@
 
 (import (chezscheme))
 
+(define *root* (or (getenv "VENUS_ROOT") (current-directory)))
+
+(load (string-append *root* "/src/init.ss"))
+
 ;; Try to load libedit for readline support in REPL
 (define *have-readline* #f)
 (define *readline-fn* #f)
@@ -14,36 +18,6 @@
   (set! *readline-fn* (foreign-procedure "readline" (string) string))
   (set! *add-history-fn* (foreign-procedure "add_history" (string) void))
   (set! *have-readline* #t))
-
-(define *root* (or (getenv "VENUS_ROOT") (current-directory)))
-
-(library-directories (list (string-append *root* "/src") "."))
-
-(load (string-append *root* "/src/lexer.ss"))
-(load (string-append *root* "/src/parser.ss"))
-(load (string-append *root* "/src/codegen.ss"))
-(load (string-append *root* "/src/runtime.ss"))
-
-;; Load Venus standard library extensions into the interaction environment.
-;; Each Venus export is a top-level binding created by the codegen.
-;; We reference functions by name so eval can look them up.
-(define (load-ve-extension! path module-name)
-  (let ((exports (ve-import path)))
-    (for-each (lambda (kv)
-                (let ((key (car kv))
-                      (var-name (string->symbol (car kv))))
-                  (eval `(set! ,module-name
-                               (cons (cons ,key ,var-name) ,module-name)))))
-              exports)))
-
-(load-ve-extension! "src/string.ve" 'String)
-(load-ve-extension! "src/list.ve" 'List)
-(load-ve-extension! "src/table.ve" 'Table)
-(load-ve-extension! "src/vector.ve" 'Vector)
-(load-ve-extension! "src/map.ve" 'Map)
-
-;; Load global built-in functions
-(load (string-append *root* "/src/builtins.ss"))
 
 (define (read-file path)
   (call-with-input-file path

@@ -4,13 +4,20 @@ chezscheme = "latest"
 [tasks.build]
 description = "Compile Venus interpreter binary (bin/ve)"
 
+[tasks.build-if-changed]
+description = "Compile only if source files have changed"
+sources = ["src/**/*.ss", "!src/srfi/**", "src/**/*.ve", "src/main.c", ".mise/tasks/build"]
+outputs = ["bin/ve"]
+run = "mise run build"
+
 [tasks.clean]
 description = "Remove build artifacts"
 run = "rm -f bin/ve"
 
 [tasks.test]
 description = "Build and run the Venus test suite"
-run = "mise run build && ./bin/ve test/run_all.ve"
+depends = ["build-if-changed"]
+run = "./bin/ve test/run_all.ve"
 
 [tasks.repl]
 description = "Start the Venus REPL"

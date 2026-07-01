@@ -1,8 +1,6 @@
 ;;; Venus Parser for Chez Scheme
 ;;; Recursive-descent parser producing AST as association lists.
 
-(load "src/lexer.ss")
-
 (define-record-type parser
   (fields
     (mutable tokens)

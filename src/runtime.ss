@@ -1,10 +1,5 @@
-;; Venus runtime — load domain modules then define shared wiring
-(load (string-append *root* "/src/table.ss"))
-(load (string-append *root* "/src/list.ss"))
-(load (string-append *root* "/src/string.ss"))
-(load (string-append *root* "/src/math.ss"))
-(load (string-append *root* "/src/map.ss"))
-(load (string-append *root* "/src/vector.ss"))
+;; Venus runtime — define shared wiring
+;; Module loads are handled by init.ss
 
 ;; Module alists for dynamic method dispatch
 (define Table (list (cons "has" Table-has)

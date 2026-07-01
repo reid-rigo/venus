@@ -1,5 +1,10 @@
 bin/
+
 src/srfi/
+src/*.so
+
 tmp/
 
 .vscode/
+
+.worktrees/
