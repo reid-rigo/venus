@@ -39,6 +39,8 @@
 (load-ve-extension! "src/string.ve" 'String)
 (load-ve-extension! "src/list.ve" 'List)
 (load-ve-extension! "src/table.ve" 'Table)
+(load-ve-extension! "src/vector.ve" 'Vector)
+(load-ve-extension! "src/map.ve" 'Map)
 
 (define (read-file path)
   (call-with-input-file path

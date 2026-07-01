@@ -1,2 +1,12 @@
-// String extensions written in Venus.
-// Only add functions here that don't exist in chez_runtime.ss.
+fn is_empty(s) {
+  String.len(s) == 0
+}
+
+fn repeat_str(s, n) {
+  List.join(List.map(List.range(1, n), fn(x) { s }), "")
+}
+
+export {
+  is_empty -> is_empty,
+  repeat_str -> repeat_str
+}

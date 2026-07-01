@@ -1,0 +1,9 @@
+fn copy(v) {
+  let result = Vector.make()
+  Vector.each(v, fn(x) { Vector.push(result, x) })
+  result
+}
+
+export {
+  copy -> copy
+}

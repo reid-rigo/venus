@@ -1,0 +1,45 @@
+fn merge(a, b) {
+  List.reduce(Map.to_list(a), fn(acc, pair) {
+    Map.set(acc, List.get(pair, 1), List.get(pair, 2))
+  }, b)
+}
+
+fn filter(m, f) {
+  List.reduce(Map.to_list(m), fn(acc, pair) {
+    let k = List.get(pair, 1)
+    let v = List.get(pair, 2)
+    if f(v, k) {
+      Map.set(acc, k, v)
+    } else {
+      acc
+    }
+  }, Map.make())
+}
+
+fn each(m, f) {
+  List.each(Map.to_list(m), fn(pair) {
+    f(List.get(pair, 2), List.get(pair, 1))
+  })
+  nil
+}
+
+fn keys(m) {
+  List.map(Map.to_list(m), fn(pair) { List.get(pair, 1) })
+}
+
+fn values(m) {
+  List.map(Map.to_list(m), fn(pair) { List.get(pair, 2) })
+}
+
+fn map(m, f) {
+  List.map(Map.to_list(m), fn(pair) { f(List.get(pair, 2)) })
+}
+
+export {
+  merge -> merge,
+  filter -> filter,
+  each -> each,
+  keys -> keys,
+  values -> values,
+  map -> map
+}
