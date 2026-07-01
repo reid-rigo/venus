@@ -21,7 +21,9 @@ test("multiline string interpolation", fn() {
   let x = "world"
   let s = """hello
 ${x}"""
-  s == "hello\nworld"
+  let expected = """hello
+world"""
+  s == expected
 })
 
 test("multiline string length", fn() {

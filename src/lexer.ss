@@ -42,6 +42,7 @@
 (define *tok-import*    'import)
 (define *tok-export*    'export)
 (define *tok-hash*      'hash)
+(define *tok-mod*       'mod)
 (define *tok-eof*       'eof)
 
 (define (tok type val) (vector type val))
@@ -78,6 +79,7 @@
     ((#\() *tok-lparen*)   ((#\)) *tok-rparen*)
     ((#\+) *tok-plus*)     ((#\*) *tok-star*)
     ((#\/) *tok-slash*)    ((#\,) *tok-comma*)
+    ((#\%) *tok-mod*)
     ((#\{) *tok-lbrace*)   ((#\}) *tok-rbrace*)
     ((#\[) *tok-lbracket*) ((#\]) *tok-rbracket*)
     ((#\_) *tok-underscore*)
@@ -197,7 +199,7 @@
             (when (< pos len)
               (let ([c (advance!)])
                 (cond
-                  [(and (char=? c #\#) (char=? (peek 0) #\{))
+                  [(and (char=? c #\$) (char=? (peek 0) #\{))
                    (flush!)
                    (advance!)
                    (set! parts (cons (cons 'expr (read-interp-expr)) parts))

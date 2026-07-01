@@ -54,7 +54,8 @@ test("each iterates values", fn() {
   Vector.push(v, 30)
   let acc = Vector.make()
   Vector.each(v, fn(x) { Vector.push(acc, x) })
-  Vector.to_list(acc) == [10, 20, 30]
+  let r = Vector.to_list(acc)
+  List.len(r) == 3 and List.get(r, 1) == 10 and List.get(r, 2) == 20 and List.get(r, 3) == 30
 })
 
 test("each returns nil", fn() {
@@ -73,7 +74,8 @@ test("map transforms", fn() {
 })
 
 test("map empty", fn() {
-  Vector.map(Vector.make(), fn(x) { x }) == []
+  let r = Vector.map(Vector.make(), fn(x) { x })
+  List.len(r) == 0
 })
 
 test("filter", fn() {
@@ -86,18 +88,21 @@ test("filter", fn() {
 })
 
 test("filter empty", fn() {
-  Vector.filter(Vector.make(), fn(x) { true }) == []
+  let r = Vector.filter(Vector.make(), fn(x) { true })
+  List.len(r) == 0
 })
 
 test("to_list", fn() {
   let v = Vector.make()
   Vector.push(v, 10)
   Vector.push(v, 20)
-  Vector.to_list(v) == [10, 20]
+  let r = Vector.to_list(v)
+  List.len(r) == 2 and List.get(r, 1) == 10 and List.get(r, 2) == 20
 })
 
 test("to_list empty", fn() {
-  Vector.to_list(Vector.make()) == []
+  let r = Vector.to_list(Vector.make())
+  List.len(r) == 0
 })
 
 test("copy is independent", fn() {

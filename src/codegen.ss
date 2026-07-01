@@ -244,8 +244,8 @@
       ((eq? type 'true)
        "#t")
 
-       ((eq? type 'false)
-        "'()")
+        ((eq? type 'false)
+        "#f")
 
       ((eq? type 'ident)
        (ident->scheme (ast-ref node 'name)))
@@ -266,21 +266,23 @@
              (right (cg-emit-expr port (ast-ref node 'right))))
          (cond
             ((string=? op "==")
-             (string-append "(if (equal? " left " " right ") #t '())"))
+             (string-append "(if (equal? " left " " right ") #t #f)"))
             ((string=? op "!=")
-             (string-append "(if (not (equal? " left " " right ")) #t '())"))
+             (string-append "(if (not (equal? " left " " right ")) #t #f)"))
            ((string=? op "and")
             (string-append "(and " left " " right ")"))
-           ((string=? op "or")
-            (string-append "(or " left " " right ")"))
-           (else
+            ((string=? op "or")
+             (string-append "(or " left " " right ")"))
+            ((string=? op "%")
+             (string-append "(modulo " left " " right ")"))
+            (else
             (string-append "(" op " " left " " right ")")))))
 
        ((eq? type 'unary)
         (let ((operand (cg-emit-expr port (ast-ref node 'operand)))
               (op (ast-ref node 'op)))
-          (if (string=? op "!")
-              (string-append "(if (not " operand ") #t '())")
+           (if (string=? op "!")
+               (string-append "(if (not " operand ") #t #f)")
               (string-append "(- " operand ")"))))
 
        ((eq? type 'call)

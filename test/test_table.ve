@@ -50,10 +50,9 @@ test("safe nav nil object", fn() {
 })
 
 test("Table.each iterates values", fn() {
-  let seen = []
-  Table.each(#{ a -> 1, b -> 2 }, fn(v, k) { List.add(seen, v) })
-  let expected = 2
-  List.len(seen) == expected
+  let seen = Vector.make()
+  Table.each(#{ a -> 1, b -> 2 }, fn(v, k) { Vector.push(seen, v) })
+  Vector.len(seen) == 2
 })
 
 test("Table.each returns nothing", fn() {

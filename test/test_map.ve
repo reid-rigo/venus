@@ -74,7 +74,8 @@ test("map transforms values to list", fn() {
 })
 
 test("map empty", fn() {
-  Map.map(Map.make(), fn(v) { v }) == []
+  let r = Map.map(Map.make(), fn(v) { v })
+  List.len(r) == 0
 })
 
 test("filter", fn() {

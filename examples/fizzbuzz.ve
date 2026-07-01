@@ -1,7 +1,7 @@
-// fizzbuzz with match expressions
+// fizzbuzz with match, modulo, and times
 
 fn fizzbuzz(n) {
-  match n {
+  match n % 15 {
     0 -> "fizzbuzz",
     3 -> "fizz",
     5 -> "buzz",
@@ -13,15 +13,4 @@ fn fizzbuzz(n) {
   }
 }
 
-fn run(i, limit) {
-  if i < limit {
-    print(fizzbuzz(i))
-    run(i + 1, limit)
-  }
-}
-
-fn main() {
-  run(0, 15)
-}
-
-main()
+times(15, fn(i) { print(fizzbuzz(i)) })

@@ -260,7 +260,7 @@
 (define (parse-multiplication p)
   (let loop ((left (parse-unary p)))
     (let* ((t (p:peek p 0)))
-      (if (or (eq? (tok-type t) *tok-star*) (eq? (tok-type t) *tok-slash*))
+      (if (or (eq? (tok-type t) *tok-star*) (eq? (tok-type t) *tok-slash*) (eq? (tok-type t) *tok-mod*))
           (let* ((op (tok-value (p:advance! p)))
                 (right (parse-unary p)))
             (loop (ast 'binary (cons 'op op) (cons 'left left) (cons 'right right))))
@@ -325,13 +325,11 @@
              (ast 'interp-string
                   (cons 'parts
                         (map (lambda (part)
-                               (if (eq? (car part) 'text)
-                                   (let* ((escaped (string-append "\""
-                                                                 (string-replace
-                                                                   (string-replace
-                                                                     (string-replace (cdr part) "\\" "\\\\") "\"" "\\\"")
-                                                                   "\n" "\\n")
-                                                                 "\"")))
+                                (if (eq? (car part) 'text)
+                                    (let* ((escaped (string-append "\""
+                                                                  (string-replace
+                                                                    (string-replace (cdr part) "\\" "\\\\") "\"" "\\\"")
+                                                                  "\"")))
                                      (ast 'string (cons 'value escaped)))
                                     ;; expr part: parse the source
                                     (let* ((lex (list->vector (tokenize (cdr part))))
